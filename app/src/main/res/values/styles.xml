@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016  escoand
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/branding_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/branding_colorPrimaryDark</item>
+        <item name="colorAccent">@color/branding_colorAccent</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:paddingTop">24dp</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="subtitleTextColor">@android:color/secondary_text_dark</item>
+        <item name="titleTextColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="Toolbar.AppCompat" parent="Toolbar"></style>
+
+    <!-- cardview -->
+    <style name="Card.Wrapper">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+    </style>
+
+    <style name="Card" parent="CardView.Light">
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <style name="Card.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Card.Text.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Card.Action">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:divider">@drawable/divider_card_actions</item>
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:showDividers">beginning|middle|end</item>
+    </style>
+
+    <style name="Card.Action.Button" parent="Material.Drawable.Ripple.Touch.MatchView.Light">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:tint">@android:color/tertiary_text_light</item>
+        <item name="rd_enable">true</item>
+    </style>
+
+    <!-- progress -->
+    <style name="Progress.Linear" parent="Material.Drawable.LinearProgress.Query">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="pv_autostart">true</item>
+        <item name="pv_circular">false</item>
+        <item name="pv_progressMode">indeterminate</item>
+        <item name="pv_progressStyle">@style/Material.Drawable.LinearProgress.Query</item>
+    </style>
+
+    <style name="Progress.Circular" parent="Material.Drawable.CircularProgress">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="pv_autostart">true</item>
+        <item name="pv_circular">true</item>
+        <item name="pv_progressStyle">@style/Material.Drawable.CircularProgress</item>
+    </style>
+
+</resources>
