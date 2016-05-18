@@ -19,6 +19,7 @@ package com.escoand.android.daily_read;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,9 +29,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.rey.material.app.DatePickerDialog;
 import com.rey.material.app.Dialog;
@@ -62,16 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // drawer
-        ListView list = (ListView) findViewById(R.id.drawerList);
-        list.setAdapter(new DrawerArrayAdapter(this,
-                getResources().obtainTypedArray(R.array.drawer_items),
-                getResources().obtainTypedArray(R.array.drawer_icons)));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switchFragment(position);
-            }
-        });
+        ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(new OnNavigationItemSelectedListener());
 
         // content
         FragmentManager fm = getSupportFragmentManager();
@@ -80,72 +71,6 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.content, daily);
         ft.commit();
         setDate(new Date());
-    }
-
-    private void switchFragment(int position) {
-        FragmentManager fm = getSupportFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag("dialog");
-        Dialog.Builder dialogBuilder = null;
-
-        switch (getResources().obtainTypedArray(R.array.drawer_icons).getResourceId(position, -1)) {
-
-            // today
-            case R.drawable.drawer_today:
-                setDate(new Date());
-                break;
-
-            // calendar
-            case R.drawable.drawer_calendar:
-                dialogBuilder = new DatePickerDialog.Builder() {
-                    @Override
-                    public void onPositiveActionClicked(DialogFragment fragment) {
-                        DatePickerDialog dialog = (DatePickerDialog) fragment.getDialog();
-                        setDate(dialog.getCalendar().getTime());
-                        super.onPositiveActionClicked(fragment);
-                    }
-                };
-                ((DatePickerDialog.Builder) dialogBuilder).date(daily.getDate().getTime());
-                break;
-
-            // list
-            case R.drawable.drawer_list:
-                dialogBuilder = new Dialog.Builder() {
-                    @Override
-                    public void onPositiveActionClicked(DialogFragment fragment) {
-                        super.onPositiveActionClicked(fragment);
-                    }
-                };
-                com.rey.material.widget.ListView v = new com.rey.material.widget.ListView(getBaseContext());
-                v.setAdapter(new SimpleCursorAdapter(
-                        getBaseContext(),
-                        R.layout.item_list,
-                        new Database(getBaseContext()).getList(),
-                        new String[]{Database.COLUMN_SOURCE, Database.COLUMN_DATE},
-                        new int[]{R.id.listText, R.id.listDate},
-                        0));
-                dialogBuilder.getDialog().setContentView(v);
-                break;
-
-            // store
-            case R.drawable.drawer_store:
-                startActivityForResult(new Intent(this, StoreActivity.class), 0);
-                break;
-
-            // about
-            case R.drawable.drawer_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-        }
-
-        if (dialogBuilder != null) {
-            if (prev != null)
-                ft.remove(prev);
-            ft.addToBackStack(null);
-            dialogBuilder.positiveAction(getString(R.string.button_ok)).negativeAction(getString(R.string.button_cancel));
-            new DialogFragment().newInstance(dialogBuilder).show(fm, "dialog");
-        }
-        layout.closeDrawers();
     }
 
     private void setDate(Date date) {
@@ -157,5 +82,76 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         daily.setDate(daily.getDate());
+    }
+
+    private class OnNavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            FragmentManager fm = getSupportFragmentManager();
+            final FragmentTransaction ft = fm.beginTransaction();
+            Fragment prev = fm.findFragmentByTag("dialog");
+            Dialog.Builder dialogBuilder = null;
+
+            switch (item.getItemId()) {
+
+                // today
+                case R.id.navigation_today:
+                    setDate(new Date());
+                    break;
+
+                // calendar
+                case R.id.navigation_calendar:
+                    dialogBuilder = new DatePickerDialog.Builder() {
+                        @Override
+                        public void onPositiveActionClicked(DialogFragment fragment) {
+                            DatePickerDialog dialog = (DatePickerDialog) fragment.getDialog();
+                            setDate(dialog.getCalendar().getTime());
+                            super.onPositiveActionClicked(fragment);
+                        }
+                    };
+                    ((DatePickerDialog.Builder) dialogBuilder).date(daily.getDate().getTime());
+                    break;
+
+                // list
+                case R.id.navigation_list:
+                    dialogBuilder = new Dialog.Builder() {
+                        @Override
+                        public void onPositiveActionClicked(DialogFragment fragment) {
+                            super.onPositiveActionClicked(fragment);
+                        }
+                    };
+                    com.rey.material.widget.ListView v = new com.rey.material.widget.ListView(getBaseContext());
+                    v.setAdapter(new SimpleCursorAdapter(
+                            getBaseContext(),
+                            R.layout.item_list,
+                            new Database(getBaseContext()).getList(),
+                            new String[]{Database.COLUMN_SOURCE, Database.COLUMN_DATE},
+                            new int[]{R.id.listText, R.id.listDate},
+                            0));
+                    dialogBuilder.getDialog().setContentView(v);
+                    break;
+
+                // store
+                case R.id.navigation_store:
+                    startActivityForResult(new Intent(getApplication(), StoreActivity.class), 0);
+                    break;
+
+                // about
+                case R.id.navigation_about:
+                    startActivity(new Intent(getApplication(), AboutActivity.class));
+                    break;
+            }
+
+            if (dialogBuilder != null) {
+                if (prev != null)
+                    ft.remove(prev);
+                ft.addToBackStack(null);
+                dialogBuilder.positiveAction(getString(R.string.button_ok)).negativeAction(getString(R.string.button_cancel));
+                new DialogFragment().newInstance(dialogBuilder).show(fm, "dialog");
+            }
+            layout.closeDrawers();
+            return false;
+        }
+
     }
 }

@@ -19,31 +19,19 @@
 
 <resources>
 
-    <array name="drawer_items">
-        <item>Heute</item>
-        <item>Kalender</item>
-        <item>Liste</item>
-        <item>@string/button_store</item>
-        <item />
-        <item>Einstellungen</item>
-        <item>Über</item>
-    </array>
-    <array name="drawer_icons">
-        <item>@drawable/drawer_today</item>
-        <item>@drawable/drawer_calendar</item>
-        <item>@drawable/drawer_list</item>
-        <item>@drawable/drawer_store</item>
-        <item>@drawable/divider_list</item>
-        <item>@drawable/drawer_settings</item>
-        <item>@drawable/drawer_about</item>
-    </array>
+    <string name="navigation_today">Heute</string>
+    <string name="navigation_calendar">Kalender</string>
+    <string name="navigation_list">Liste</string>
+    <string name="navigation_store">Store</string>
+    <string name="navigation_other">Sonstiges</string>
+    <string name="navigation_settings">Einstellungen</string>
+    <string name="navigation_about">Über</string>
 
     <string name="type_voty">Jahreslosung</string>
     <string name="type_votm">Monatslosung</string>
     <string name="type_votw">Wochenlosung</string>
     <string name="type_votd">Tagestext</string>
 
-    <string name="button_store">Store</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
     <string name="button_error">Fehler</string>
