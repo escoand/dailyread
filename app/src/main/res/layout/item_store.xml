@@ -45,9 +45,13 @@
                     app:layout_widthPercent="100%"
                     tools:ignore="ContentDescription" />
 
-                <com.rey.material.widget.ProgressView
+                <ProgressBar
                     android:id="@+id/progressImage"
-                    style="@style/Progress.Circular" />
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
             </android.support.percent.PercentFrameLayout>
 
@@ -56,23 +60,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.rey.material.widget.Button
+                <Button
                     android:id="@+id/buttonRemove"
-                    style="@style/Material.Drawable.Ripple.Touch.Light"
+                    style="@style/Widget.AppCompat.ActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
                     android:background="@android:color/transparent"
-                    android:text="@string/button_remove"
-                    app:rd_enable="true" />
+                    android:text="@string/button_remove" />
 
-                <com.rey.material.widget.Button
+                <Button
                     android:id="@+id/buttonAction"
+                    style="@style/Widget.AppCompat.ActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center_vertical"
-                    android:background="@android:color/transparent"
-                    app:rd_enable="true" />
+                    android:background="@android:color/transparent" />
 
             </FrameLayout>
 
@@ -80,11 +83,13 @@
 
     </android.support.v7.widget.CardView>
 
-    <com.rey.material.widget.ProgressView
+    <ProgressBar
         android:id="@+id/progressData"
-        style="@style/Progress.Linear"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:translationZ="99dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 </FrameLayout>

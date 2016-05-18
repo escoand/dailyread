@@ -19,10 +19,7 @@
 
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/branding_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/branding_colorPrimaryDark</item>
-        <item name="colorAccent">@color/branding_colorAccent</item>
+    <style name="AppTheme.AppCompat" parent="AppTheme">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 

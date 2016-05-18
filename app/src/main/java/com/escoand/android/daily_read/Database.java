@@ -26,21 +26,19 @@ import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
 public class Database extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "data";
-    private static final int DATABASE_VERSION = 1;
-
     public static final String TABLE_TEXTS = "texts";
     public static final String TABLE_SETS = "sets";
     public static final String TABLE_TYPES = "types";
-
     public static final String COLUMN_SUBSCRIPTION = "subscription";
     public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_DATE = "date";
@@ -49,18 +47,17 @@ public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_SOURCE = "author";
     public static final String COLUMN_READ = "read";
-
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_REVISION = "revision";
     public static final String COLUMN_PRIORITY = "priority";
-
     public static final String TYPE_YEAR = "voty";
     public static final String TYPE_MONTH = "votm";
     public static final String TYPE_WEEK = "votw";
     public static final String TYPE_DAY = "votd";
     public static final String TYPE_EXEGESIS = "exeg";
     public static final String TYPE_INTRO = "intr";
-
+    private static final String DATABASE_NAME = "data";
+    private static final int DATABASE_VERSION = 1;
     private static final int PRIORITY_YEAR = 50;
     private static final int PRIORITY_MONTH = 40;
     private static final int PRIORITY_WEEK = 30;
@@ -132,7 +129,7 @@ public class Database extends SQLiteOpenHelper {
         return c;
     }
 
-    public boolean loadDataCSV(String subscription, int revision, File file) {
+    public boolean loadDataCSV(String subscription, int revision, File file) throws IOException {
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -201,7 +198,7 @@ public class Database extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
             result = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             db.endTransaction();
             db.close();
@@ -210,7 +207,7 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean loadDataXML(String subscription, int revision, File file) {
+    public boolean loadDataXML(String subscription, int revision, File file) throws IOException, XmlPullParserException {
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -389,7 +386,7 @@ public class Database extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
             result = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             db.endTransaction();
             db.close();

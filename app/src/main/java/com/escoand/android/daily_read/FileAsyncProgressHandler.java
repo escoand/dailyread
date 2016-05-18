@@ -19,14 +19,14 @@ package com.escoand.android.daily_read;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
-import com.rey.material.widget.ProgressView;
 
 public abstract class FileAsyncProgressHandler extends FileAsyncHttpResponseHandler {
-    ProgressView progressView;
+    ProgressBar progressView;
 
-    public FileAsyncProgressHandler(Context context, ProgressView progressView) {
+    public FileAsyncProgressHandler(Context context, ProgressBar progressView) {
         super(context);
         this.progressView = progressView;
     }
@@ -35,12 +35,12 @@ public abstract class FileAsyncProgressHandler extends FileAsyncHttpResponseHand
     public void onStart() {
         super.onStart();
         progressView.setVisibility(View.VISIBLE);
-        progressView.start();
     }
 
     @Override
     public void onProgress(long bytesWritten, long totalSize) {
-        progressView.setProgress((float) 1 * bytesWritten / totalSize);
+        progressView.setMax((int) totalSize);
+        progressView.setProgress((int) bytesWritten);
         super.onProgress(bytesWritten, totalSize);
     }
 

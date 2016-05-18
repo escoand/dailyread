@@ -18,25 +18,22 @@
 package com.escoand.android.daily_read;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.loopj.android.http.DataAsyncHttpResponseHandler;
-import com.rey.material.widget.ProgressView;
 
-/**
- * Created by andreas on 10.05.16.
- */
 public abstract class DataAsyncProgressHandler extends DataAsyncHttpResponseHandler {
-    ProgressView progressView;
+    ProgressBar progressBar;
     long receivedBytes = 0;
 
-    public DataAsyncProgressHandler(ProgressView progressView) {
-        this.progressView = progressView;
+    public DataAsyncProgressHandler(ProgressBar progressBar) {
+        this.progressBar = progressBar;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        progressView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -47,13 +44,14 @@ public abstract class DataAsyncProgressHandler extends DataAsyncHttpResponseHand
 
     @Override
     public void onProgress(long bytesWritten, long totalSize) {
-        progressView.setProgress((float) 1 * receivedBytes / totalSize);
+        progressBar.setMax((int) totalSize);
+        progressBar.setProgress((int) receivedBytes);
         super.onProgress(bytesWritten, totalSize);
     }
 
     @Override
     public void onFinish() {
         super.onFinish();
-        progressView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

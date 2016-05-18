@@ -25,16 +25,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.rey.material.app.DatePickerDialog;
-import com.rey.material.app.Dialog;
-import com.rey.material.app.DialogFragment;
 
 import java.util.Date;
 
@@ -90,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager fm = getSupportFragmentManager();
             final FragmentTransaction ft = fm.beginTransaction();
             Fragment prev = fm.findFragmentByTag("dialog");
-            Dialog.Builder dialogBuilder = null;
+            //Dialog.Builder dialogBuilder = null;
 
             switch (item.getItemId()) {
 
@@ -101,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // calendar
                 case R.id.navigation_calendar:
-                    dialogBuilder = new DatePickerDialog.Builder() {
+                    /*dialogBuilder = new DatePickerDialog().Builder() {
                         @Override
                         public void onPositiveActionClicked(DialogFragment fragment) {
                             DatePickerDialog dialog = (DatePickerDialog) fragment.getDialog();
@@ -109,18 +104,18 @@ public class MainActivity extends AppCompatActivity {
                             super.onPositiveActionClicked(fragment);
                         }
                     };
-                    ((DatePickerDialog.Builder) dialogBuilder).date(daily.getDate().getTime());
+                    ((DatePickerDialog.Builder) dialogBuilder).date(daily.getDate().getTime());*/
                     break;
 
                 // list
                 case R.id.navigation_list:
-                    dialogBuilder = new Dialog.Builder() {
+                    /*dialogBuilder = new Dialog.Builder() {
                         @Override
                         public void onPositiveActionClicked(DialogFragment fragment) {
                             super.onPositiveActionClicked(fragment);
                         }
                     };
-                    com.rey.material.widget.ListView v = new com.rey.material.widget.ListView(getBaseContext());
+                    ListView v = new ListView(getBaseContext());
                     v.setAdapter(new SimpleCursorAdapter(
                             getBaseContext(),
                             R.layout.item_list,
@@ -128,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{Database.COLUMN_SOURCE, Database.COLUMN_DATE},
                             new int[]{R.id.listText, R.id.listDate},
                             0));
-                    dialogBuilder.getDialog().setContentView(v);
+                    dialogBuilder.getDialog().setContentView(v);*/
                     break;
 
                 // store
@@ -142,13 +137,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
 
-            if (dialogBuilder != null) {
+            /*if (dialogBuilder != null) {
                 if (prev != null)
                     ft.remove(prev);
                 ft.addToBackStack(null);
                 dialogBuilder.positiveAction(getString(R.string.button_ok)).negativeAction(getString(R.string.button_cancel));
                 new DialogFragment().newInstance(dialogBuilder).show(fm, "dialog");
-            }
+            }*/
             layout.closeDrawers();
             return false;
         }
