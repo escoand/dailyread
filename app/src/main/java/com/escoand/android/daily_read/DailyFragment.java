@@ -18,6 +18,7 @@
 package com.escoand.android.daily_read;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import java.util.Date;
 
@@ -44,7 +46,7 @@ public class DailyFragment extends Fragment {
         db = new Database(getContext());
 
         listAdapter = new SimpleCursorAdapter(getContext(), R.layout.item_daily, null, from, to, 0);
-        listAdapter.setViewBinder(new DailyViewBinder(getContext()));
+        listAdapter.setViewBinder(new DailyViewBinder());
 
         ListView list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
@@ -74,5 +76,28 @@ public class DailyFragment extends Fragment {
     private void refresh() {
         if (listAdapter != null && db != null)
             listAdapter.changeCursor(db.getDay(date));
+    }
+
+    private class DailyViewBinder implements SimpleCursorAdapter.ViewBinder {
+
+        @Override
+        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+            if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE) && view instanceof TextView)
+                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+                    case Database.TYPE_YEAR:
+                        ((TextView) view).setText(getContext().getString(R.string.type_voty));
+                        return true;
+                    case Database.TYPE_MONTH:
+                        ((TextView) view).setText(getContext().getString(R.string.type_votm));
+                        return true;
+                    case Database.TYPE_WEEK:
+                        ((TextView) view).setText(getContext().getString(R.string.type_votw));
+                        return true;
+                    case Database.TYPE_DAY:
+                        ((TextView) view).setText(getContext().getString(R.string.type_votd));
+                        return true;
+                }
+            return false;
+        }
     }
 }
