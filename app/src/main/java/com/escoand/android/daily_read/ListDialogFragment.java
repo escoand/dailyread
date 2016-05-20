@@ -23,22 +23,16 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import java.util.Date;
 
-public class ListDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener {
+public class ListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     OnDateSelectedListener listener;
     SimpleCursorAdapter adapter;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.fragment_list, null);
 
         // adapter
         adapter = new SimpleCursorAdapter(
@@ -49,31 +43,20 @@ public class ListDialogFragment extends DialogFragment implements AdapterView.On
                 new int[]{R.id.listTitle, R.id.listDate},
                 0);
 
-        // list
-        ListView list = (ListView) v.findViewById(R.id.listView);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
-
         // dialog
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.navigation_list)
-                .setView(v)
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                })
+                .setAdapter(adapter, this)
+                .setNegativeButton(R.string.button_cancel, null)
                 .create();
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor c = (Cursor) adapter.getItem(position);
+    public void onClick(DialogInterface dialog, int which) {
+        Cursor c = (Cursor) adapter.getItem(which);
         Date date = Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE)));
         if (listener != null)
             listener.onDateSelected(date);
-        dismiss();
     }
 
     public void setOnDateSelectedListener(OnDateSelectedListener listener) {

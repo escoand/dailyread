@@ -18,7 +18,6 @@
 package com.escoand.android.daily_read;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,8 +29,6 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashSet;
 
 public class CalendarDialogFragment extends DialogFragment implements com.prolificinteractive.materialcalendarview.OnDateSelectedListener {
@@ -71,24 +68,14 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         }
 
         // min and max
-        try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-            cal.setMinimumDate(df.parse(String.valueOf(min)));
-            cal.setMaximumDate(df.parse(String.valueOf(max)));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        cal.setMinimumDate(Database.getDateFromInt(min));
+        cal.setMaximumDate(Database.getDateFromInt(max));
 
         // dialog
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.navigation_calendar)
                 .setView(cal)
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                })
+                .setNegativeButton(R.string.button_cancel, null)
                 .create();
     }
 
