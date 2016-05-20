@@ -20,6 +20,7 @@ package com.escoand.android.daily_read;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,7 +34,7 @@ import android.view.View;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener {
     private DrawerLayout layout;
     private Toolbar toolbar;
     private DailyFragment daily;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // drawer
-        ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(new OnNavigationItemSelectedListener());
+        ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(this);
 
         // content
         FragmentManager fm = getSupportFragmentManager();
@@ -65,12 +66,7 @@ public class MainActivity extends AppCompatActivity {
         daily = new DailyFragment();
         ft.replace(R.id.content, daily);
         ft.commit();
-        setDate(new Date());
-    }
-
-    private void setDate(Date date) {
-        toolbar.setSubtitle(DateFormat.getLongDateFormat(getBaseContext()).format(date));
-        daily.setDate(date);
+        onDateSelected(new Date());
     }
 
     @Override
@@ -79,74 +75,56 @@ public class MainActivity extends AppCompatActivity {
         daily.setDate(daily.getDate());
     }
 
-    private class OnNavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            FragmentManager fm = getSupportFragmentManager();
-            final FragmentTransaction ft = fm.beginTransaction();
-            Fragment prev = fm.findFragmentByTag("dialog");
-            //Dialog.Builder dialogBuilder = null;
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentManager fm = getSupportFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        DialogFragment dialog = null;
 
-            switch (item.getItemId()) {
+        switch (item.getItemId()) {
 
-                // today
-                case R.id.navigation_today:
-                    setDate(new Date());
-                    break;
+            // today
+            case R.id.navigation_today:
+                onDateSelected(new Date());
+                break;
 
-                // calendar
-                case R.id.navigation_calendar:
-                    /*dialogBuilder = new DatePickerDialog().Builder() {
-                        @Override
-                        public void onPositiveActionClicked(DialogFragment fragment) {
-                            DatePickerDialog dialog = (DatePickerDialog) fragment.getDialog();
-                            setDate(dialog.getCalendar().getTime());
-                            super.onPositiveActionClicked(fragment);
-                        }
-                    };
-                    ((DatePickerDialog.Builder) dialogBuilder).date(daily.getDate().getTime());*/
-                    break;
+            // calendar
+            case R.id.navigation_calendar:
+                dialog = new CalendarDialogFragment();
+                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
 
-                // list
-                case R.id.navigation_list:
-                    /*dialogBuilder = new Dialog.Builder() {
-                        @Override
-                        public void onPositiveActionClicked(DialogFragment fragment) {
-                            super.onPositiveActionClicked(fragment);
-                        }
-                    };
-                    ListView v = new ListView(getBaseContext());
-                    v.setAdapter(new SimpleCursorAdapter(
-                            getBaseContext(),
-                            R.layout.item_list,
-                            new Database(getBaseContext()).getList(),
-                            new String[]{Database.COLUMN_SOURCE, Database.COLUMN_DATE},
-                            new int[]{R.id.listText, R.id.listDate},
-                            0));
-                    dialogBuilder.getDialog().setContentView(v);*/
-                    break;
+            // list
+            case R.id.navigation_list:
+                dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
 
-                // store
-                case R.id.navigation_store:
-                    startActivityForResult(new Intent(getApplication(), StoreActivity.class), 0);
-                    break;
+            // store
+            case R.id.navigation_store:
+                startActivityForResult(new Intent(getApplication(), StoreActivity.class), 0);
+                break;
 
-                // about
-                case R.id.navigation_about:
-                    startActivity(new Intent(getApplication(), AboutActivity.class));
-                    break;
-            }
-
-            /*if (dialogBuilder != null) {
-                if (prev != null)
-                    ft.remove(prev);
-                ft.addToBackStack(null);
-                dialogBuilder.positiveAction(getString(R.string.button_ok)).negativeAction(getString(R.string.button_cancel));
-                new DialogFragment().newInstance(dialogBuilder).show(fm, "dialog");
-            }*/
-            layout.closeDrawers();
-            return false;
+            // about
+            case R.id.navigation_about:
+                startActivity(new Intent(getApplication(), AboutActivity.class));
+                break;
         }
 
+        if (dialog != null) {
+            Fragment prev = fm.findFragmentByTag("dialog");
+            if (prev != null)
+                ft.remove(prev);
+            ft.addToBackStack(null);
+            dialog.show(fm, "dialog");
+        }
+        layout.closeDrawers();
+        return false;
+    }
+
+    @Override
+    public void onDateSelected(Date date) {
+        toolbar.setSubtitle(DateFormat.getLongDateFormat(getBaseContext()).format(date));
+        daily.setDate(date);
     }
 }

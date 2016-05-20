@@ -21,6 +21,7 @@
 
     <style name="Toolbar.AppCompat" parent="Toolbar">
         <item name="android:elevation">4dp</item>
+        <item name="android:paddingTop">24dp</item>
     </style>
 
 </resources>

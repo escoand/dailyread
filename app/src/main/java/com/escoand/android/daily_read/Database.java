@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
 
@@ -33,6 +34,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Database extends SQLiteOpenHelper {
@@ -65,8 +68,24 @@ public class Database extends SQLiteOpenHelper {
     private static final int PRIORITY_EXEGESIS = 10;
     private static final int PRIORITY_INTRO = 25;
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static int getIntFromDate(Date date) {
+        return Integer.valueOf(dateFormat.format(date));
+    }
+
+    @Nullable
+    public static Date getDateFromInt(int date) {
+        try {
+            return dateFormat.parse(String.valueOf(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -419,13 +438,11 @@ public class Database extends SQLiteOpenHelper {
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
                 new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE},
                 COLUMN_DATE + "=?",
-                new String[]{},
+                new String[]{String.valueOf(getIntFromDate(date))},
                 null, null,
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
         if (c != null)
             c.moveToFirst();
-        if (c.getCount() == 0)
-            c = getStatistics();
 
         return c;
     }
@@ -433,7 +450,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getList() {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE},
+                new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
                 COLUMN_TYPE + "!=?",
                 new String[]{TYPE_EXEGESIS},
                 null, null,

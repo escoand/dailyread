@@ -31,7 +31,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-public class DailyFragment extends Fragment {
+public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder {
     private static SimpleCursorAdapter listAdapter;
     private static Database db;
     private static String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
@@ -46,7 +46,7 @@ public class DailyFragment extends Fragment {
         db = new Database(getContext());
 
         listAdapter = new SimpleCursorAdapter(getContext(), R.layout.item_daily, null, from, to, 0);
-        listAdapter.setViewBinder(new DailyViewBinder());
+        listAdapter.setViewBinder(this);
 
         ListView list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
@@ -64,6 +64,26 @@ public class DailyFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE) && view instanceof TextView)
+            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+                case Database.TYPE_YEAR:
+                    ((TextView) view).setText(getContext().getString(R.string.type_voty));
+                    return true;
+                case Database.TYPE_MONTH:
+                    ((TextView) view).setText(getContext().getString(R.string.type_votm));
+                    return true;
+                case Database.TYPE_WEEK:
+                    ((TextView) view).setText(getContext().getString(R.string.type_votw));
+                    return true;
+                case Database.TYPE_DAY:
+                    ((TextView) view).setText(getContext().getString(R.string.type_votd));
+                    return true;
+            }
+        return false;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -78,26 +98,4 @@ public class DailyFragment extends Fragment {
             listAdapter.changeCursor(db.getDay(date));
     }
 
-    private class DailyViewBinder implements SimpleCursorAdapter.ViewBinder {
-
-        @Override
-        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE) && view instanceof TextView)
-                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
-                    case Database.TYPE_YEAR:
-                        ((TextView) view).setText(getContext().getString(R.string.type_voty));
-                        return true;
-                    case Database.TYPE_MONTH:
-                        ((TextView) view).setText(getContext().getString(R.string.type_votm));
-                        return true;
-                    case Database.TYPE_WEEK:
-                        ((TextView) view).setText(getContext().getString(R.string.type_votw));
-                        return true;
-                    case Database.TYPE_DAY:
-                        ((TextView) view).setText(getContext().getString(R.string.type_votd));
-                        return true;
-                }
-            return false;
-        }
-    }
 }

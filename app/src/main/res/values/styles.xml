@@ -80,4 +80,13 @@
         <item name="android:showDividers">beginning|middle|end</item>
     </style>
 
+    <!-- progress -->
+    <style name="Progress.Circular" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:progressDrawable">@drawable/progress</item>
+    </style>
+
+    <style name="Progress.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress</item>
+    </style>
+
 </resources>
