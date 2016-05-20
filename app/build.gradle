@@ -56,7 +56,4 @@ dependencies {
 
     // in-app billing
     compile 'com.anjlab.android.iab.v3:library:1.0.+'
-
-    // about page
-    compile 'com.github.medyo:android-about-page:1.+'
 }

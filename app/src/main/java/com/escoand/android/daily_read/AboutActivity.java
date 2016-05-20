@@ -23,9 +23,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mehdi.sakout.aboutpage.AboutPage;
-import mehdi.sakout.aboutpage.Element;
-
 public class AboutActivity extends AppCompatActivity {
 
     @Override
@@ -44,13 +41,6 @@ public class AboutActivity extends AppCompatActivity {
         });
 
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
-        v.addView(new AboutPage(this)
-                .isRTL(false)
-                .setImage(R.mipmap.branding_launcher)
-                .setDescription(getString(R.string.app_subtitle))
-                .addItem(new Element().setTitle("Version " + BuildConfig.VERSION_NAME))
-                .addWebsite("http://brunnen-verlag.de/catalogsearch/result/?q=termine+mit+gott")
-                .addGitHub("escoand/lichtstrahlen")
-                .create());
+        v.addView(getLayoutInflater().inflate(R.layout.activity_about, null));
     }
 }
