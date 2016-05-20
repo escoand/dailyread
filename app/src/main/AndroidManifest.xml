@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (C) 2016  escoand
   ~
@@ -23,8 +24,10 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
+        android:allowBackup="false"
         android:icon="@mipmap/branding_launcher"
         android:label="@string/app_title"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme.AppCompat">
         <activity
             android:name=".MainActivity"
@@ -34,8 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StoreActivity"></activity>
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".StoreActivity" />
+        <activity android:name=".AboutActivity" />
     </application>
 
 </manifest>

@@ -21,6 +21,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.widget.SimpleCursorAdapter;
@@ -28,9 +29,10 @@ import android.widget.SimpleCursorAdapter;
 import java.util.Date;
 
 public class ListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
-    OnDateSelectedListener listener;
-    SimpleCursorAdapter adapter;
+    private OnDateSelectedListener listener;
+    private SimpleCursorAdapter adapter;
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 

@@ -37,7 +37,7 @@ import org.json.JSONException;
 import cz.msebera.android.httpclient.Header;
 
 public class StoreActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
-    private AsyncHttpClient client = new AsyncHttpClient();
+    private final AsyncHttpClient client = new AsyncHttpClient();
     private StoreArrayAdapter listAdapter;
     private BillingProcessor billing;
 
@@ -68,7 +68,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
         ListView list = (ListView) findViewById(R.id.listView);
         list.setEmptyView(findViewById(R.id.listLoading));
-        listAdapter = new StoreArrayAdapter(this, billing, this);
+        listAdapter = new StoreArrayAdapter(this, billing);
         list.setAdapter(listAdapter);
 
         getPurchasesList();

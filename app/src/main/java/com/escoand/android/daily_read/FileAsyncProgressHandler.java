@@ -24,7 +24,7 @@ import android.widget.ProgressBar;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
 public abstract class FileAsyncProgressHandler extends FileAsyncHttpResponseHandler {
-    ProgressBar progressView;
+    private final ProgressBar progressView;
 
     public FileAsyncProgressHandler(Context context, ProgressBar progressView) {
         super(context);

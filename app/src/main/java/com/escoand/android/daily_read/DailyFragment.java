@@ -32,11 +32,10 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder {
+    private static final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
+    private static final int[] to = new int[]{R.id.itemTitle, R.id.itemText, R.id.itemAuthor};
     private static SimpleCursorAdapter listAdapter;
     private static Database db;
-    private static String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
-    private static int[] to = new int[]{R.id.itemTitle, R.id.itemText, R.id.itemAuthor};
-
     private Date date = new Date();
 
     @Override

@@ -25,7 +25,7 @@
         <item name="colorAccent">@color/branding_colorAccent</item>
     </style>
 
-    <style name="AppTheme.AppCompat" parent="AppTheme"></style>
+    <style name="AppTheme.AppCompat" parent="AppTheme" />
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:layout_width">match_parent</item>
@@ -35,7 +35,7 @@
         <item name="titleTextColor">@android:color/primary_text_dark</item>
     </style>
 
-    <style name="Toolbar.AppCompat" parent="Toolbar"></style>
+    <style name="Toolbar.AppCompat" parent="Toolbar" />
 
     <!-- cardview -->
     <style name="Card.Wrapper">

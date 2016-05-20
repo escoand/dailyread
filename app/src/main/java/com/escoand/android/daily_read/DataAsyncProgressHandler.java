@@ -23,8 +23,7 @@ import android.widget.ProgressBar;
 import com.loopj.android.http.DataAsyncHttpResponseHandler;
 
 public abstract class DataAsyncProgressHandler extends DataAsyncHttpResponseHandler {
-    ProgressBar progressBar;
-    long receivedBytes = 0;
+    private final ProgressBar progressBar;
 
     public DataAsyncProgressHandler(ProgressBar progressBar) {
         this.progressBar = progressBar;
@@ -37,15 +36,9 @@ public abstract class DataAsyncProgressHandler extends DataAsyncHttpResponseHand
     }
 
     @Override
-    public void onProgressData(byte[] responseBody) {
-        receivedBytes += responseBody.length;
-        super.onProgressData(responseBody);
-    }
-
-    @Override
     public void onProgress(long bytesWritten, long totalSize) {
         progressBar.setMax((int) totalSize);
-        progressBar.setProgress((int) receivedBytes);
+        progressBar.setProgress((int) bytesWritten);
         super.onProgress(bytesWritten, totalSize);
     }
 

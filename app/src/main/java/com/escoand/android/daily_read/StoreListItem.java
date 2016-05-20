@@ -57,7 +57,7 @@ public class StoreListItem {
 
     private BillingProcessor billing;
 
-    protected StoreListItem(JSONObject json) throws JSONException {
+    public StoreListItem(JSONObject json) throws JSONException {
         productId = json.getString("name");
         imageURL = json.getString("image");
         dataURL = json.getString("data");
@@ -87,9 +87,9 @@ public class StoreListItem {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 int len = 0;
-                for (int i = 0; i < headers.length; i++) {
-                    if (headers[i].getName().equals("Content-Length"))
-                        len = Integer.valueOf(headers[i].getValue());
+                for (Header header : headers) {
+                    if (header.getName().equals("Content-Length"))
+                        len = Integer.valueOf(header.getValue());
                 }
                 image.setImageBitmap(BitmapFactory.decodeByteArray(responseBody, 0, len));
             }

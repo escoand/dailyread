@@ -44,7 +44,7 @@
                 android:id="@+id/itemAuthor"
                 style="@style/Card.Text"
                 android:layout_marginBottom="16dp"
-                android:gravity="right" />
+                android:gravity="end" />
 
         </LinearLayout>
 

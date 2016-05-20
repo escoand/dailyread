@@ -32,11 +32,11 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import java.util.HashSet;
 
 public class CalendarDialogFragment extends DialogFragment implements com.prolificinteractive.materialcalendarview.OnDateSelectedListener {
-    OnDateSelectedListener listener;
+    private final HashSet<Integer> datesAvailable = new HashSet<>();
+    private final HashSet<Integer> datesRead = new HashSet<>();
+    private OnDateSelectedListener listener;
 
-    HashSet<Integer> datesAvailable = new HashSet<>();
-    HashSet<Integer> datesRead = new HashSet<>();
-
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 

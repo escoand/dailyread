@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--suppress AndroidDomInspection, AndroidDomInspection -->
             <android.support.percent.PercentFrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -66,7 +67,7 @@
                     style="@style/Widget.AppCompat.ActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
+                    android:layout_gravity="start|center_vertical"
                     android:background="@android:color/transparent"
                     android:text="@string/button_remove" />
 
@@ -75,7 +76,7 @@
                     style="@style/Widget.AppCompat.ActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
+                    android:layout_gravity="end|center_vertical"
                     android:background="@android:color/transparent" />
 
             </FrameLayout>
@@ -90,7 +91,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:translationZ="99dp"
         android:visibility="gone" />
 
 </FrameLayout>

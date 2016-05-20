@@ -39,9 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Database extends SQLiteOpenHelper {
-    public static final String TABLE_TEXTS = "texts";
-    public static final String TABLE_SETS = "sets";
-    public static final String TABLE_TYPES = "types";
     public static final String COLUMN_SUBSCRIPTION = "subscription";
     public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_DATE = "date";
@@ -59,6 +56,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String TYPE_DAY = "votd";
     public static final String TYPE_EXEGESIS = "exeg";
     public static final String TYPE_INTRO = "intr";
+    private static final String TABLE_TEXTS = "texts";
+    private static final String TABLE_SETS = "sets";
+    private static final String TABLE_TYPES = "types";
     private static final String DATABASE_NAME = "data";
     private static final int DATABASE_VERSION = 1;
     private static final int PRIORITY_YEAR = 50;
@@ -239,7 +239,7 @@ public class Database extends SQLiteOpenHelper {
             ContentValues values_year = new ContentValues();
             ContentValues values_intro = new ContentValues();
             String name = "";
-            int date = 0;
+            int date;
 
             // subscription
             values_day.put(COLUMN_NAME, subscription);

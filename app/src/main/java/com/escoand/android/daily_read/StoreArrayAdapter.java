@@ -25,10 +25,10 @@ import android.widget.ArrayAdapter;
 import com.anjlab.android.iab.v3.BillingProcessor;
 
 public class StoreArrayAdapter extends ArrayAdapter<StoreListItem> {
-    private Activity activity;
-    private BillingProcessor billing;
+    private final Activity activity;
+    private final BillingProcessor billing;
 
-    public StoreArrayAdapter(Activity activity, BillingProcessor billing, BillingProcessor.IBillingHandler handler) {
+    public StoreArrayAdapter(Activity activity, BillingProcessor billing) {
         super(activity, R.layout.item_store);
         this.activity = activity;
         this.billing = billing;
