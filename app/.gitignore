@@ -1,4 +1,4 @@
 *.log
-/app/src/ls
-/app/src/tmg/
 /build
+src/ls
+src/tmg/
