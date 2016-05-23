@@ -1,6 +1,5 @@
 *.iml
 .gradle
-branding*
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
