@@ -27,10 +27,11 @@
     <string name="navigation_settings">Einstellungen</string>
     <string name="navigation_about">Über</string>
 
-    <string name="type_voty">Jahreslosung</string>
-    <string name="type_votm">Monatslosung</string>
-    <string name="type_votw">Wochenlosung</string>
-    <string name="type_votd">Tagestext</string>
+    <string name="about_version">Version</string>
+    <string name="about_copyright">Copyright (c) 2016 escoand</string>
+    <string name="about_recommend">Weiterempfehlen</string>
+    <string name="about_tickets">Fehler oder Verbesserungswünsche melden</string>
+    <string name="about_license">Lizenzen</string>
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
@@ -39,6 +40,15 @@
     <string name="button_purchase">Kaufen</string>
     <string name="button_remove">Entfernen</string>
 
+    <string name="type_voty">Jahreslosung</string>
+    <string name="type_votm">Monatslosung</string>
+    <string name="type_votw">Wochenlosung</string>
+    <string name="type_votd">Tagestext</string>
+
     <string name="message_nodata">Es konnte kein Text für dieses Datum gefunden werden.\nIm Store gibt es eventuell Texte dafür.</string>
+    <string name="message_recommend_subject">App-Empfehlung für dich</string>
+    <string name="message_recommend">Ich möchte dir die folgende App empfehlen.\nProbier sie doch mal aus.\nhttps://play.google.com/store/apps/details?id=</string>
+
+    <string name="url_tickets">https://github.com/escoand/dailyread/issues</string>
 
 </resources>
