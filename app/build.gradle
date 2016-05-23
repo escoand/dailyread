@@ -22,7 +22,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.escoand.android.daily_read"
+        applicationId "com.escoand.android.readdaily"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 201580
@@ -30,8 +30,16 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        tmg {
+            applicationId "com.escoand.android.readdaily.tmg"
+        }
+        ls {
+            applicationId "com.escoand.android.readdaily.ls"
         }
     }
 }

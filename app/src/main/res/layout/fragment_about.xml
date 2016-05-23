@@ -33,7 +33,7 @@
 
             <ImageView
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/branding_launcher"
+                android:src="@mipmap/ic_launcher"
                 app:layout_aspectRatio="178%"
                 app:layout_widthPercent="100%" />
 
