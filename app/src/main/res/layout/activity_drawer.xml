@@ -30,7 +30,8 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            style="@style/Toolbar.AppCompat" />
+            style="@style/Toolbar.AppCompat"
+            app:navigationIcon="@drawable/toolbar_menu" />
 
         <FrameLayout
             android:id="@+id/content"
