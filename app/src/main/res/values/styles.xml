@@ -98,6 +98,10 @@
         <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
+    <style name="Text.About.Action">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="Text.About.More">
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">16dp</item>
