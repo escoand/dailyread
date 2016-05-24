@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -410,7 +410,6 @@ public class Database extends SQLiteOpenHelper {
             db.endTransaction();
             db.close();
         }
-
         return result;
     }
 
@@ -429,7 +428,6 @@ public class Database extends SQLiteOpenHelper {
                 result = true;
         }
         c.close();
-
         return result;
     }
 
@@ -443,7 +441,16 @@ public class Database extends SQLiteOpenHelper {
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
         if (c != null)
             c.moveToFirst();
+        return c;
+    }
 
+    public Cursor getCalendar() {
+        Cursor c = getReadableDatabase().query(
+                TABLE_TEXTS,
+                new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
+                null, null, null, null, null);
+        if (c != null)
+            c.moveToFirst();
         return c;
     }
 
@@ -457,7 +464,6 @@ public class Database extends SQLiteOpenHelper {
                 COLUMN_SOURCE);
         if (c != null)
             c.moveToFirst();
-
         return c;
     }
 

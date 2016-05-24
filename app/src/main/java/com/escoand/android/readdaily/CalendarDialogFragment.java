@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         // read dates
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
-        Cursor cursor = new Database(getContext()).getList();
+        Cursor cursor = new Database(getContext()).getCalendar();
         while (cursor.moveToNext()) {
 
             // available
@@ -68,8 +68,10 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         }
 
         // min and max
-        cal.setMinimumDate(Database.getDateFromInt(min));
-        cal.setMaximumDate(Database.getDateFromInt(max));
+        if (min != Integer.MAX_VALUE)
+            cal.setMinimumDate(Database.getDateFromInt(min));
+        if (max != Integer.MIN_VALUE)
+            cal.setMaximumDate(Database.getDateFromInt(max));
 
         // dialog
         return new AlertDialog.Builder(getContext())
