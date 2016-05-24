@@ -24,11 +24,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
+import android.view.View;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import java.util.Date;
 
-public class ListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
+public class ListDialogFragment extends DialogFragment implements SimpleCursorAdapter.ViewBinder, DialogInterface.OnClickListener {
     private OnDateSelectedListener listener;
     private SimpleCursorAdapter adapter;
 
@@ -44,6 +47,7 @@ public class ListDialogFragment extends DialogFragment implements DialogInterfac
                 new String[]{Database.COLUMN_SOURCE, Database.COLUMN_DATE},
                 new int[]{R.id.listTitle, R.id.listDate},
                 0);
+        adapter.setViewBinder(this);
 
         // dialog
         return new AlertDialog.Builder(getContext())
@@ -51,6 +55,16 @@ public class ListDialogFragment extends DialogFragment implements DialogInterfac
                 .setAdapter(adapter, this)
                 .setNegativeButton(R.string.button_cancel, null)
                 .create();
+    }
+
+    @Override
+    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_DATE)) {
+            ((TextView) view).setText(DateFormat.getMediumDateFormat(
+                    getContext()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
+            return true;
+        }
+        return false;
     }
 
     @Override

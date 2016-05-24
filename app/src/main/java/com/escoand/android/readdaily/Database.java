@@ -451,7 +451,7 @@ public class Database extends SQLiteOpenHelper {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS,
                 new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
-                COLUMN_TYPE + "!=?",
+                COLUMN_TYPE + "!=? AND " + COLUMN_SOURCE + "!=''",
                 new String[]{TYPE_EXEGESIS},
                 null, null,
                 COLUMN_SOURCE);
