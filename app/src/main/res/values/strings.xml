@@ -28,7 +28,7 @@
     <string name="navigation_about">Über</string>
 
     <string name="about_version">Version %s</string>
-    <string name="about_copyright">Copyright (c) 2016 escoand</string>
+    <string name="about_copyright">Copyright © 2016 escoand</string>
     <string name="about_recommend">Weiterempfehlen</string>
     <string name="about_tickets">Fehler oder Verbesserungswünsche melden</string>
     <string name="about_libraries">Lizenzen</string>

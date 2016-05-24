@@ -19,24 +19,27 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <android.support.percent.PercentFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!--suppress AndroidDomInspection -->
             <ImageView
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/img_about"
                 app:layout_aspectRatio="178%"
-                app:layout_widthPercent="100%" />
+                app:layout_widthPercent="100%"
+                tools:ignore="ContentDescription" />
 
         </android.support.percent.PercentFrameLayout>
 
@@ -57,7 +60,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/divider_list" />
+            android:src="@drawable/divider_list"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_version"
@@ -68,7 +72,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/divider_list" />
+            android:src="@drawable/divider_list"
+            tools:ignore="ContentDescription" />
 
         <TextView
             style="@style/Text.About"
@@ -79,7 +84,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/divider_list" />
+            android:src="@drawable/divider_list"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_recommend"
@@ -91,7 +97,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/divider_list" />
+            android:src="@drawable/divider_list"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_tickets"
@@ -103,7 +110,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/divider_list" />
+            android:src="@drawable/divider_list"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_libraries"
