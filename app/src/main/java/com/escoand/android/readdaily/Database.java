@@ -436,7 +436,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getDay(Date date) {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
-                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE},
+                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ},
                 COLUMN_DATE + "=?",
                 new String[]{String.valueOf(getIntFromDate(date))},
                 null, null,
@@ -459,6 +459,12 @@ public class Database extends SQLiteOpenHelper {
             c.moveToFirst();
 
         return c;
+    }
+
+    public int markAsRead(Date date) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_READ, true);
+        return getWritableDatabase().update(TABLE_TEXTS, values, COLUMN_DATE + "=?", new String[]{String.valueOf(getIntFromDate(date))});
     }
 
     public void removeData(String subscription) {
