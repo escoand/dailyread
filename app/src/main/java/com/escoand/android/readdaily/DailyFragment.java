@@ -41,7 +41,7 @@ public class DailyFragment extends Fragment implements
         View.OnClickListener {
     private static final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     private static final int[] to = new int[]{R.id.itemTitle, R.id.itemText, R.id.itemAuthor};
-    private static SimpleCursorAdapter listAdapter;
+    private static SimpleCursorAdapter adapter;
     private static Database db;
     private Date date = new Date();
     private FloatingActionButton floating_note;
@@ -56,12 +56,12 @@ public class DailyFragment extends Fragment implements
 
         db = new Database(getContext());
 
-        listAdapter = new SimpleCursorAdapter(getContext(), R.layout.item_daily, null, from, to, 0);
-        listAdapter.setViewBinder(this);
+        adapter = new SimpleCursorAdapter(getContext(), R.layout.item_daily, null, from, to, 0);
+        adapter.setViewBinder(this);
 
         ListView list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
-        list.setAdapter(listAdapter);
+        list.setAdapter(adapter);
         list.setOnItemClickListener(this);
 
         v.findViewById(R.id.buttonStore).setOnClickListener(new View.OnClickListener() {
@@ -129,7 +129,7 @@ public class DailyFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        Cursor c = listAdapter.getCursor();
+        Cursor c = adapter.getCursor();
         Intent i = new Intent();
         switch (v.getId()) {
             case R.id.floating_note:
@@ -165,11 +165,11 @@ public class DailyFragment extends Fragment implements
     }
 
     private void refresh() {
-        if (listAdapter == null || db == null)
+        if (adapter == null || db == null || floating_read == null)
             return;
 
         Cursor c = db.getDay(date);
-        listAdapter.changeCursor(c);
+        adapter.changeCursor(c);
         if (c.getCount() > 0) {
             floating_read.setVisibility(View.VISIBLE);
             if (c.getInt(c.getColumnIndex(Database.COLUMN_READ)) != 0)
