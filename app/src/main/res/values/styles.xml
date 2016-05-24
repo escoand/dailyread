@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (C) 2016  escoand
+  ~ Copyright (c) 2016 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -19,23 +19,19 @@
 
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.AppCompat" parent="AppTheme" />
-
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="subtitleTextColor">@android:color/secondary_text_dark</item>
         <item name="titleTextColor">@android:color/primary_text_dark</item>
     </style>
-
-    <style name="Toolbar.AppCompat" parent="Toolbar" />
 
     <!-- cardview -->
     <style name="Card.Wrapper">
