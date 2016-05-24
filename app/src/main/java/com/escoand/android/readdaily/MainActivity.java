@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ft.remove(prev);
             ft.addToBackStack(null);
             dialog.show(fm, "dialog");
+            ft.commit();
         }
         layout.closeDrawers();
         return false;

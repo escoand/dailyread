@@ -17,6 +17,7 @@
 
 package com.escoand.android.readdaily;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -68,6 +69,7 @@ public class Database extends SQLiteOpenHelper {
     private static final int PRIORITY_EXEGESIS = 10;
     private static final int PRIORITY_INTRO = 25;
 
+    @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     public Database(Context context) {
@@ -131,21 +133,6 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO
-    }
-
-    private Cursor getStatistics() {
-        Cursor c = getReadableDatabase().query(TABLE_TEXTS,
-                new String[]{"rowid _id",
-                        COLUMN_SUBSCRIPTION + " " + COLUMN_TEXT,
-                        COLUMN_TYPE,
-                        "count(*) " + COLUMN_SOURCE,
-                        "'' " + COLUMN_TITLE},
-                null, null,
-                COLUMN_SUBSCRIPTION + "," + COLUMN_TYPE,
-                null, null);
-        if (c != null)
-            c.moveToFirst();
-        return c;
     }
 
     public boolean loadDataCSV(String subscription, int revision, File file) throws IOException {
@@ -426,8 +413,8 @@ public class Database extends SQLiteOpenHelper {
             c.moveToFirst();
             if (c.getInt(0) > 0)
                 result = true;
+            c.close();
         }
-        c.close();
         return result;
     }
 

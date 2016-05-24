@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
         v.addView(getLayoutInflater().inflate(R.layout.fragment_about, null));
 
-        ((TextView) v.findViewById(R.id.about_version)).setText(getString(R.string.about_version) + " " + BuildConfig.VERSION_NAME);
+        ((TextView) v.findViewById(R.id.about_version)).setText(
+                String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
         v.findViewById(R.id.about_recommend).setOnClickListener(this);
         v.findViewById(R.id.about_tickets).setOnClickListener(this);
 
