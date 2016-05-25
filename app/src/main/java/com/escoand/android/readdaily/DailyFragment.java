@@ -131,7 +131,7 @@ public class DailyFragment extends Fragment implements
         // select
         else {
             selected = view.findViewById(R.id.daily_card);
-            selected.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            selected.setBackgroundColor(getResources().getColor(R.color.colorAccentLight));
             floating_note.setVisibility(View.VISIBLE);
             floating_share.setVisibility(View.VISIBLE);
         }
