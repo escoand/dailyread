@@ -19,10 +19,17 @@ package com.escoand.android.readdaily;
 
 import android.app.Dialog;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -35,48 +42,36 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
     private final HashSet<Integer> datesAvailable = new HashSet<>();
     private final HashSet<Integer> datesRead = new HashSet<>();
     private OnDateSelectedListener listener;
+    private ProgressBar progress;
+    private MaterialCalendarView cal;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        FrameLayout v = new FrameLayout(getContext());
+        progress = new ProgressBar(new ContextThemeWrapper(getContext(), R.style.Progress_Circular));
+        cal = new MaterialCalendarView(getContext());
 
-        // calendar
-        MaterialCalendarView cal = new MaterialCalendarView(getContext());
+        v.addView(progress);
+        v.addView(cal);
+
+        progress.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER));
+
+        cal.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         cal.addDecorator(new AvailableDecorator());
         cal.addDecorator(new ReadDecorator());
         cal.setOnDateChangedListener(this);
 
-        // read dates
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        Cursor cursor = new Database(getContext()).getCalendar();
-        while (cursor.moveToNext()) {
+        new DataLoader().execute();
 
-            // available
-            int date = cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE));
-            datesAvailable.add(date);
-
-            // read
-            if (cursor.getInt(cursor.getColumnIndex(Database.COLUMN_READ)) != 0)
-                datesRead.add(date);
-
-            // min and max
-            if (date < min)
-                min = date;
-            if (date > max)
-                max = date;
-        }
-
-        // min and max
-        if (min != Integer.MAX_VALUE)
-            cal.setMinimumDate(Database.getDateFromInt(min));
-        if (max != Integer.MIN_VALUE)
-            cal.setMaximumDate(Database.getDateFromInt(max));
-
-        // dialog
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.navigation_calendar)
-                .setView(cal)
+                .setView(v)
                 .setNegativeButton(R.string.button_cancel, null)
                 .create();
     }
@@ -113,6 +108,44 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         @Override
         public void decorate(DayViewFacade view) {
             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.calendar_read));
+        }
+    }
+
+    private class DataLoader extends AsyncTask<Void, Void, Integer[]> {
+        @Override
+        protected void onPreExecute() {
+            progress.setVisibility(View.VISIBLE);
+            cal.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected Integer[] doInBackground(Void... params) {
+            int date;
+            int min = Integer.MAX_VALUE;
+            int max = Integer.MIN_VALUE;
+            Cursor cursor = new Database(getContext()).getCalendar();
+            while (cursor.moveToNext()) {
+                date = cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE));
+                datesAvailable.add(date);
+                if (cursor.getInt(cursor.getColumnIndex(Database.COLUMN_READ)) != 0)
+                    datesRead.add(date);
+                if (date < min)
+                    min = date;
+                if (date > max)
+                    max = date;
+            }
+            cursor.close();
+            return new Integer[]{min, max};
+        }
+
+        @Override
+        protected void onPostExecute(Integer[] integers) {
+            if (integers[0] != Integer.MAX_VALUE)
+                cal.setMinimumDate(Database.getDateFromInt(integers[0]));
+            if (integers[1] != Integer.MIN_VALUE)
+                cal.setMaximumDate(Database.getDateFromInt(integers[1]));
+            cal.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
         }
     }
 }
