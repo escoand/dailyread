@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ package com.escoand.android.readdaily;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -40,7 +41,7 @@ public class DailyFragment extends Fragment implements
         AdapterView.OnItemClickListener,
         View.OnClickListener {
     private static final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
-    private static final int[] to = new int[]{R.id.itemTitle, R.id.itemText, R.id.itemAuthor};
+    private static final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private static SimpleCursorAdapter adapter;
     private static Database db;
     private Date date = new Date();
@@ -54,16 +55,16 @@ public class DailyFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, null);
 
+        // data
         db = new Database(getContext());
-
         adapter = new SimpleCursorAdapter(getContext(), R.layout.item_daily, null, from, to, 0);
         adapter.setViewBinder(this);
 
+        // list
         ListView list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
-
         v.findViewById(R.id.buttonStore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,9 +87,14 @@ public class DailyFragment extends Fragment implements
 
     @Override
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-        Log.e("setViewValue", String.valueOf(columnIndex) + "/" + cursor.getColumnCount());
-        Log.e("setViewValue", view.toString());
-        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE) && view instanceof TextView)
+        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE)) {
+            View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
+            View button = ((ViewGroup) view.getParent()).findViewById(R.id.daily_button);
+
+            source.setVisibility(View.VISIBLE);
+            button.setVisibility(View.GONE);
+            button.setOnClickListener(this);
+
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
                 case Database.TYPE_YEAR:
                     ((TextView) view).setText(getContext().getString(R.string.type_voty));
@@ -101,8 +107,12 @@ public class DailyFragment extends Fragment implements
                     return true;
                 case Database.TYPE_DAY:
                     ((TextView) view).setText(getContext().getString(R.string.type_votd));
+                    source.setVisibility(View.GONE);
+                    button.setVisibility(View.VISIBLE);
                     return true;
             }
+        }
+
         return false;
     }
 
@@ -129,30 +139,38 @@ public class DailyFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
+        // TODO cursor not current view
         Cursor c = adapter.getCursor();
         Intent i = new Intent();
         switch (v.getId()) {
+            case R.id.daily_button:
+                // TODO fix url
+                String url = URLEncoder.encode(getString(R.string.url_bible) +
+                        ((TextView) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.daily_text)).getText());
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                break;
             case R.id.floating_note:
                 i.setAction("com.evernote.action.CREATE_NEW_NOTE");
-                // TODO
                 i.putExtra(Intent.EXTRA_TITLE, "");
                 i.putExtra(Intent.EXTRA_TEXT, "");
                 i.putExtra("TAG_NAME_LIST", new ArrayList<String>());
                 i.putExtra("AUTHOR", "");
                 i.putExtra("SOURCE_URL", "");
                 i.putExtra("SOURCE_APP", "");
-                startActivity(i);
                 break;
             case R.id.floating_share:
                 i.setAction(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, c.getString(c.getColumnIndex(Database.COLUMN_TEXT)));
-                startActivity(i);
                 break;
             case R.id.floating_read:
                 db.markAsRead(date);
                 floating_read.setImageResource(R.drawable.floating_read);
                 break;
         }
+        // TODO check intent-ed application
+        if (i.getAction() != null)
+            startActivity(i);
     }
 
     public Date getDate() {

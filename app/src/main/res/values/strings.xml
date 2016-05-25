@@ -39,6 +39,7 @@
     <string name="button_download">Laden</string>
     <string name="button_purchase">Kaufen</string>
     <string name="button_remove">Entfernen</string>
+    <string name="button_bible">Bibel lesen</string>
 
     <string name="type_voty">Jahreslosung</string>
     <string name="type_votm">Monatslosung</string>
@@ -49,6 +50,7 @@
     <string name="message_recommend_subject">App-Empfehlung für dich</string>
     <string name="message_recommend">Ich möchte dir die folgende App empfehlen.\nProbier sie doch mal aus.\nhttps://play.google.com/store/apps/details?id=</string>
 
+    <string name="url_bible">http://www.bibleserver.com/text/LUT/</string>
     <string name="url_tickets">https://github.com/escoand/dailyread/issues</string>
 
 </resources>
