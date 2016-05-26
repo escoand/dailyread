@@ -36,7 +36,9 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 
 public class CalendarDialogFragment extends DialogFragment implements com.prolificinteractive.materialcalendarview.OnDateSelectedListener {
     private final HashSet<Integer> datesAvailable = new HashSet<>();
@@ -121,29 +123,27 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         @Override
         protected Integer[] doInBackground(Void... params) {
             int date;
-            int min = Integer.MAX_VALUE;
-            int max = Integer.MIN_VALUE;
             Cursor cursor = new Database(getContext()).getCalendar();
             while (cursor.moveToNext()) {
                 date = cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE));
                 datesAvailable.add(date);
                 if (cursor.getInt(cursor.getColumnIndex(Database.COLUMN_READ)) != 0)
                     datesRead.add(date);
-                if (date < min)
-                    min = date;
-                if (date > max)
-                    max = date;
             }
             cursor.close();
-            return new Integer[]{min, max};
+            try {
+                return new Integer[]{Collections.min(datesAvailable), Collections.max(datesAvailable)};
+            } catch (NoSuchElementException e) {
+                return new Integer[]{};
+            }
         }
 
         @Override
         protected void onPostExecute(Integer[] integers) {
-            if (integers[0] != Integer.MAX_VALUE)
+            if (integers.length >= 2) {
                 cal.setMinimumDate(Database.getDateFromInt(integers[0]));
-            if (integers[1] != Integer.MIN_VALUE)
                 cal.setMaximumDate(Database.getDateFromInt(integers[1]));
+            }
             cal.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
         }

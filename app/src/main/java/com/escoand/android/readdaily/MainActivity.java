@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -76,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        FragmentManager fm = getSupportFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
         DialogFragment dialog = null;
 
         switch (item.getItemId()) {
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // today
             case R.id.navigation_today:
                 onDateSelected(new Date());
-                break;
+                return true;
 
             // calendar
             case R.id.navigation_calendar:
@@ -110,15 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        if (dialog != null) {
-            Fragment prev = fm.findFragmentByTag("dialog");
-            if (prev != null)
-                ft.remove(prev);
-            ft.addToBackStack(null);
-            dialog.show(fm, "dialog");
-            ft.commit();
-        }
+        if (dialog != null)
+            dialog.show(getSupportFragmentManager(), "dialog");
+
         layout.closeDrawers();
+
         return false;
     }
 
