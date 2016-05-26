@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,8 +44,8 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
                 getContext(),
                 R.layout.item_list,
                 new Database(getContext()).getList(),
-                new String[]{Database.COLUMN_SOURCE, Database.COLUMN_DATE},
-                new int[]{R.id.listTitle, R.id.listDate},
+                new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE},
+                new int[]{R.id.list_image, R.id.list_title, R.id.list_date},
                 0);
         adapter.setViewBinder(this);
 
@@ -59,7 +59,13 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
 
     @Override
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_DATE)) {
+        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_READ)) {
+            if (cursor.getInt(cursor.getColumnIndex(Database.COLUMN_READ)) != 0)
+                view.setVisibility(View.VISIBLE);
+            else
+                view.setVisibility(View.INVISIBLE);
+            return true;
+        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_DATE)) {
             ((TextView) view).setText(DateFormat.getMediumDateFormat(
                     getContext()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
             return true;
