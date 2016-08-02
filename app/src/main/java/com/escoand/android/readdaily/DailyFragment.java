@@ -192,14 +192,17 @@ public class DailyFragment extends Fragment implements
     }
 
     private void refreshButtons(boolean show) {
+        Cursor c = adapter.getCursor();
         if (show) {
             floating_note.show();
             floating_share.show();
             floating_read.show();
-            floating_bible.show();
+            if (c != null && c.getCount() > 0 && c.getInt(c.getColumnIndex(Database.COLUMN_HASONLINE)) != 0)
+                floating_bible.show();
+            else
+                floating_bible.hide();
             floating_readall.hide();
         } else {
-            Cursor c = adapter.getCursor();
             floating_note.hide();
             floating_share.hide();
             floating_read.hide();

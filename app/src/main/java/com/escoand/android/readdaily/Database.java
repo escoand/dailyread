@@ -51,6 +51,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_REVISION = "revision";
     public static final String COLUMN_PRIORITY = "priority";
+    public static final String COLUMN_HASONLINE = "hasonline";
     public static final String TYPE_YEAR = "voty";
     public static final String TYPE_MONTH = "votm";
     public static final String TYPE_WEEK = "votw";
@@ -421,7 +422,8 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getDay(Date date) {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
-                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ},
+                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ,
+                        "(CASE WHEN " + COLUMN_PRIORITY + " IN (" + PRIORITY_INTRO + "," + PRIORITY_EXEGESIS + ") THEN 0 ELSE 1 END) " + COLUMN_HASONLINE},
                 COLUMN_DATE + "=?",
                 new String[]{String.valueOf(getIntFromDate(date))},
                 null, null,
