@@ -29,6 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:orientation="vertical">
 
             <TextView
@@ -43,23 +44,6 @@
                 android:id="@+id/daily_source"
                 style="@style/Card.Text"
                 android:gravity="end" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="end"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/daily_button"
-                    style="@style/Widget.AppCompat.Light.ActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/button_bible"
-                    android:textColor="@color/colorAccent" />
-
-            </LinearLayout>
 
         </LinearLayout>
 

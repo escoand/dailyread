@@ -33,14 +33,28 @@
         <item name="titleTextColor">@android:color/primary_text_dark</item>
     </style>
 
+    <!-- floating action button -->
+    <style name="FloatingActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">@android:color/white</item>
+        <item name="android:visibility">gone</item>
+        <item name="fabSize">normal</item>
+        <item name="useCompatPadding">true</item>
+    </style>
+
+    <style name="FloatingActionButton.Mini">
+        <item name="android:tint">@android:color/black</item>
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="fabSize">mini</item>
+    </style>
+
     <!-- cardview -->
     <style name="Card.Wrapper">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="Card" parent="CardView.Light">
@@ -51,8 +65,6 @@
     <style name="Card.Text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:layout_marginRight">16dp</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -60,9 +72,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:layout_marginRight">16dp</item>
-        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:textSize">24sp</item>
     </style>
 

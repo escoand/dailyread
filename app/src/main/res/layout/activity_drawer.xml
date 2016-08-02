@@ -19,7 +19,6 @@
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -34,61 +33,99 @@
             style="@style/Toolbar"
             app:navigationIcon="@drawable/toolbar_menu" />
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:elevation="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_above="@id/bottom_sheet"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"></FrameLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|bottom"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="12dp"
+                android:layout_above="@id/bottom_sheet"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:ignore="RtlHardcoded">
+                android:orientation="vertical">
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/floating_note"
-                    style="@style/Widget.Design.FloatingActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:src="@drawable/floating_note"
-                    android:visibility="gone"
-                    app:backgroundTint="@android:color/white"
-                    app:fabSize="mini" />
+                    style="@style/FloatingActionButton.Mini"
+                    android:src="@drawable/floating_note" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/floating_share"
-                    style="@style/Widget.Design.FloatingActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:src="@drawable/floating_share"
-                    android:visibility="gone"
-                    app:backgroundTint="@android:color/white"
-                    app:fabSize="mini"
-                    app:useCompatPadding="true" />
+                    style="@style/FloatingActionButton.Mini"
+                    android:src="@drawable/floating_share" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/floating_read"
-                    style="@style/Widget.Design.FloatingActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:src="@drawable/floating_unread"
-                    android:visibility="gone"
-                    app:fabSize="normal" />
+                    style="@style/FloatingActionButton.Mini"
+                    android:src="@drawable/floating_read" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floating_bible"
+                    style="@style/FloatingActionButton"
+                    android:src="@drawable/floating_bible" />
 
             </LinearLayout>
 
-        </FrameLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/bottom_sheet"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floating_readall"
+                    style="@style/FloatingActionButton"
+                    android:src="@drawable/floating_readall" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

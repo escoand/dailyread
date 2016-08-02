@@ -48,6 +48,8 @@ public class DailyFragment extends Fragment implements
     private FloatingActionButton floating_note;
     private FloatingActionButton floating_share;
     private FloatingActionButton floating_read;
+    private FloatingActionButton floating_bible;
+    private FloatingActionButton floating_readall;
 
     private View selected = null;
 
@@ -76,9 +78,13 @@ public class DailyFragment extends Fragment implements
         floating_note = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_note);
         floating_share = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_share);
         floating_read = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_read);
+        floating_bible = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_bible);
+        floating_readall = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_readall);
         floating_note.setOnClickListener(this);
         floating_share.setOnClickListener(this);
         floating_read.setOnClickListener(this);
+        floating_bible.setOnClickListener(this);
+        floating_readall.setOnClickListener(this);
 
         refresh();
 
@@ -89,11 +95,8 @@ public class DailyFragment extends Fragment implements
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
         if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE)) {
             View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
-            View button = ((ViewGroup) view.getParent()).findViewById(R.id.daily_button);
 
             source.setVisibility(View.VISIBLE);
-            button.setVisibility(View.GONE);
-            button.setOnClickListener(this);
 
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
                 case Database.TYPE_YEAR:
@@ -108,7 +111,6 @@ public class DailyFragment extends Fragment implements
                 case Database.TYPE_DAY:
                     ((TextView) view).setText(getContext().getString(R.string.type_votd));
                     source.setVisibility(View.GONE);
-                    button.setVisibility(View.VISIBLE);
                     return true;
             }
         }
@@ -123,17 +125,15 @@ public class DailyFragment extends Fragment implements
 
         // unselect
         if (selected != null && view == selected.getParent()) {
-            floating_note.setVisibility(View.GONE);
-            floating_share.setVisibility(View.GONE);
             selected = null;
+            refreshButtons(false);
         }
 
         // select
         else {
             selected = view.findViewById(R.id.daily_card);
             selected.setBackgroundColor(getResources().getColor(R.color.colorAccentLight));
-            floating_note.setVisibility(View.VISIBLE);
-            floating_share.setVisibility(View.VISIBLE);
+            refreshButtons(true);
         }
     }
 
@@ -143,13 +143,6 @@ public class DailyFragment extends Fragment implements
         Cursor c = adapter.getCursor();
         Intent i = new Intent();
         switch (v.getId()) {
-            case R.id.daily_button:
-                // TODO fix url
-                String url = URLEncoder.encode(getString(R.string.url_bible) +
-                        ((TextView) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.daily_text)).getText());
-                i.setAction(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                break;
             case R.id.floating_note:
                 i.setAction("com.evernote.action.CREATE_NEW_NOTE");
                 i.putExtra(Intent.EXTRA_TITLE, "");
@@ -163,9 +156,16 @@ public class DailyFragment extends Fragment implements
                 i.setAction(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, c.getString(c.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
-            case R.id.floating_read:
+            case R.id.floating_bible:
+                // TODO fix url
+                String url = URLEncoder.encode(getString(R.string.url_bible) +
+                        ((TextView) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.daily_text)).getText());
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                break;
+            case R.id.floating_readall:
                 db.markAsRead(date);
-                floating_read.setImageResource(R.drawable.floating_read);
+                setDate(getDate());
                 break;
         }
         // TODO check intent-ed application
@@ -183,18 +183,31 @@ public class DailyFragment extends Fragment implements
     }
 
     private void refresh() {
-        if (adapter == null || db == null || floating_read == null)
+        if (adapter == null || db == null || floating_readall == null)
             return;
 
         Cursor c = db.getDay(date);
         adapter.changeCursor(c);
-        if (c.getCount() > 0) {
-            floating_read.setVisibility(View.VISIBLE);
-            if (c.getInt(c.getColumnIndex(Database.COLUMN_READ)) != 0)
-                floating_read.setImageResource(R.drawable.floating_read);
+        refreshButtons(false);
+    }
+
+    private void refreshButtons(boolean show) {
+        if (show) {
+            floating_note.show();
+            floating_share.show();
+            floating_read.show();
+            floating_bible.show();
+            floating_readall.hide();
+        } else {
+            Cursor c = adapter.getCursor();
+            floating_note.hide();
+            floating_share.hide();
+            floating_read.hide();
+            floating_bible.hide();
+            if (c != null && c.getCount() > 0 && c.getInt(c.getColumnIndex(Database.COLUMN_READ)) == 0)
+                floating_readall.show();
             else
-                floating_read.setImageResource(R.drawable.floating_unread);
-        } else
-            floating_read.setVisibility(View.GONE);
+                floating_readall.hide();
+        }
     }
 }
