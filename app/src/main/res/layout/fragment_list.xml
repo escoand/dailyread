@@ -30,9 +30,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:clipToPadding="false"
         android:divider="@null"
-        android:listSelector="@android:color/transparent"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp" />
+        android:listSelector="@android:color/transparent" />
 
     <ProgressBar
         android:id="@+id/listLoading"

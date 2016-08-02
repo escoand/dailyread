@@ -30,7 +30,8 @@
 
         <android.support.percent.PercentFrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <!--suppress AndroidDomInspection -->
             <ImageView
@@ -45,79 +46,91 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/app_title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/app_subtitle"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/about_version"
             style="@style/Text.About"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_weight="1" />
 
         <TextView
             style="@style/Text.About"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_copyright" />
+            android:layout_height="0dp"
+            android:text="@string/about_copyright"
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/about_recommend"
             style="@style/Text.About.Action"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_recommend" />
+            android:layout_height="0dp"
+            android:text="@string/about_recommend"
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/about_tickets"
             style="@style/Text.About.Action"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_tickets" />
+            android:layout_height="0dp"
+            android:text="@string/about_tickets"
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/about_libraries"
             style="@style/Text.About"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
