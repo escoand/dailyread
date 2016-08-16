@@ -134,8 +134,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="@color/drawer_background"
         app:headerLayout="@layout/header_drawer"
+        app:itemIconTint="@color/drawer_icon"
+        app:itemTextColor="@color/drawer_text"
         app:menu="@menu/drawer" />
 
 </android.support.v4.widget.DrawerLayout>
