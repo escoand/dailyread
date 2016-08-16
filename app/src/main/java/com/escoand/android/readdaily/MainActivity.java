@@ -19,6 +19,7 @@ package com.escoand.android.readdaily;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -57,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // drawer
         ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(this);
+
+        // bottom sheet
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         // content
         FragmentManager fm = getSupportFragmentManager();
