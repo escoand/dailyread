@@ -19,9 +19,9 @@
 
 <resources>
 
-    <color name="colorPrimary">#4466aa</color>
-    <color name="colorPrimaryDark">#113366</color>
-    <color name="colorAccent">#aa2222</color>
+    <color name="background_toolbar">#4466aa</color>
+    <color name="background_systembar">#113366</color>
+    <color name="background_accent">#aa2222</color>
     <color name="colorAccentLight">#cc7777</color>
 
     <color name="drawer_background">@android:color/white</color>

@@ -20,13 +20,13 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/background_toolbar</item>
+        <item name="colorPrimaryDark">@color/background_systembar</item>
+        <item name="colorAccent">@color/background_accent</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/background_toolbar</item>
         <item name="subtitleTextColor">@android:color/secondary_text_dark</item>
         <item name="titleTextColor">@android:color/primary_text_dark</item>
     </style>
@@ -102,7 +102,7 @@
     </style>
 
     <style name="Text.About.Action">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/background_accent</item>
     </style>
 
     <style name="Text.About.More">
@@ -113,11 +113,11 @@
     </style>
 
     <style name="BottomButton.Image" parent="Widget.AppCompat.Light.ActionButton">
-        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:tint">@color/background_toolbar</item>
     </style>
 
     <style name="BottomButton.Text" parent="">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/background_toolbar</item>
     </style>
 
 </resources>
