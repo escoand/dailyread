@@ -37,7 +37,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
@@ -419,18 +422,31 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public Cursor getDay(Date date) {
+    public Cursor getDay(Date date, String condition, String[] values) {
+        String w = COLUMN_DATE + "=?";
+        String[] v = new String[]{String.valueOf(getIntFromDate(date))};
+
+        if (condition != null && !condition.isEmpty() && values != null && values.length > 0) {
+            w += " AND (" + condition + ")";
+            List<String> list = new ArrayList<String>(Arrays.asList(v));
+            list.addAll(Arrays.asList(values));
+            v = (String[]) list.toArray();
+        }
+
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
                 new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ,
                         "(CASE WHEN " + COLUMN_PRIORITY + " IN (" + PRIORITY_INTRO + "," + PRIORITY_EXEGESIS + ") THEN 0 ELSE 1 END) " + COLUMN_HASONLINE},
-                COLUMN_DATE + "=?",
-                new String[]{String.valueOf(getIntFromDate(date))},
+                w, v,
                 null, null,
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
         if (c != null)
             c.moveToFirst();
         return c;
+    }
+
+    public Cursor getDay(Date date) {
+        return getDay(date, null, null);
     }
 
     public Cursor getCalendar() {
