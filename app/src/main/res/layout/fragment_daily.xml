@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2016 escoand.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- floating action buttons -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_readall"
+        style="@style/FloatingActionButton"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/floating_readall" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_bible"
+        style="@style/FloatingActionButton"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/floating_bible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_read"
+        style="@style/FloatingActionButton.Mini"
+        android:layout_above="@id/floating_bible"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/floating_read" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_share"
+        style="@style/FloatingActionButton.Mini"
+        android:layout_above="@id/floating_read"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/floating_share" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_note"
+        style="@style/FloatingActionButton.Mini"
+        android:layout_above="@id/floating_share"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/floating_note" />
+
+    <!-- content -->
+    <ListView
+        android:id="@+id/listView"
+        style="@style/Widget.AppCompat.ListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:cacheColorHint="@android:color/transparent"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent" />
+
+    <!-- empty list -->
+    <LinearLayout
+        android:id="@+id/listNoData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/message_nodata"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:ignore="UnusedAttribute" />
+
+        <Button
+            android:id="@+id/buttonStore"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation_store" />
+
+    </LinearLayout>
+
+</RelativeLayout>

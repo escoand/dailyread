@@ -31,68 +31,20 @@
         <include layout="@layout/toolbar" />
 
         <!-- content -->
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/content.wrapper"
+        <fragment
+            android:id="@+id/content"
+            class="com.escoand.android.readdaily.DailyFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <FrameLayout
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </android.support.v4.widget.NestedScrollView>
-
-        <!-- floating action buttons -->
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_readall"
-            style="@style/FloatingActionButton"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right|end"
-            android:src="@drawable/floating_readall"
-            app:layout_anchor="@id/content.wrapper"
-            app:layout_anchorGravity="bottom|right|end" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_bible"
-            style="@style/FloatingActionButton"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right|end"
-            android:src="@drawable/floating_bible"
-            app:layout_anchor="@id/content.wrapper"
-            app:layout_anchorGravity="bottom|right|end" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_read"
-            style="@style/FloatingActionButton.Mini"
-            android:layout_gravity="top|center_horizontal"
-            android:src="@drawable/floating_read"
-            app:layout_anchor="@id/floating_bible"
-            app:layout_anchorGravity="top|center_horizontal" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_share"
-            style="@style/FloatingActionButton.Mini"
-            android:layout_gravity="top|center_horizontal"
-            android:src="@drawable/floating_share"
-            app:layout_anchor="@id/floating_read"
-            app:layout_anchorGravity="top|center_horizontal" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_note"
-            style="@style/FloatingActionButton.Mini"
-            android:layout_gravity="top|center_horizontal"
-            android:src="@drawable/floating_note"
-            app:layout_anchor="@id/floating_share"
-            app:layout_anchorGravity="top|center_horizontal" />
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <!-- bottom buttons -->
         <FrameLayout
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:behavior_hideable="false"
+            android:background="@color/bottom_buttons_background"
             app:layout_behavior="@string/bottom_sheet_behavior">
 
             <include

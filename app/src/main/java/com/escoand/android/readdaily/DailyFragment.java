@@ -50,12 +50,13 @@ public class DailyFragment extends Fragment implements
     private FloatingActionButton floating_read;
     private FloatingActionButton floating_bible;
     private FloatingActionButton floating_readall;
+    private TitleInterface titleInterface;
 
     private View selected = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_list, null);
+        View v = inflater.inflate(R.layout.fragment_daily, null);
 
         // data
         db = new Database(getContext());
@@ -75,11 +76,11 @@ public class DailyFragment extends Fragment implements
         });
 
         // floating buttons
-        floating_note = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_note);
-        floating_share = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_share);
-        floating_read = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_read);
-        floating_bible = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_bible);
-        floating_readall = (FloatingActionButton) container.getRootView().findViewById(R.id.floating_readall);
+        floating_note = (FloatingActionButton) v.findViewById(R.id.floating_note);
+        floating_share = (FloatingActionButton) v.findViewById(R.id.floating_share);
+        floating_read = (FloatingActionButton) v.findViewById(R.id.floating_read);
+        floating_bible = (FloatingActionButton) v.findViewById(R.id.floating_bible);
+        floating_readall = (FloatingActionButton) v.findViewById(R.id.floating_readall);
         floating_note.setOnClickListener(this);
         floating_share.setOnClickListener(this);
         floating_read.setOnClickListener(this);
@@ -132,7 +133,7 @@ public class DailyFragment extends Fragment implements
         // select
         else {
             selected = view.findViewById(R.id.daily_card);
-            selected.setBackgroundColor(getResources().getColor(R.color.colorAccentLight));
+            selected.setBackgroundColor(getResources().getColor(R.color.accent_light));
             refreshButtons(true);
         }
     }
@@ -189,6 +190,19 @@ public class DailyFragment extends Fragment implements
         Cursor c = db.getDay(date);
         adapter.changeCursor(c);
         refreshButtons(false);
+
+        String title = null;
+        String subtitle = null;
+        if (titleInterface != null && c.getCount() > 0) {
+            while (c.moveToNext()) {
+                if (c.getString(c.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS))
+                    title = c.getString(c.getColumnIndex(Database.COLUMN_TITLE));
+                else if (c.getString(c.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
+                    subtitle = c.getString(c.getColumnIndex(Database.COLUMN_TEXT));
+            }
+        }
+        if (titleInterface != null)
+            titleInterface.setTitles(title, subtitle);
     }
 
     private void refreshButtons(boolean show) {
@@ -212,5 +226,9 @@ public class DailyFragment extends Fragment implements
             else
                 floating_readall.hide();
         }
+    }
+
+    public void setTitleInterface(TitleInterface titleInterface) {
+        this.titleInterface = titleInterface;
     }
 }

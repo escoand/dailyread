@@ -23,7 +23,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -31,10 +30,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener, TitleInterface {
     private DrawerLayout layout;
     private Toolbar toolbar;
     private DailyFragment daily;
@@ -63,13 +63,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View bottomSheet = findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetBehavior.setHideable(false);
 
         // content
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        daily = new DailyFragment();
-        ft.replace(R.id.content, daily);
-        ft.commit();
+        daily = (DailyFragment) fm.findFragmentById(R.id.content);
+        daily.setTitleInterface(this);
         onDateSelected(new Date());
     }
 
@@ -125,5 +124,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDateSelected(Date date) {
         toolbar.setSubtitle(DateFormat.getLongDateFormat(getBaseContext()).format(date));
         daily.setDate(date);
+    }
+
+    @Override
+    public void setTitles(String title, String subtitle) {
+        if (title != null && subtitle != null) {
+            findViewById(R.id.header).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.header_title)).setText(title);
+            ((TextView) findViewById(R.id.header_subtitle)).setText(subtitle);
+        } else
+            findViewById(R.id.header).setVisibility(View.GONE);
     }
 }
