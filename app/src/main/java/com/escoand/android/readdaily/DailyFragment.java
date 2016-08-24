@@ -113,6 +113,12 @@ public class DailyFragment extends Fragment implements
                     ((TextView) view).setText(getContext().getString(R.string.type_votd));
                     source.setVisibility(View.GONE);
                     return true;
+                case Database.TYPE_EXEGESIS:
+                    if (titleInterface == null)
+                        view.setVisibility(View.VISIBLE);
+                    else
+                        view.setVisibility(View.GONE);
+                    return true;
             }
         }
 
@@ -188,12 +194,11 @@ public class DailyFragment extends Fragment implements
             return;
 
         Cursor c = db.getDay(date);
-        adapter.changeCursor(c);
-        refreshButtons(false);
-
         String title = null;
         String subtitle = null;
-        if (titleInterface != null && c.getCount() > 0) {
+
+        if (titleInterface != null) {
+            c.moveToPosition(-1);
             while (c.moveToNext()) {
                 if (c.getString(c.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS))
                     title = c.getString(c.getColumnIndex(Database.COLUMN_TITLE));
@@ -201,8 +206,13 @@ public class DailyFragment extends Fragment implements
                     subtitle = c.getString(c.getColumnIndex(Database.COLUMN_TEXT));
             }
         }
-        if (titleInterface != null)
+        if (titleInterface != null) {
             titleInterface.setTitles(title, subtitle);
+            c = db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS});
+        }
+
+        adapter.changeCursor(c);
+        refreshButtons(false);
     }
 
     private void refreshButtons(boolean show) {

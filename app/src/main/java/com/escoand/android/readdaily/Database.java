@@ -430,7 +430,7 @@ public class Database extends SQLiteOpenHelper {
             w += " AND (" + condition + ")";
             List<String> list = new ArrayList<String>(Arrays.asList(v));
             list.addAll(Arrays.asList(values));
-            v = (String[]) list.toArray();
+            v = list.toArray(new String[list.size()]);
         }
 
         Cursor c = getReadableDatabase().query(
