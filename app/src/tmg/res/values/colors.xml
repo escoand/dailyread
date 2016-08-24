@@ -19,8 +19,8 @@
 
 <resources>
 
-    <color name="toolbar_background">#4466aa</color>
-    <color name="systembar_background">#113366</color>
+    <color name="systembar_background">#1d203b</color>
+    <color name="toolbar_background">#393b63</color>
     <color name="accent_dark">#aa2222</color>
     <color name="accent_light">#cc7777</color>
 
@@ -30,5 +30,7 @@
 
     <color name="bottom_buttons_background">@android:color/white</color>
     <color name="bottom_buttons_tint">@android:color/tertiary_text_dark</color>
+
+    <color name="daily_background">@android:color/white</color>
 
 </resources>
