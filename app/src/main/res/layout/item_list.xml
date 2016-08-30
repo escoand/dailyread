@@ -32,14 +32,14 @@
 
     <TextView
         android:id="@+id/list_title"
-        style="@style/TextAppearance.AppCompat.Subhead"
+        style="@style/Text.List"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/list_date"
-        style="@style/TextAppearance.AppCompat"
+        style="@style/Text.List.Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0" />

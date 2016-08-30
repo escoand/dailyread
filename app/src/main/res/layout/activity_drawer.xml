@@ -86,13 +86,11 @@
     <!-- drawer -->
     <android.support.design.widget.NavigationView
         android:id="@+id/drawer"
+        style="@style/Text.Drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/drawer_background"
         app:headerLayout="@layout/drawer_head"
-        app:itemIconTint="@color/drawer_icon"
-        app:itemTextColor="@color/drawer_text"
         app:menu="@menu/drawer" />
 
 </android.support.v4.widget.DrawerLayout>

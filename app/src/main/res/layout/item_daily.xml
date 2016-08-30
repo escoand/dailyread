@@ -34,15 +34,21 @@
 
             <TextView
                 android:id="@+id/daily_title"
-                style="@style/Card.Text.Title" />
+                style="@style/Text.Daily.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/daily_text"
-                style="@style/Card.Text" />
+                style="@style/Text.Daily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/daily_source"
-                style="@style/Card.Text"
+                style="@style/Text.Daily.Source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="end" />
 
         </LinearLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2016 escoand.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <!-- card -->
+    <style name="Card">
+        <item name="cardElevation">0dp</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <!-- text -->
+    <style name="Text">
+        <!--<item name="android:fontFamily"></item>-->
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="Text.Header">
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Text.Header.Small">
+        <item name="android:textSize">12dp</item>
+        <item name="android:color">@android:color/tertiary_text_light</item>
+    </style>
+
+    <style name="Text.Drawer">
+        <item name="android:background">@color/drawer_background</item>
+        <item name="android:textSize">14dp</item>
+        <item name="itemIconTint">@color/drawer_icon</item>
+        <item name="itemTextColor">@color/drawer_text</item>
+    </style>
+
+    <style name="Text.Daily">
+        <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Text.Daily.Title">
+        <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Text.Daily.Source"></style>
+
+    <style name="Text.BottomMenu">
+        <item name="android:textSize">14dp</item>
+    </style>
+
+</resources>

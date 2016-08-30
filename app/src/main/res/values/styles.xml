@@ -46,6 +46,10 @@
         <item name="fabSize">mini</item>
     </style>
 
+    <style name="BottomMenu" parent="Widget.AppCompat.Light.ActionButton">
+        <item name="android:tint">@color/toolbar_background</item>
+    </style>
+
     <!-- cardview -->
     <style name="Card.Wrapper">
         <item name="android:layout_width">match_parent</item>
@@ -93,7 +97,45 @@
     </style>
 
     <!-- text -->
-    <style name="Text.About" parent="">
+    <style name="Text">
+        <item name="android:textAppearance">@android:style/TextAppearance</item>
+    </style>
+
+    <style name="Text.Header">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="Text.Header.Small">
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    </style>
+
+    <style name="Text.List">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="Text.List.Date">
+        <item name="android:textAppearance">@android:style/TextAppearance</item>
+    </style>
+
+    <style name="Text.Drawer"></style>
+
+    <style name="Text.Daily"></style>
+
+    <style name="Text.Daily.Empty">
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="Text.Daily.Title">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="Text.Daily.Source">
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    </style>
+
+    <style name="Text.BottomMenu"></style>
+
+    <style name="Text.About">
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
@@ -110,14 +152,6 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:textColor">@android:color/tertiary_text_light</item>
-    </style>
-
-    <style name="BottomButton.Image" parent="Widget.AppCompat.Light.ActionButton">
-        <item name="android:tint">@color/toolbar_background</item>
-    </style>
-
-    <style name="BottomButton.Text" parent="">
-        <item name="android:textColor">@color/toolbar_background</item>
     </style>
 
 </resources>

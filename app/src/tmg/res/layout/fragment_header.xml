@@ -39,12 +39,11 @@
 
         <TextView
             android:id="@+id/header_title"
+            style="@style/Text.Header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:gravity="bottom"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:textColor="@android:color/primary_text_dark" />
+            android:gravity="bottom" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,14 +54,14 @@
 
             <TextView
                 android:id="@+id/header_subtitle"
+                style="@style/Text.Header.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:textColor="@android:color/secondary_text_dark" />
+                android:gravity="right" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/read_bible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
