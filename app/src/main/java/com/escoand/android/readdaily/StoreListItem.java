@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public class StoreListItem {
     private final String imageURL;
     private final String dataURL;
     private final String type;
-    private SkuDetails details;
+    private SkuDetails details = null;
     private boolean isInstalled;
     private boolean isPurchased;
     private boolean isError = false;

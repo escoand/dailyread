@@ -34,7 +34,7 @@ public class HeaderFragment extends Fragment implements HeaderInterface {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = (ViewGroup) inflater.inflate(R.layout.fragment_header, null);
+        root = (ViewGroup) inflater.inflate(R.layout.fragment_header, container);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
         return root;

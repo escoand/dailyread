@@ -51,16 +51,23 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         v.findViewById(R.id.about_tickets).setOnClickListener(this);
 
         // licenses
-        ((TextView) v.findViewById(R.id.about_libraries)).setText(getString(R.string.about_libraries) + "\n\n" +
-                "Android Asynchronous Http Client " + com.loopj.android.http.BuildConfig.VERSION_NAME + "\nApache License 2.0 by James Smith\n\n" +
-                "Android In-App Billing v3 Library " + com.anjlab.android.iab.v3.BuildConfig.VERSION_NAME + "\nApache License 2.0 by AnjLab\n\n" +
-                "Design Support Library " + android.support.design.BuildConfig.VERSION_NAME + "\nApache License 2.0 by The Android Open Source Project\n\n" +
-                "Material Calendar View " + com.prolificinteractive.materialcalendarview.BuildConfig.VERSION_NAME + "\nby Prolific Interactive\n\n" +
-                "Percent Support Library " + android.support.percent.BuildConfig.VERSION_NAME + "\nApache License 2.0 by The Android Open Source Project\n\n" +
-                "v7 appcompat library " + android.support.v7.appcompat.BuildConfig.VERSION_NAME + "\nApache License 2.0 by The Android Open Source Project\n\n" +
-                "v7 cardview library " + android.support.v7.cardview.BuildConfig.VERSION_NAME + "\nApache License 2.0 by The Android Open Source Project"
-
-        );
+        ((TextView) v.findViewById(R.id.about_libraries)).setText(String.format("%s\n\n" +
+                        "Android Asynchronous Http Client %s\nApache License 2.0 by James Smith\n\n" +
+                        "Android In-App Billing v3 Library %s\nApache License 2.0 by AnjLab\n\n" +
+                        "Design Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
+                        "Material Calendar View %s\nby Prolific Interactive\n\n" +
+                        "Percent Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
+                        "v7 appcompat library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
+                        "v7 cardview library %s\nApache License 2.0 by The Android Open Source Project",
+                getString(R.string.about_libraries),
+                com.loopj.android.http.BuildConfig.VERSION_NAME,
+                com.anjlab.android.iab.v3.BuildConfig.VERSION_NAME,
+                android.support.design.BuildConfig.VERSION_NAME,
+                com.prolificinteractive.materialcalendarview.BuildConfig.VERSION_NAME,
+                android.support.percent.BuildConfig.VERSION_NAME,
+                android.support.v7.appcompat.BuildConfig.VERSION_NAME,
+                android.support.v7.cardview.BuildConfig.VERSION_NAME
+        ));
     }
 
     @Override

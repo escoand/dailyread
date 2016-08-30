@@ -207,8 +207,6 @@ public class Database extends SQLiteOpenHelper {
             reader.close();
             db.setTransactionSuccessful();
             result = true;
-        } catch (Exception e) {
-            throw e;
         } finally {
             db.endTransaction();
             db.close();
@@ -395,8 +393,6 @@ public class Database extends SQLiteOpenHelper {
 
             db.setTransactionSuccessful();
             result = true;
-        } catch (Exception e) {
-            throw e;
         } finally {
             db.endTransaction();
             db.close();
@@ -428,7 +424,7 @@ public class Database extends SQLiteOpenHelper {
 
         if (condition != null && !condition.isEmpty() && values != null && values.length > 0) {
             w += " AND (" + condition + ")";
-            List<String> list = new ArrayList<String>(Arrays.asList(v));
+            List<String> list = new ArrayList<>(Arrays.asList(v));
             list.addAll(Arrays.asList(values));
             v = list.toArray(new String[list.size()]);
         }

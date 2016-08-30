@@ -56,7 +56,7 @@ public class DailyFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_daily, null);
+        View v = inflater.inflate(R.layout.fragment_daily, container);
 
         // data
         db = new Database(getContext());
