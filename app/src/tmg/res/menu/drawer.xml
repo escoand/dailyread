@@ -19,53 +19,62 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/navigation_today"
-        android:icon="@mipmap/drawer_today"
-        android:title="@string/navigation_today" />
+    <group android:id="@+id/dummy_group_1">
 
-    <item
-        android:id="@+id/navigation_list"
-        android:icon="@mipmap/drawer_list"
-        android:title="@string/navigation_list" />
+        <item
+            android:id="@+id/navigation_today"
+            android:icon="@drawable/drawer_today"
+            android:title="@string/navigation_today" />
 
-    <item
-        android:id="@+id/navigation_intro"
-        android:icon="@mipmap/drawer_intro"
-        android:title="@string/navigation_intro" />
+        <item
+            android:id="@+id/navigation_list"
+            android:icon="@mipmap/drawer_list"
+            android:title="@string/navigation_list" />
 
-    <item
-        android:id="@+id/navigation_voty"
-        android:icon="@mipmap/drawer_voty"
-        android:title="@string/navigation_voty" />
+        <item
+            android:id="@+id/navigation_intro"
+            android:icon="@drawable/drawer_intro"
+            android:title="@string/navigation_intro" />
 
-    <item
-        android:id="@+id/navigation_search"
-        android:icon="@mipmap/drawer_search"
-        android:title="@string/navigation_search" />
+        <item
+            android:id="@+id/navigation_voty"
+            android:icon="@drawable/drawer_voty"
+            android:title="@string/navigation_voty" />
 
-    <item
-        android:id="@+id/navigation_calendar"
-        android:icon="@mipmap/drawer_calendar"
-        android:title="@string/navigation_calendar" />
+        <item
+            android:id="@+id/navigation_search"
+            android:icon="@mipmap/drawer_search"
+            android:title="@string/navigation_search" />
 
-    <item
-        android:id="@+id/navigation_reminder"
-        android:icon="@mipmap/drawer_reminder"
-        android:title="@string/navigation_reminder" />
+        <item
+            android:id="@+id/navigation_calendar"
+            android:icon="@mipmap/drawer_calendar"
+            android:title="@string/navigation_calendar" />
 
-    <item
-        android:id="@+id/navigation_store"
-        android:visible="false" />
+        <item
+            android:id="@+id/navigation_reminder"
+            android:icon="@drawable/drawer_reminder"
+            android:title="@string/navigation_reminder" />
 
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@mipmap/drawer_settings"
-        android:title="@string/navigation_settings" />
+    </group>
 
-    <item
-        android:id="@+id/navigation_about"
-        android:icon="@mipmap/drawer_about"
-        android:title="@string/navigation_about" />
+    <group android:id="@+id/dummy_group_2">
+
+        <item
+            android:id="@+id/navigation_store"
+            android:title="@string/navigation_store"
+            android:visible="false" />
+
+        <item
+            android:id="@+id/navigation_settings"
+            android:icon="@mipmap/drawer_settings"
+            android:title="@string/navigation_settings" />
+
+        <item
+            android:id="@+id/navigation_about"
+            android:icon="@mipmap/drawer_about"
+            android:title="@string/navigation_about" />
+
+    </group>
 
 </menu>
