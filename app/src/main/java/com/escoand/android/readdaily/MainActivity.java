@@ -17,6 +17,7 @@
 
 package com.escoand.android.readdaily;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -32,6 +33,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.util.Date;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener {
     private DrawerLayout layout;
@@ -72,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         header.setOnClickListener(daily);
         daily.setHeaderInterface(header);
         onDateSelected(new Date());
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

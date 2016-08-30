@@ -22,22 +22,23 @@
     <!-- card -->
     <style name="Card">
         <item name="cardElevation">0dp</item>
-        <item name="contentPadding">0dp</item>
+        <item name="cardUseCompatPadding">false</item>
     </style>
 
     <!-- text -->
     <style name="Text">
-        <!--<item name="android:fontFamily"></item>-->
+        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
         <item name="android:textSize">14dp</item>
     </style>
 
     <style name="Text.Header">
+        <item name="android:textColor">@color/drawer_text</item>
         <item name="android:textSize">16dp</item>
     </style>
 
     <style name="Text.Header.Small">
+        <item name="android:textColor">@android:color/tertiary_text_dark</item>
         <item name="android:textSize">12dp</item>
-        <item name="android:color">@android:color/tertiary_text_light</item>
     </style>
 
     <style name="Text.Drawer">
