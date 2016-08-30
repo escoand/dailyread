@@ -459,17 +459,20 @@ public class Database extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getList() {
+    public Cursor getList(String condition, String[] values) {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS,
                 new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
-                COLUMN_TYPE + "!=? AND " + COLUMN_SOURCE + "!=''",
-                new String[]{TYPE_EXEGESIS},
+                condition, values,
                 null, null,
                 COLUMN_SOURCE);
         if (c != null)
             c.moveToFirst();
         return c;
+    }
+
+    public Cursor getList() {
+        return getList(null, null);
     }
 
     public int markAsRead(Date date) {

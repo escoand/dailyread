@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // today
             case R.id.navigation_today:
                 onDateSelected(new Date());
-                return true;
+                break;
 
             // calendar
             case R.id.navigation_calendar:
@@ -99,12 +99,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // list
             case R.id.navigation_list:
                 dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
-
-            // list
+            case R.id.navigation_intro:
+                dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_INTRO});
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
             case R.id.navigation_voty:
                 dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
 

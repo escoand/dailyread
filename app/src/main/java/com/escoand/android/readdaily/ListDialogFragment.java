@@ -32,8 +32,15 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class ListDialogFragment extends DialogFragment implements SimpleCursorAdapter.ViewBinder, DialogInterface.OnClickListener {
+    private String condition = null;
+    private String[] values = null;
     private OnDateSelectedListener listener;
     private SimpleCursorAdapter adapter;
+
+    public void setFilter(String condition, String[] values) {
+        this.condition = condition;
+        this.values = values;
+    }
 
     @NonNull
     @Override
@@ -43,7 +50,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
         adapter = new SimpleCursorAdapter(
                 getContext(),
                 R.layout.item_list,
-                new Database(getContext()).getList(),
+                new Database(getContext()).getList(condition, values),
                 new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE},
                 new int[]{R.id.list_image, R.id.list_title, R.id.list_date},
                 0);
