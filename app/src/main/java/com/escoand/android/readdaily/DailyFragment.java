@@ -163,6 +163,7 @@ public class DailyFragment extends Fragment implements
                 i.setAction(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, c.getString(c.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
+            case R.id.read_bible:
             case R.id.floating_bible:
                 // TODO fix url
                 String url = URLEncoder.encode(getString(R.string.url_bible) +

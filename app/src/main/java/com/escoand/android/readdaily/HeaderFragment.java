@@ -30,6 +30,7 @@ public class HeaderFragment extends Fragment implements HeaderInterface {
     private ViewGroup root;
     private TextView title;
     private TextView subtitle;
+    private View bible;
 
     @Nullable
     @Override
@@ -37,7 +38,12 @@ public class HeaderFragment extends Fragment implements HeaderInterface {
         root = (ViewGroup) inflater.inflate(R.layout.fragment_header, container);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
+        bible = root.findViewById(R.id.read_bible);
         return root;
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        bible.setOnClickListener(listener);
     }
 
     @Override

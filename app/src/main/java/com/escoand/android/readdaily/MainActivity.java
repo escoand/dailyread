@@ -65,10 +65,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetBehavior.setHideable(false);
 
-        // content
+        // fragments
         FragmentManager fm = getSupportFragmentManager();
         header = (HeaderFragment) fm.findFragmentById(R.id.header);
         daily = (DailyFragment) fm.findFragmentById(R.id.content);
+        header.setOnClickListener(daily);
         daily.setHeaderInterface(header);
         onDateSelected(new Date());
     }
