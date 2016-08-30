@@ -17,6 +17,8 @@
 
 package com.escoand.android.readdaily;
 
-public interface TitleInterface {
-    void setTitles(String title, String subtitle);
+import android.database.Cursor;
+
+public interface HeaderInterface {
+    void updateHeader(Cursor cursor);
 }

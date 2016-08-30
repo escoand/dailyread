@@ -30,13 +30,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener, TitleInterface {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener {
     private DrawerLayout layout;
     private Toolbar toolbar;
+    private HeaderFragment header;
     private DailyFragment daily;
 
     @Override
@@ -67,8 +67,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // content
         FragmentManager fm = getSupportFragmentManager();
+        header = (HeaderFragment) fm.findFragmentById(R.id.header);
         daily = (DailyFragment) fm.findFragmentById(R.id.content);
-        daily.setTitleInterface(this);
+        daily.setHeaderInterface(header);
         onDateSelected(new Date());
     }
 
@@ -101,6 +102,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
 
+            // list
+            case R.id.navigation_voty:
+                dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+
             // store
             case R.id.navigation_store:
                 startActivityForResult(new Intent(getApplication(), StoreActivity.class), 0);
@@ -124,15 +131,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDateSelected(Date date) {
         toolbar.setSubtitle(DateFormat.getLongDateFormat(getBaseContext()).format(date));
         daily.setDate(date);
-    }
-
-    @Override
-    public void setTitles(String title, String subtitle) {
-        if (title != null && subtitle != null) {
-            findViewById(R.id.header).setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.header_title)).setText(title);
-            ((TextView) findViewById(R.id.header_subtitle)).setText(subtitle);
-        } else
-            findViewById(R.id.header).setVisibility(View.GONE);
     }
 }

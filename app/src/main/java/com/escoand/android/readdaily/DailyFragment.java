@@ -50,7 +50,7 @@ public class DailyFragment extends Fragment implements
     private FloatingActionButton floating_read;
     private FloatingActionButton floating_bible;
     private FloatingActionButton floating_readall;
-    private TitleInterface titleInterface;
+    private HeaderInterface headerInterface;
 
     private View selected = null;
 
@@ -114,7 +114,7 @@ public class DailyFragment extends Fragment implements
                     source.setVisibility(View.GONE);
                     return true;
                 case Database.TYPE_EXEGESIS:
-                    if (titleInterface == null)
+                    if (headerInterface == null)
                         view.setVisibility(View.VISIBLE);
                     else
                         view.setVisibility(View.GONE);
@@ -194,20 +194,9 @@ public class DailyFragment extends Fragment implements
             return;
 
         Cursor c = db.getDay(date);
-        String title = null;
-        String subtitle = null;
 
-        if (titleInterface != null) {
-            c.moveToPosition(-1);
-            while (c.moveToNext()) {
-                if (c.getString(c.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS))
-                    title = c.getString(c.getColumnIndex(Database.COLUMN_TITLE));
-                else if (c.getString(c.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
-                    subtitle = c.getString(c.getColumnIndex(Database.COLUMN_TEXT));
-            }
-        }
-        if (titleInterface != null) {
-            titleInterface.setTitles(title, subtitle);
+        if (headerInterface != null) {
+            headerInterface.updateHeader(c);
             c = db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS});
         }
 
@@ -238,7 +227,7 @@ public class DailyFragment extends Fragment implements
         }
     }
 
-    public void setTitleInterface(TitleInterface titleInterface) {
-        this.titleInterface = titleInterface;
+    public void setHeaderInterface(HeaderInterface headerInterface) {
+        this.headerInterface = headerInterface;
     }
 }
