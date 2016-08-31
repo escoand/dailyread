@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // list
             case R.id.navigation_list:
                 dialog = new ListDialogFragment();
-                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TEXT + "!=''", new String[]{Database.TYPE_DAY});
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
             case R.id.navigation_intro:

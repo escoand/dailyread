@@ -458,7 +458,9 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getList(String condition, String[] values) {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
+                new String[]{"rowid _id",
+                        "CASE WHEN " + COLUMN_SOURCE + "!='' THEN " + COLUMN_SOURCE + " ELSE " + COLUMN_TEXT + " END " + COLUMN_SOURCE,
+                        COLUMN_DATE, COLUMN_READ},
                 condition, values,
                 null, null,
                 COLUMN_SOURCE);

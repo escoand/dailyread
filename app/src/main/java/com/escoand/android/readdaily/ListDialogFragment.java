@@ -73,8 +73,12 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
                 view.setVisibility(View.INVISIBLE);
             return true;
         } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_DATE)) {
-            ((TextView) view).setText(DateFormat.getMediumDateFormat(
-                    getContext()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
+            try {
+                ((TextView) view).setText(DateFormat.getMediumDateFormat(
+                        getContext()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
+            } catch (Exception e) {
+                return false;
+            }
             return true;
         }
         return false;
