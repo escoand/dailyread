@@ -27,8 +27,8 @@
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/toolbar_background</item>
-        <item name="subtitleTextColor">@android:color/secondary_text_dark</item>
-        <item name="titleTextColor">@android:color/primary_text_dark</item>
+        <item name="subtitleTextAppearance">@style/Text.Toolbar.Subtitle</item>
+        <item name="titleTextAppearance">@style/Text.Toolbar.Title</item>
     </style>
 
     <!-- floating action button -->
@@ -101,6 +101,17 @@
         <item name="android:textAppearance">@android:style/TextAppearance</item>
     </style>
 
+    <style name="Text.Toolbar"></style>
+
+    <style name="Text.Toolbar.Title">
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Toolbar.Subtitle">
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
+    </style>
+
     <style name="Text.Header">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
     </style>
@@ -118,6 +129,17 @@
     </style>
 
     <style name="Text.Drawer"></style>
+
+    <style name="Text.Drawer.Title">
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Drawer.Subtitle">
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="Text.Daily"></style>
 

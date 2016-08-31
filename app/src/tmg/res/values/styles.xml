@@ -27,8 +27,21 @@
 
     <!-- text -->
     <style name="Text">
-        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
+        <item name="fontPath">fonts/Nunito-Light.ttf</item>
         <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="Text.Toolbar">
+        <item name="fontPath">fonts/Nunito-Light.ttf</item>
+    </style>
+
+    <style name="Text.Drawer.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="Text.Drawer.Subtitle">
+        <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
 
     <style name="Text.Header">
@@ -45,6 +58,7 @@
         <item name="android:background">@color/drawer_background</item>
         <item name="android:textSize">14dp</item>
         <item name="itemIconTint">@color/drawer_icon</item>
+        <item name="itemTextAppearance">@style/Text</item>
         <item name="itemTextColor">@color/drawer_text</item>
     </style>
 
