@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.readdaily;
+package de.escoand.readdaily;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import android.database.Cursor;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
-    }
+public interface HeaderInterface {
+    void updateHeader(Cursor cursor);
 }

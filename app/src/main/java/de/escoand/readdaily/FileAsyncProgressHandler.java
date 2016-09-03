@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,36 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.readdaily;
+package de.escoand.readdaily;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.loopj.android.http.DataAsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
-public abstract class DataAsyncProgressHandler extends DataAsyncHttpResponseHandler {
-    private final ProgressBar progressBar;
+public abstract class FileAsyncProgressHandler extends FileAsyncHttpResponseHandler {
+    private final ProgressBar progressView;
 
-    public DataAsyncProgressHandler(ProgressBar progressBar) {
-        this.progressBar = progressBar;
+    public FileAsyncProgressHandler(Context context, ProgressBar progressView) {
+        super(context);
+        this.progressView = progressView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.VISIBLE);
+        progressView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onProgress(long bytesWritten, long totalSize) {
-        progressBar.setMax((int) totalSize);
-        progressBar.setProgress((int) bytesWritten);
+        progressView.setMax((int) totalSize);
+        progressView.setProgress((int) bytesWritten);
         super.onProgress(bytesWritten, totalSize);
     }
 
     @Override
     public void onFinish() {
         super.onFinish();
-        progressBar.setVisibility(View.INVISIBLE);
+        progressView.setVisibility(View.INVISIBLE);
     }
 }

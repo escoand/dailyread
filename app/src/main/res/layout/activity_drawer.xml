@@ -50,7 +50,7 @@
 
             <fragment
                 android:id="@+id/header"
-                class="com.escoand.android.readdaily.HeaderFragment"
+                class="de.escoand.readdaily.HeaderFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true" />
@@ -60,7 +60,7 @@
         <!-- content -->
         <fragment
             android:id="@+id/content"
-            class="com.escoand.android.readdaily.DailyFragment"
+            class="de.escoand.readdaily.DailyFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"

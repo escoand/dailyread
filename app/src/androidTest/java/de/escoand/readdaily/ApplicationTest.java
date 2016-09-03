@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016  escoand
+ * Copyright (c) 2016 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.readdaily;
+package de.escoand.readdaily;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import android.app.Application;
+import android.test.ApplicationTestCase;
 
 /**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+public class ApplicationTest extends ApplicationTestCase<Application> {
+    public ApplicationTest() {
+        super(Application.class);
     }
 }

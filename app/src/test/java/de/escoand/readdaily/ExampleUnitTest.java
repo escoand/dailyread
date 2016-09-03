@@ -15,10 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.readdaily;
+package de.escoand.readdaily;
 
-import android.database.Cursor;
+import org.junit.Test;
 
-public interface HeaderInterface {
-    void updateHeader(Cursor cursor);
+import static org.junit.Assert.assertEquals;
+
+/**
+ * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ */
+public class ExampleUnitTest {
+    @Test
+    public void addition_isCorrect() throws Exception {
+        assertEquals(4, 2 + 2);
+    }
 }

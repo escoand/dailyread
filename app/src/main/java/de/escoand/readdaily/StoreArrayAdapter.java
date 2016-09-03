@@ -15,26 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.readdaily;
+package de.escoand.readdaily;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
-public class SplashActivity extends AppCompatActivity {
+import com.anjlab.android.iab.v3.BillingProcessor;
+
+public class StoreArrayAdapter extends ArrayAdapter<StoreListItem> {
+    private final Activity activity;
+    private final BillingProcessor billing;
+
+    public StoreArrayAdapter(Activity activity, BillingProcessor billing) {
+        super(activity, R.layout.item_store);
+        this.activity = activity;
+        this.billing = billing;
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(getApplication(), MainActivity.class));
-                finish();
-            }
-        }, 3000);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return getItem(position).getView(activity, parent, billing);
     }
 }
