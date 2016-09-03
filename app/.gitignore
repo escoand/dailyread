@@ -1,4 +1,8 @@
+*.jpg
 *.log
+*.png
+*.ttf
+
 /build
-src/ls
-src/tmg
+
+src/*/res/values/strings.xml
