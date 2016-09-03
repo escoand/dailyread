@@ -47,6 +47,7 @@
 
     <style name="Text.Drawer">
         <item name="android:background">@color/drawer_background</item>
+        <item name="android:listDivider">@color/drawer_text</item>
         <item name="android:textSize">14dp</item>
         <item name="itemIconTint">@color/drawer_icon</item>
         <item name="itemTextAppearance">@style/Text</item>
