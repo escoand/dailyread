@@ -19,7 +19,7 @@
 
 <resources>
 
-    <color name="systembar_background">#1d203b</color>
+    <color name="statusbar_background">#1d203b</color>
     <color name="toolbar_background">#393b63</color>
     <color name="accent_dark">#aa2222</color>
     <color name="accent_light">#cc7777</color>
