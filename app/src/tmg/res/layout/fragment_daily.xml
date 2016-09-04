@@ -18,6 +18,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,46 +26,49 @@
 
     <!-- floating action buttons -->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_readall"
+        android:id="@+id/floating_more"
         style="@style/FloatingActionButton.Mini"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_readall" />
+        android:src="@drawable/floating_more"
+        android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_bible"
+        android:id="@+id/floating_intro"
         style="@style/FloatingActionButton.Mini"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/floating_more"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_bible" />
+        android:src="@drawable/drawer_intro"
+        android:tint="@android:color/white"
+        android:visibility="gone"
+        app:backgroundTint="#4a90e2" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_read"
+        android:id="@+id/floating_voty"
         style="@style/FloatingActionButton.Mini"
-        android:layout_above="@id/floating_bible"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/floating_intro"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_read" />
+        android:src="@drawable/drawer_voty"
+        android:tint="@android:color/white"
+        android:visibility="gone"
+        app:backgroundTint="#50e3c2" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_share"
+        android:id="@+id/floating_other"
         style="@style/FloatingActionButton.Mini"
-        android:layout_above="@id/floating_read"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="false"
-        android:src="@drawable/floating_share" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_note"
-        style="@style/FloatingActionButton.Mini"
-        android:layout_above="@id/floating_share"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/floating_voty"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_note" />
+        android:tint="@android:color/white"
+        android:visibility="gone"
+        app:backgroundTint="#f5a623" />
 
     <!-- content -->
     <ListView

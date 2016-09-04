@@ -22,7 +22,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -40,8 +38,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     private static final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private static SimpleCursorAdapter adapter;
     private static Database db;
+    private Cursor cursor;
     private Date date = new Date();
-    private FloatingActionButton more = null;
     private HeaderInterface headerInterface;
 
     @Override
@@ -65,9 +63,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         });
 
         // floating buttons
-        more = (FloatingActionButton) v.findViewById(R.id.floating_more);
-        if (more != null)
-            more.setOnClickListener(this);
+        if (v.findViewById(R.id.floating_more) != null)
+            v.findViewById(R.id.floating_more).setOnClickListener(this);
         if (v.findViewById(R.id.floating_note) != null)
             v.findViewById(R.id.floating_note).setOnClickListener(this);
         if (v.findViewById(R.id.floating_share) != null)
@@ -119,8 +116,6 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     @Override
     public void onClick(View v) {
-        // TODO cursor not current view
-        Cursor c = adapter.getCursor();
         Intent i = new Intent();
         switch (v.getId()) {
 
@@ -138,11 +133,17 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             // read bible
             case R.id.read_bible:
             case R.id.floating_bible:
-                // TODO fix url
-                String url = URLEncoder.encode(getString(R.string.url_bible) +
-                        ((TextView) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.daily_text)).getText());
-                i.setAction(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
+                String verse = null;
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
+                        verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                }
+                if (verse != null) {
+                    String url = getString(R.string.url_bible) + verse.replaceAll(" ", "");
+                    i.setAction(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                }
                 break;
 
             // note
@@ -165,7 +166,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             // share
             case R.id.floating_share:
                 i.setAction(Intent.ACTION_SEND);
-                i.putExtra(Intent.EXTRA_TEXT, c.getString(c.getColumnIndex(Database.COLUMN_TEXT)));
+                i.putExtra(Intent.EXTRA_TEXT, cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
         }
         // TODO check intent-ed application
@@ -186,18 +187,21 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         if (adapter == null || db == null)
             return;
 
-        Cursor c = db.getDay(date);
+        cursor = db.getDay(date);
 
+        // header interface
         if (headerInterface != null) {
-            headerInterface.updateHeader(c);
-            c = db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS});
-        }
+            headerInterface.updateHeader(cursor);
+            adapter.changeCursor(db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS}));
+        } else
+            adapter.changeCursor(cursor);
 
-        if (c.getCount() > 0)
-            toggleVisibility(more, View.VISIBLE);
-        else
-            toggleVisibility(more, View.GONE);
+        // floating action buttons
         if (getView() != null) {
+            if (adapter.getCursor().getCount() > 0)
+                toggleVisibility(getView().findViewById(R.id.floating_more), View.VISIBLE);
+            else
+                toggleVisibility(getView().findViewById(R.id.floating_more), View.GONE);
             toggleVisibility(getView().findViewById(R.id.floating_bible), View.GONE);
             toggleVisibility(getView().findViewById(R.id.floating_intro), View.GONE);
             toggleVisibility(getView().findViewById(R.id.floating_note), View.GONE);
@@ -206,8 +210,6 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             toggleVisibility(getView().findViewById(R.id.floating_share), View.GONE);
             toggleVisibility(getView().findViewById(R.id.floating_voty), View.GONE);
         }
-
-        adapter.changeCursor(c);
     }
 
     public void setHeaderInterface(HeaderInterface headerInterface) {
