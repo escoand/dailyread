@@ -18,7 +18,10 @@
 package de.escoand.readdaily;
 
 import android.database.Cursor;
+import android.view.View;
 
 public interface HeaderInterface {
+    void setOnClickListener(View.OnClickListener listener);
+
     void updateHeader(Cursor cursor);
 }

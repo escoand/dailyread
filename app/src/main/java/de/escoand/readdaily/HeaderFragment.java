@@ -42,6 +42,7 @@ public class HeaderFragment extends Fragment implements HeaderInterface {
         return root;
     }
 
+    @Override
     public void setOnClickListener(View.OnClickListener listener) {
         bible.setOnClickListener(listener);
     }

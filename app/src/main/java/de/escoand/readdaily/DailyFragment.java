@@ -27,7 +27,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -36,23 +35,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DailyFragment extends Fragment implements
-        SimpleCursorAdapter.ViewBinder,
-        AdapterView.OnItemClickListener,
-        View.OnClickListener {
+public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener {
     private static final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     private static final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private static SimpleCursorAdapter adapter;
     private static Database db;
     private Date date = new Date();
-    private FloatingActionButton floating_note;
-    private FloatingActionButton floating_share;
-    private FloatingActionButton floating_read;
-    private FloatingActionButton floating_bible;
-    private FloatingActionButton floating_readall;
+    private FloatingActionButton more = null;
     private HeaderInterface headerInterface;
-
-    private View selected = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,7 +57,6 @@ public class DailyFragment extends Fragment implements
         ListView list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
         list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
         v.findViewById(R.id.buttonStore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,16 +65,19 @@ public class DailyFragment extends Fragment implements
         });
 
         // floating buttons
-        floating_note = (FloatingActionButton) v.findViewById(R.id.floating_note);
-        floating_share = (FloatingActionButton) v.findViewById(R.id.floating_share);
-        floating_read = (FloatingActionButton) v.findViewById(R.id.floating_read);
-        floating_bible = (FloatingActionButton) v.findViewById(R.id.floating_bible);
-        floating_readall = (FloatingActionButton) v.findViewById(R.id.floating_readall);
-        floating_note.setOnClickListener(this);
-        floating_share.setOnClickListener(this);
-        floating_read.setOnClickListener(this);
-        floating_bible.setOnClickListener(this);
-        floating_readall.setOnClickListener(this);
+        more = (FloatingActionButton) v.findViewById(R.id.floating_more);
+        if (more != null)
+            more.setOnClickListener(this);
+        if (v.findViewById(R.id.floating_note) != null)
+            v.findViewById(R.id.floating_note).setOnClickListener(this);
+        if (v.findViewById(R.id.floating_share) != null)
+            v.findViewById(R.id.floating_share).setOnClickListener(this);
+        if (v.findViewById(R.id.floating_read) != null)
+            v.findViewById(R.id.floating_read).setOnClickListener(this);
+        if (v.findViewById(R.id.floating_bible) != null)
+            v.findViewById(R.id.floating_bible).setOnClickListener(this);
+        if (v.findViewById(R.id.floating_readall) != null)
+            v.findViewById(R.id.floating_readall).setOnClickListener(this);
 
         refresh();
 
@@ -126,30 +118,34 @@ public class DailyFragment extends Fragment implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (selected != null)
-            selected.setBackgroundColor(getResources().getColor(android.support.v7.cardview.R.color.cardview_light_background));
-
-        // unselect
-        if (selected != null && view == selected.getParent()) {
-            selected = null;
-            refreshButtons(false);
-        }
-
-        // select
-        else {
-            selected = view.findViewById(R.id.daily_card);
-            selected.setBackgroundColor(getResources().getColor(R.color.accent_light));
-            refreshButtons(true);
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         // TODO cursor not current view
         Cursor c = adapter.getCursor();
         Intent i = new Intent();
         switch (v.getId()) {
+
+            // show buttons
+            case R.id.floating_more:
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_bible));
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_intro));
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_note));
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_read));
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_readall));
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_share));
+                toggleVisibility(v.getRootView().findViewById(R.id.floating_voty));
+                break;
+
+            // read bible
+            case R.id.read_bible:
+            case R.id.floating_bible:
+                // TODO fix url
+                String url = URLEncoder.encode(getString(R.string.url_bible) +
+                        ((TextView) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.daily_text)).getText());
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                break;
+
+            // note
             case R.id.floating_note:
                 i.setAction("com.evernote.action.CREATE_NEW_NOTE");
                 i.putExtra(Intent.EXTRA_TITLE, "");
@@ -159,21 +155,17 @@ public class DailyFragment extends Fragment implements
                 i.putExtra("SOURCE_URL", "");
                 i.putExtra("SOURCE_APP", "");
                 break;
-            case R.id.floating_share:
-                i.setAction(Intent.ACTION_SEND);
-                i.putExtra(Intent.EXTRA_TEXT, c.getString(c.getColumnIndex(Database.COLUMN_TEXT)));
-                break;
-            case R.id.read_bible:
-            case R.id.floating_bible:
-                // TODO fix url
-                String url = URLEncoder.encode(getString(R.string.url_bible) +
-                        ((TextView) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.daily_text)).getText());
-                i.setAction(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                break;
+
+            // mark
             case R.id.floating_readall:
                 db.markAsRead(date);
                 setDate(getDate());
+                break;
+
+            // share
+            case R.id.floating_share:
+                i.setAction(Intent.ACTION_SEND);
+                i.putExtra(Intent.EXTRA_TEXT, c.getString(c.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
         }
         // TODO check intent-ed application
@@ -191,7 +183,7 @@ public class DailyFragment extends Fragment implements
     }
 
     private void refresh() {
-        if (adapter == null || db == null || floating_readall == null)
+        if (adapter == null || db == null)
             return;
 
         Cursor c = db.getDay(date);
@@ -201,34 +193,39 @@ public class DailyFragment extends Fragment implements
             c = db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS});
         }
 
-        adapter.changeCursor(c);
-        refreshButtons(false);
-    }
-
-    private void refreshButtons(boolean show) {
-        Cursor c = adapter.getCursor();
-        if (show) {
-            floating_note.show();
-            floating_share.show();
-            floating_read.show();
-            if (c != null && c.getCount() > 0 && c.getInt(c.getColumnIndex(Database.COLUMN_HASONLINE)) != 0)
-                floating_bible.show();
-            else
-                floating_bible.hide();
-            floating_readall.hide();
-        } else {
-            floating_note.hide();
-            floating_share.hide();
-            floating_read.hide();
-            floating_bible.hide();
-            if (c != null && c.getCount() > 0 && c.getInt(c.getColumnIndex(Database.COLUMN_READ)) == 0)
-                floating_readall.show();
-            else
-                floating_readall.hide();
+        if (c.getCount() > 0)
+            toggleVisibility(more, View.VISIBLE);
+        else
+            toggleVisibility(more, View.GONE);
+        if (getView() != null) {
+            toggleVisibility(getView().findViewById(R.id.floating_bible), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.floating_intro), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.floating_note), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.floating_read), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.floating_readall), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.floating_share), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.floating_voty), View.GONE);
         }
+
+        adapter.changeCursor(c);
     }
 
     public void setHeaderInterface(HeaderInterface headerInterface) {
         this.headerInterface = headerInterface;
+    }
+
+    private void toggleVisibility(View v, int force) {
+        if (v == null)
+            return;
+        if (force >= 0)
+            v.setVisibility(force);
+        else if (v.getVisibility() == View.VISIBLE)
+            v.setVisibility(View.GONE);
+        else
+            v.setVisibility(View.VISIBLE);
+    }
+
+    private void toggleVisibility(View v) {
+        toggleVisibility(v, -1);
     }
 }
