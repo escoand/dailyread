@@ -28,10 +28,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -143,7 +143,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onDateSelected(Date date) {
-        toolbar.setSubtitle(DateFormat.getLongDateFormat(getBaseContext()).format(date));
+        SimpleDateFormat frmt = new SimpleDateFormat();
+        String pattern;
+
+        pattern = getString(R.string.toolbar_title);
+        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+        frmt.applyPattern(pattern);
+        toolbar.setTitle(frmt.format(date));
+
+        pattern = getString(R.string.toolbar_subtitle);
+        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+        frmt.applyPattern(pattern);
+        toolbar.setSubtitle(frmt.format(date));
+
         daily.setDate(date);
     }
 }

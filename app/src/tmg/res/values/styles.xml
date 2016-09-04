@@ -35,6 +35,10 @@
         <item name="fontPath">fonts/Nunito-Light.ttf</item>
     </style>
 
+    <style name="Text.Toolbar.Title">
+        <item name="android:textColor">@color/drawer_text</item>
+    </style>
+
     <style name="Text.Header">
         <item name="android:textColor">@color/drawer_text</item>
         <item name="android:textSize">16dp</item>
@@ -47,7 +51,7 @@
 
     <style name="Text.Drawer">
         <item name="android:background">@color/drawer_background</item>
-        <item name="android:listDivider">@color/drawer_text</item>
+        <item name="android:listDivider">@color/drawer_divider</item>
         <item name="android:textSize">14dp</item>
         <item name="itemIconTint">@color/drawer_icon</item>
         <item name="itemTextAppearance">@style/Text</item>
