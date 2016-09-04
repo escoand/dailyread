@@ -45,7 +45,7 @@
     </style>
 
     <style name="Text.Header.Small">
-        <item name="android:textColor">@android:color/tertiary_text_dark</item>
+        <item name="android:textColor">#afb0c0</item>
         <item name="android:textSize">12dp</item>
     </style>
 
