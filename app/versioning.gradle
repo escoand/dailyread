@@ -25,10 +25,10 @@ ext {
             candidate = 0
         } else if (patch.contains("-alpha")) {
             (patch, candidate) = patch.tokenize("-")
-            candidate = 30 + candidate.replaceAll("[^0-9]", "").toInteger()
+            candidate = 0 + candidate.replaceAll("[^0-9]", "").toInteger()
         } else if (patch.contains("-beta")) {
             (patch, candidate) = patch.tokenize("-")
-            candidate = 60 + candidate.replaceAll("[^0-9]", "").toInteger()
+            candidate = 50 + candidate.replaceAll("[^0-9]", "").toInteger()
         }
 
         (major, minor, patch, candidate) = [major, minor, patch, candidate].collect {

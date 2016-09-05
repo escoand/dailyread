@@ -18,7 +18,7 @@
 apply plugin: 'com.android.application'
 apply from: 'versioning.gradle'
 
-version = "1.0.0-devel"
+version = "1.0.0-apha1"
 
 android {
     compileSdkVersion 23
