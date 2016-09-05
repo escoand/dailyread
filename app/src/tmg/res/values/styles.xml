@@ -51,7 +51,7 @@
 
     <style name="Text.Drawer">
         <item name="android:background">@color/drawer_background</item>
-        <item name="android:listDivider">@color/drawer_divider</item>
+        <item name="android:listDivider">@drawable/divider_light</item>
         <item name="android:textSize">14dp</item>
         <item name="itemIconTint">@color/drawer_icon</item>
         <item name="itemTextAppearance">@style/Text</item>
@@ -82,6 +82,12 @@
 
     <style name="Text.BottomMenu">
         <item name="android:textSize">14dp</item>
+    </style>
+
+    <!-- progress -->
+    <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminate">false</item>
+        <item name="android:progressDrawable">@drawable/progress</item>
     </style>
 
 </resources>
