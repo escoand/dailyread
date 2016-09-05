@@ -62,24 +62,7 @@
             android:id="@+id/content"
             class="de.escoand.readdaily.DailyFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-        <!-- bottom buttons -->
-        <FrameLayout
-            android:id="@+id/bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bottom_buttons_background"
-            app:layout_behavior="@string/bottom_sheet_behavior">
-
-            <include
-                layout="@layout/bottom_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </FrameLayout>
+            android:layout_height="match_parent" />
 
     </android.support.design.widget.CoordinatorLayout>
 

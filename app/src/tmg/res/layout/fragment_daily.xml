@@ -29,7 +29,7 @@
         android:id="@+id/floating_more"
         style="@style/FloatingActionButton.Mini"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bottom_menu"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/floating_more"
@@ -76,9 +76,10 @@
         style="@style/Widget.AppCompat.ListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bottom_menu"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:cacheColorHint="@android:color/transparent"
         android:clipToPadding="false"
@@ -91,13 +92,13 @@
         android:id="@+id/listNoData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bottom_menu"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_gravity="center"
         android:layout_margin="30dp"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -115,6 +116,84 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/navigation_store" />
+
+    </LinearLayout>
+
+    <!-- bottom buttons -->
+    <LinearLayout
+        android:id="@+id/bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/bottom_buttons_background"
+        android:elevation="8dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/BottomMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/drawer_today" />
+
+            <TextView
+                style="@style/Text.BottomMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Heute" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/BottomMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_share" />
+
+            <TextView
+                style="@style/Text.BottomMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teilen" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/read_bible"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/BottomMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_bible" />
+
+            <TextView
+                style="@style/Text.BottomMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Onlinebibel" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
