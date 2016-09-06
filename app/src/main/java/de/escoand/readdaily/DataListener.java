@@ -20,8 +20,10 @@ package de.escoand.readdaily;
 import android.database.Cursor;
 import android.view.View;
 
-public interface HeaderInterface {
+import java.util.Date;
+
+public interface DataListener {
     void setOnClickListener(View.OnClickListener listener);
 
-    void updateHeader(Cursor cursor);
+    void updateHeader(Date date, Cursor cursor);
 }

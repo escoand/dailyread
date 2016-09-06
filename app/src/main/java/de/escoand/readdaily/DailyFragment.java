@@ -40,7 +40,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     private static Database db;
     private Cursor cursor;
     private Date date = new Date();
-    private HeaderInterface headerInterface;
+    private ArrayList<DataListener> listener = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -103,7 +103,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                     source.setVisibility(View.GONE);
                     return true;
                 case Database.TYPE_EXEGESIS:
-                    if (headerInterface == null)
+                    if (listener.size() == 0)
                         view.setVisibility(View.VISIBLE);
                     else
                         view.setVisibility(View.GONE);
@@ -190,10 +190,11 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         cursor = db.getDay(date);
 
         // header interface
-        if (headerInterface != null) {
-            headerInterface.updateHeader(cursor);
+        for (DataListener tmp : listener)
+            tmp.updateHeader(date, cursor);
+        if (listener.size() > 0)
             adapter.changeCursor(db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS}));
-        } else
+        else
             adapter.changeCursor(cursor);
 
         // floating action buttons
@@ -212,8 +213,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         }
     }
 
-    public void setHeaderInterface(HeaderInterface headerInterface) {
-        this.headerInterface = headerInterface;
+    public void registerListener(DataListener listener) {
+        this.listener.add(listener);
     }
 
     private void toggleVisibility(View v, int force) {
