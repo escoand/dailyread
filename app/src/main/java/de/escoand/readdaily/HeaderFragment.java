@@ -17,6 +17,10 @@
 
 package de.escoand.readdaily;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,17 +28,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Date;
 
-public class HeaderFragment extends Fragment implements DataListener {
+public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener {
     private ViewGroup root;
     private ImageView image;
     private TextView title;
     private TextView subtitle;
     private View bible;
+    private boolean isLarge = false;
 
     @Nullable
     @Override
@@ -44,6 +50,9 @@ public class HeaderFragment extends Fragment implements DataListener {
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
         bible = root.findViewById(R.id.read_bible);
+
+        image.setOnClickListener(this);
+
         return root;
     }
 
@@ -109,5 +118,51 @@ public class HeaderFragment extends Fragment implements DataListener {
             root.setVisibility(View.VISIBLE);
         } else
             root.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        AnimatorSet anims = new AnimatorSet();
+        Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
+        Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
+        Animator anim3, anim4;
+        ValueAnimator anim6, anim7, anim8, anim9;
+
+        // alpha animations
+        if (!isLarge) {
+            anim1.setTarget(root.findViewById(R.id.header_progress));
+            anim2.setTarget(root.findViewById(R.id.header_text));
+            anim3 = anim1.clone();
+            anim4 = anim1.clone();
+        } else {
+            anim1.setTarget(root.findViewById(R.id.header_text));
+            anim2.setTarget(root.findViewById(R.id.header_progress));
+            anim3 = anim2.clone();
+            anim4 = anim2.clone();
+        }
+        anim3.setTarget(root.findViewById(R.id.header_forward));
+        anim4.setTarget(root.findViewById(R.id.header_rewind));
+
+        // resize animation
+        final View cntrl = root.findViewById(R.id.header_control);
+        if (!isLarge) {
+            anim6 = new WidthResizeAnimator(root.findViewById(R.id.header_text), root.findViewById(R.id.header_text).getMeasuredWidth(), 0);
+            anim7 = new WidthResizeAnimator(root.findViewById(R.id.header_rewind), 0, root.findViewById(R.id.header_rewind).getMeasuredHeight());
+            anim8 = new WidthResizeAnimator(root.findViewById(R.id.header_forward), 0, root.findViewById(R.id.header_forward).getMeasuredHeight());
+            anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), root.getMeasuredWidth() - 3 * root.findViewById(R.id.header_rewind).getMeasuredHeight());
+        } else {
+            anim6 = new WidthResizeAnimator(root.findViewById(R.id.header_text), 0, root.getMeasuredWidth() - 3 * root.findViewById(R.id.header_rewind).getMeasuredHeight());
+            anim7 = new WidthResizeAnimator(root.findViewById(R.id.header_rewind), root.findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
+            anim8 = new WidthResizeAnimator(root.findViewById(R.id.header_forward), root.findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
+            anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), cntrl.getMeasuredHeight() / 2);
+        }
+
+        // animate
+        anims.playTogether(anim1, anim2, anim3, anim4, anim6, anim7, anim8, anim9);
+        anims.setDuration(500);
+        anims.setInterpolator(new DecelerateInterpolator());
+        anims.start();
+
+        isLarge = !isLarge;
     }
 }
