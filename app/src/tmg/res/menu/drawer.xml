@@ -28,7 +28,6 @@
 
         <item
             android:id="@+id/navigation_list"
-            android:icon="@mipmap/drawer_list"
             android:title="@string/navigation_list" />
 
         <item
@@ -43,12 +42,12 @@
 
         <item
             android:id="@+id/navigation_search"
-            android:icon="@mipmap/drawer_search"
+            android:icon="@drawable/drawer_search"
             android:title="@string/navigation_search" />
 
         <item
             android:id="@+id/navigation_calendar"
-            android:icon="@mipmap/drawer_calendar"
+            android:icon="@drawable/drawer_calendar"
             android:title="@string/navigation_calendar" />
 
         <item
@@ -61,18 +60,17 @@
     <group android:id="@+id/dummy_group_2">
 
         <item
-            android:id="@+id/navigation_store"
-            android:title="@string/navigation_store"
-            android:visible="false" />
-
-        <item
             android:id="@+id/navigation_settings"
-            android:icon="@mipmap/drawer_settings"
+            android:icon="@drawable/drawer_settings"
             android:title="@string/navigation_settings" />
 
         <item
+            android:id="@+id/navigation_store"
+            android:title="@string/navigation_store" />
+
+        <item
             android:id="@+id/navigation_about"
-            android:icon="@mipmap/drawer_about"
+            android:icon="@drawable/drawer_about"
             android:title="@string/navigation_about" />
 
     </group>

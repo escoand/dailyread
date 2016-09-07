@@ -141,10 +141,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                style="@style/BottomMenu"
+                style="@style/Image.BottomMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/drawer_today" />
+                android:src="@drawable/drawer_today" />
 
             <TextView
                 style="@style/Text.BottomMenu"
@@ -161,10 +161,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                style="@style/BottomMenu"
+                style="@style/Image.BottomMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_share" />
+                android:src="@drawable/floating_share" />
 
             <TextView
                 style="@style/Text.BottomMenu"
@@ -182,10 +182,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                style="@style/BottomMenu"
+                style="@style/Image.BottomMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_bible" />
+                android:src="@drawable/floating_bible" />
 
             <TextView
                 style="@style/Text.BottomMenu"
