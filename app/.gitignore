@@ -5,4 +5,5 @@
 
 /build
 
+src/*/res/drawable/icon_*.xml
 src/*/res/values/strings.xml
