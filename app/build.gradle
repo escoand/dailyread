@@ -28,7 +28,7 @@ android {
         applicationId "de.escoand.readdaily"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode getVersionCode()
+        versionCode buildVersionCode()
         versionName version
     }
     buildTypes {

@@ -16,7 +16,7 @@
  */
 
 ext {
-    getVersionCode = {
+    buildVersionCode = {
         def candidate = 99
         def (major, minor, patch) = version.toLowerCase().tokenize(".")
 
@@ -34,6 +34,7 @@ ext {
         (major, minor, patch, candidate) = [major, minor, patch, candidate].collect {
             it.toInteger()
         }
+
         (int) (major * 1000000) + (minor * 10000) + (patch * 100) + candidate
     }
 }
