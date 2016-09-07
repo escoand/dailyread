@@ -31,7 +31,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_readall" />
+        android:src="@drawable/icon_readall" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_bible"
@@ -39,28 +39,28 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_bible" />
+        android:src="@drawable/icon_bible" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_read"
         style="@style/FloatingActionButton.Mini"
         android:layout_above="@id/floating_bible"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_read" />
+        android:src="@drawable/icon_read" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_share"
         style="@style/FloatingActionButton.Mini"
         android:layout_above="@id/floating_read"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_share" />
+        android:src="@drawable/icon_share" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_note"
         style="@style/FloatingActionButton.Mini"
         android:layout_above="@id/floating_share"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_note" />
+        android:src="@drawable/icon_note" />
 
     <!-- content -->
     <ListView

@@ -93,14 +93,14 @@
         <item name="android:showDividers">beginning|middle|end</item>
     </style>
 
-    <!-- progress -->
+    <!-- progress_circular -->
     <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
-        <item name="android:progressDrawable">@drawable/progress</item>
+        <item name="android:progressDrawable">@drawable/progress_circular</item>
     </style>
 
     <style name="Progress.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress</item>
+        <item name="android:progressDrawable">@drawable/progress_circular</item>
     </style>
 
     <!-- text -->

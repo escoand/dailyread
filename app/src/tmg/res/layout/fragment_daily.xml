@@ -32,7 +32,7 @@
         android:layout_above="@+id/bottom_menu"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/floating_more"
+        android:src="@drawable/icon_plus"
         android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
@@ -42,7 +42,7 @@
         android:layout_above="@+id/floating_more"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/drawer_intro"
+        android:src="@drawable/icon_intro"
         android:tint="@android:color/white"
         android:visibility="gone"
         app:backgroundTint="#4a90e2" />
@@ -54,7 +54,7 @@
         android:layout_above="@+id/floating_intro"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/drawer_voty"
+        android:src="@drawable/icon_voty"
         android:tint="@android:color/white"
         android:visibility="gone"
         app:backgroundTint="#50e3c2" />
@@ -144,7 +144,7 @@
                 style="@style/Image.BottomMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/drawer_today" />
+                android:src="@drawable/icon_today" />
 
             <TextView
                 style="@style/Text.BottomMenu"
@@ -164,7 +164,7 @@
                 style="@style/Image.BottomMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/floating_share" />
+                android:src="@drawable/icon_share" />
 
             <TextView
                 style="@style/Text.BottomMenu"
@@ -185,7 +185,7 @@
                 style="@style/Image.BottomMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/floating_bible" />
+                android:src="@drawable/icon_bible" />
 
             <TextView
                 style="@style/Text.BottomMenu"

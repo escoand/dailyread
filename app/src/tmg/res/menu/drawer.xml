@@ -23,7 +23,7 @@
 
         <item
             android:id="@+id/navigation_today"
-            android:icon="@drawable/drawer_today"
+            android:icon="@drawable/icon_today"
             android:title="@string/navigation_today" />
 
         <item
@@ -32,27 +32,27 @@
 
         <item
             android:id="@+id/navigation_intro"
-            android:icon="@drawable/drawer_intro"
+            android:icon="@drawable/icon_intro"
             android:title="@string/navigation_intro" />
 
         <item
             android:id="@+id/navigation_voty"
-            android:icon="@drawable/drawer_voty"
+            android:icon="@drawable/icon_voty"
             android:title="@string/navigation_voty" />
 
         <item
             android:id="@+id/navigation_search"
-            android:icon="@drawable/drawer_search"
+            android:icon="@drawable/icon_search"
             android:title="@string/navigation_search" />
 
         <item
             android:id="@+id/navigation_calendar"
-            android:icon="@drawable/drawer_calendar"
+            android:icon="@drawable/icon_calendar"
             android:title="@string/navigation_calendar" />
 
         <item
             android:id="@+id/navigation_reminder"
-            android:icon="@drawable/drawer_reminder"
+            android:icon="@drawable/icon_reminder"
             android:title="@string/navigation_reminder" />
 
     </group>
@@ -61,7 +61,7 @@
 
         <item
             android:id="@+id/navigation_settings"
-            android:icon="@drawable/drawer_settings"
+            android:icon="@drawable/icon_settings"
             android:title="@string/navigation_settings" />
 
         <item
@@ -70,7 +70,7 @@
 
         <item
             android:id="@+id/navigation_about"
-            android:icon="@drawable/drawer_about"
+            android:icon="@drawable/icon_about"
             android:title="@string/navigation_about" />
 
     </group>
