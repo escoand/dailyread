@@ -26,6 +26,7 @@
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/toolbar_background</item>
+        <item name="navigationIcon">@drawable/toolbar_menu</item>
         <item name="subtitleTextAppearance">@style/Text.Toolbar.Subtitle</item>
         <item name="titleTextAppearance">@style/Text.Toolbar.Title</item>
     </style>

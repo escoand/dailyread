@@ -43,8 +43,7 @@
                     android:id="@+id/toolbar"
                     style="@style/Toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:navigationIcon="@drawable/toolbar_menu" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
