@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setOnClickListener(View.OnClickListener listener) {
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     public void onDataUpdated(Date date, Cursor cursor) {
         SimpleDateFormat frmt = new SimpleDateFormat();

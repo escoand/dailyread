@@ -43,7 +43,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         });
 
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
-        v.addView(getLayoutInflater().inflate(R.layout.fragment_about, null));
+        v.addView(getLayoutInflater().inflate(R.layout.fragment_about, v, false));
 
         ((TextView) v.findViewById(R.id.about_version)).setText(
                 String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));

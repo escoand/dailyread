@@ -121,7 +121,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         onClick(v.getId(), v);
     }
 
-    public void onClick(@NonNull int id, @Nullable View v) {
+    public void onClick(@NonNull Integer id, @Nullable View v) {
         DialogFragment dialog = null;
         Intent i = new Intent();
         Animator anim;
@@ -238,7 +238,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         // start intent
         // TODO check intent-ed application
-        else if (i.getAction() != null)
+        else if (i.getAction() != null || i.getClass() != null)
             startActivityForResult(i, 0);
     }
 
