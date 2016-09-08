@@ -19,9 +19,10 @@ package de.escoand.readdaily;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,12 +36,10 @@ import java.util.Date;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDateSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataListener {
     private DrawerLayout layout;
     private Toolbar toolbar;
-    private HeaderFragment header;
     private DailyFragment daily;
-    private FooterFragment footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +63,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // fragments
         FragmentManager fm = getSupportFragmentManager();
-        header = (HeaderFragment) fm.findFragmentById(R.id.header);
+        HeaderFragment header = (HeaderFragment) fm.findFragmentById(R.id.header);
         daily = (DailyFragment) fm.findFragmentById(R.id.content);
-        footer = (FooterFragment) fm.findFragmentById(R.id.footer);
+        FooterFragment footer = (FooterFragment) fm.findFragmentById(R.id.footer);
         header.setOnClickListener(daily);
         footer.setOnClickListener(daily);
+        daily.registerDataListener(this);
         daily.registerDataListener(header);
         daily.registerDataListener(footer);
-        onDateSelected(new Date());
     }
 
     @Override
@@ -86,60 +85,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        DialogFragment dialog = null;
-
-        switch (item.getItemId()) {
-
-            // today
-            case R.id.navigation_today:
-                onDateSelected(new Date());
-                break;
-
-            // calendar
-            case R.id.navigation_calendar:
-                dialog = new CalendarDialogFragment();
-                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
-                break;
-
-            // list
-            case R.id.navigation_list:
-                dialog = new ListDialogFragment();
-                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TEXT + "!=''", new String[]{Database.TYPE_DAY});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
-                break;
-            case R.id.navigation_intro:
-                dialog = new ListDialogFragment();
-                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_INTRO});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
-                break;
-            case R.id.navigation_voty:
-                dialog = new ListDialogFragment();
-                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
-                break;
-
-            // store
-            case R.id.navigation_store:
-                startActivityForResult(new Intent(getApplication(), StoreActivity.class), 0);
-                break;
-
-            // about
-            case R.id.navigation_about:
-                startActivity(new Intent(getApplication(), AboutActivity.class));
-                break;
-        }
-
-        if (dialog != null)
-            dialog.show(getSupportFragmentManager(), "dialog");
-
-        layout.closeDrawers();
-
-        return false;
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        daily.onClick(item.getItemId(), null);
+        return true;
     }
 
     @Override
-    public void onDateSelected(Date date) {
+    public void setOnClickListener(View.OnClickListener listener) {
+    }
+
+    @Override
+    public void onDataUpdated(Date date, Cursor cursor) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
 
@@ -154,7 +110,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
         frmt.applyPattern(pattern);
         toolbar.setSubtitle(frmt.format(date));
-
-        daily.setDate(date);
     }
 }

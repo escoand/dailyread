@@ -20,22 +20,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_today"
+        android:id="@+id/button_today"
         android:icon="@drawable/icon_today"
         android:title="@string/navigation_today" />
 
     <item
-        android:id="@+id/navigation_calendar"
+        android:id="@+id/button_calendar"
         android:icon="@drawable/icon_calendar"
         android:title="@string/navigation_calendar" />
 
     <item
-        android:id="@+id/navigation_list"
+        android:id="@+id/button_list"
         android:icon="@drawable/icon_list"
         android:title="@string/navigation_list" />
 
     <item
-        android:id="@+id/navigation_store"
+        android:id="@+id/button_store"
         android:icon="@drawable/icon_store"
         android:title="@string/navigation_store" />
 
@@ -44,12 +44,12 @@
         <menu>
 
             <item
-                android:id="@+id/navigation_settings"
+                android:id="@+id/button_settings"
                 android:icon="@drawable/icon_settings"
                 android:title="@string/navigation_settings" />
 
             <item
-                android:id="@+id/navigation_about"
+                android:id="@+id/button_about"
                 android:icon="@drawable/icon_about"
                 android:title="@string/navigation_about" />
 

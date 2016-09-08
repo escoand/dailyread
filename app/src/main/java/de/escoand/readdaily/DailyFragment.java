@@ -23,8 +23,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,14 +39,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener {
+public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener, OnDateSelectedListener {
     private static final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     private static final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private static SimpleCursorAdapter adapter;
     private static Database db;
     ListView list;
     private Cursor cursor;
-    private Date date = new Date();
+    private Date date;
     private ArrayList<DataListener> listener = new ArrayList<>();
 
     @Override
@@ -60,12 +62,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
         list.setAdapter(adapter);
-        v.findViewById(R.id.buttonStore).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), StoreActivity.class), 0);
-            }
-        });
+        v.findViewById(R.id.button_store).setOnClickListener(this);
 
         // floating buttons
         if (v.findViewById(R.id.button_more) != null)
@@ -81,7 +78,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         if (v.findViewById(R.id.button_readall) != null)
             v.findViewById(R.id.button_readall).setOnClickListener(this);
 
-        refresh();
+        setDate(new Date());
 
         return v;
     }
@@ -121,19 +118,58 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     @Override
     public void onClick(View v) {
+        onClick(v.getId(), v);
+    }
+
+    public void onClick(@NonNull int id, @Nullable View v) {
+        DialogFragment dialog = null;
         Intent i = new Intent();
         Animator anim;
-        switch (v.getId()) {
+
+        switch (id) {
+
+            // calendar
+            case R.id.button_calendar:
+                dialog = new CalendarDialogFragment();
+                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+
+            // list
+            case R.id.button_list:
+                dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TEXT + "!=''", new String[]{Database.TYPE_DAY});
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+            case R.id.button_list_intro:
+                dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_INTRO});
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+            case R.id.button_list_voty:
+                dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+
+            // store
+            case R.id.button_store:
+                i.setClass(getActivity(), StoreActivity.class);
+                break;
+
+            // about
+            case R.id.button_about:
+                i.setClass(getActivity(), AboutActivity.class);
+                break;
 
             // show buttons
             case R.id.button_more:
-                toggleVisibility(v.getRootView().findViewById(R.id.button_bible));
-                toggleVisibility(v.getRootView().findViewById(R.id.button_intro));
-                toggleVisibility(v.getRootView().findViewById(R.id.button_note));
-                toggleVisibility(v.getRootView().findViewById(R.id.button_read));
-                toggleVisibility(v.getRootView().findViewById(R.id.button_readall));
-                toggleVisibility(v.getRootView().findViewById(R.id.button_share));
-                toggleVisibility(v.getRootView().findViewById(R.id.button_voty));
+                toggleVisibility(getView().findViewById(R.id.button_bible));
+                toggleVisibility(getView().findViewById(R.id.button_intro));
+                toggleVisibility(getView().findViewById(R.id.button_note));
+                toggleVisibility(getView().findViewById(R.id.button_read));
+                toggleVisibility(getView().findViewById(R.id.button_readall));
+                toggleVisibility(getView().findViewById(R.id.button_share));
+                toggleVisibility(getView().findViewById(R.id.button_voty));
 
                 // list
                 if (list.isEnabled()) {
@@ -194,9 +230,16 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 i.putExtra(Intent.EXTRA_TEXT, cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
         }
+
+        // start dialog
+        if (dialog != null) {
+            dialog.show(getActivity().getSupportFragmentManager(), "dialog");
+        }
+
+        // start intent
         // TODO check intent-ed application
-        if (i.getAction() != null)
-            startActivity(i);
+        else if (i.getAction() != null)
+            startActivityForResult(i, 0);
     }
 
     public Date getDate() {
@@ -206,6 +249,11 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     public void setDate(Date date) {
         this.date = date;
         refresh();
+    }
+
+    @Override
+    public void onDateSelected(Date date) {
+        setDate(date);
     }
 
     private void refresh() {
@@ -240,6 +288,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     public void registerDataListener(DataListener listener) {
         this.listener.add(listener);
+        listener.onDataUpdated(date, cursor);
     }
 
     private void toggleVisibility(View v, int force) {

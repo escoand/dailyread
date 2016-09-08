@@ -22,37 +22,37 @@
     <group android:id="@+id/dummy_group_1">
 
         <item
-            android:id="@+id/navigation_today"
+            android:id="@+id/button_today"
             android:icon="@drawable/icon_today"
             android:title="@string/navigation_today" />
 
         <item
-            android:id="@+id/navigation_list"
+            android:id="@+id/button_list"
             android:icon="@drawable/icon_list"
             android:title="@string/navigation_list" />
 
         <item
-            android:id="@+id/navigation_intro"
+            android:id="@+id/button_list_intro"
             android:icon="@drawable/icon_intro"
             android:title="@string/navigation_intro" />
 
         <item
-            android:id="@+id/navigation_voty"
+            android:id="@+id/button_list_voty"
             android:icon="@drawable/icon_voty"
             android:title="@string/navigation_voty" />
 
         <item
-            android:id="@+id/navigation_search"
+            android:id="@+id/button_search"
             android:icon="@drawable/icon_search"
             android:title="@string/navigation_search" />
 
         <item
-            android:id="@+id/navigation_calendar"
+            android:id="@+id/button_calendar"
             android:icon="@drawable/icon_calendar"
             android:title="@string/navigation_calendar" />
 
         <item
-            android:id="@+id/navigation_reminder"
+            android:id="@+id/button_reminder"
             android:icon="@drawable/icon_reminder"
             android:title="@string/navigation_reminder" />
 
@@ -61,17 +61,17 @@
     <group android:id="@+id/dummy_group_2">
 
         <item
-            android:id="@+id/navigation_settings"
+            android:id="@+id/button_settings"
             android:icon="@drawable/icon_settings"
             android:title="@string/navigation_settings" />
 
         <item
-            android:id="@+id/navigation_store"
+            android:id="@+id/button_store"
             android:icon="@drawable/icon_store"
             android:title="@string/navigation_store" />
 
         <item
-            android:id="@+id/navigation_about"
+            android:id="@+id/button_about"
             android:icon="@drawable/icon_about"
             android:title="@string/navigation_about" />
 
