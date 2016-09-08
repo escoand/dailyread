@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private HeaderFragment header;
     private DailyFragment daily;
+    private FooterFragment footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +66,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fm = getSupportFragmentManager();
         header = (HeaderFragment) fm.findFragmentById(R.id.header);
         daily = (DailyFragment) fm.findFragmentById(R.id.content);
+        footer = (FooterFragment) fm.findFragmentById(R.id.footer);
         header.setOnClickListener(daily);
-        daily.registerListener(header);
+        footer.setOnClickListener(daily);
+        daily.registerDataListener(header);
+        daily.registerDataListener(footer);
         onDateSelected(new Date());
     }
 

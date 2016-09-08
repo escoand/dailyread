@@ -150,8 +150,14 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 anim.start();
                 break;
 
+            // today
+            case R.id.footer_today:
+                setDate(new Date());
+                break;
+
             // read bible
             case R.id.read_bible:
+            case R.id.footer_bible:
             case R.id.floating_bible:
                 String verse = null;
                 cursor.moveToPosition(-1);
@@ -185,6 +191,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
             // share
             case R.id.floating_share:
+                // TODO date, title, bible, text, appname
                 i.setAction(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
@@ -211,7 +218,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         // header interface
         for (DataListener tmp : listener)
-            tmp.updateHeader(date, cursor);
+            tmp.onDataUpdated(date, cursor);
         if (listener.size() > 0)
             adapter.changeCursor(db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS}));
         else
@@ -233,7 +240,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         }
     }
 
-    public void registerListener(DataListener listener) {
+    public void registerDataListener(DataListener listener) {
         this.listener.add(listener);
     }
 

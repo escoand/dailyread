@@ -25,5 +25,5 @@ import java.util.Date;
 public interface DataListener {
     void setOnClickListener(View.OnClickListener listener);
 
-    void updateHeader(Date date, Cursor cursor);
+    void onDataUpdated(Date date, Cursor cursor);
 }

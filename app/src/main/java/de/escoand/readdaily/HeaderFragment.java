@@ -35,7 +35,6 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener {
-    private ViewGroup root;
     private ImageView image;
     private TextView title;
     private TextView subtitle;
@@ -45,7 +44,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = (ViewGroup) inflater.inflate(R.layout.fragment_header, container);
+        View root = inflater.inflate(R.layout.fragment_header, container);
         image = (ImageView) root.findViewById(R.id.header_image);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
@@ -62,7 +61,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     }
 
     @Override
-    public void updateHeader(Date date, Cursor cursor) {
+    public void onDataUpdated(Date date, Cursor cursor) {
         String title = null;
         String subtitle = null;
 
@@ -115,9 +114,9 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
             }
             this.title.setText(title);
             this.subtitle.setText(subtitle);
-            root.setVisibility(View.VISIBLE);
+            getView().setVisibility(View.VISIBLE);
         } else
-            root.setVisibility(View.GONE);
+            getView().setVisibility(View.GONE);
     }
 
     @Override
@@ -147,16 +146,16 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         anim5.setTarget(R.id.header_rewind);
 
         // resize animation
-        final View cntrl = root.findViewById(R.id.header_control);
+        final View cntrl = getView().findViewById(R.id.header_control);
         if (!isLarge) {
-            anim6 = new WidthResizeAnimator(root.findViewById(R.id.header_text), root.findViewById(R.id.header_text).getMeasuredWidth(), 0);
-            anim7 = new WidthResizeAnimator(root.findViewById(R.id.header_rewind), 0, root.findViewById(R.id.header_rewind).getMeasuredHeight());
-            anim8 = new WidthResizeAnimator(root.findViewById(R.id.header_forward), 0, root.findViewById(R.id.header_forward).getMeasuredHeight());
-            anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), root.getMeasuredWidth() - 3 * root.findViewById(R.id.header_rewind).getMeasuredHeight());
+            anim6 = new WidthResizeAnimator(getView().findViewById(R.id.header_text), getView().findViewById(R.id.header_text).getMeasuredWidth(), 0);
+            anim7 = new WidthResizeAnimator(getView().findViewById(R.id.header_rewind), 0, getView().findViewById(R.id.header_rewind).getMeasuredHeight());
+            anim8 = new WidthResizeAnimator(getView().findViewById(R.id.header_forward), 0, getView().findViewById(R.id.header_forward).getMeasuredHeight());
+            anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), getView().getMeasuredWidth() - 3 * getView().findViewById(R.id.header_rewind).getMeasuredHeight());
         } else {
-            anim6 = new WidthResizeAnimator(root.findViewById(R.id.header_text), 0, root.getMeasuredWidth() - 3 * root.findViewById(R.id.header_rewind).getMeasuredHeight());
-            anim7 = new WidthResizeAnimator(root.findViewById(R.id.header_rewind), root.findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
-            anim8 = new WidthResizeAnimator(root.findViewById(R.id.header_forward), root.findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
+            anim6 = new WidthResizeAnimator(getView().findViewById(R.id.header_text), 0, getView().getMeasuredWidth() - 3 * getView().findViewById(R.id.header_rewind).getMeasuredHeight());
+            anim7 = new WidthResizeAnimator(getView().findViewById(R.id.header_rewind), getView().findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
+            anim8 = new WidthResizeAnimator(getView().findViewById(R.id.header_forward), getView().findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
             anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), cntrl.getMeasuredHeight() / 2);
         }
 
