@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        layout.closeDrawers();
         daily.onClick(item.getItemId(), null);
         return true;
     }
