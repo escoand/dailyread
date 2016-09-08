@@ -125,23 +125,26 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         AnimatorSet anims = new AnimatorSet();
         Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
         Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
-        Animator anim3, anim4;
+        Animator anim3, anim4, anim5;
         ValueAnimator anim6, anim7, anim8, anim9;
 
         // alpha animations
         if (!isLarge) {
-            anim1.setTarget(root.findViewById(R.id.header_progress));
-            anim2.setTarget(root.findViewById(R.id.header_text));
-            anim3 = anim1.clone();
+            anim1.setTarget(R.id.header_progress);
+            anim2.setTarget(R.id.header_text);
+            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
             anim4 = anim1.clone();
+            anim5 = anim1.clone();
         } else {
-            anim1.setTarget(root.findViewById(R.id.header_text));
-            anim2.setTarget(root.findViewById(R.id.header_progress));
-            anim3 = anim2.clone();
+            anim1.setTarget(R.id.header_text);
+            anim2.setTarget(R.id.header_progress);
+            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
             anim4 = anim2.clone();
+            anim5 = anim2.clone();
         }
-        anim3.setTarget(root.findViewById(R.id.header_forward));
-        anim4.setTarget(root.findViewById(R.id.header_rewind));
+        anim3.setTarget(R.id.header_image);
+        anim4.setTarget(R.id.header_forward);
+        anim5.setTarget(R.id.header_rewind);
 
         // resize animation
         final View cntrl = root.findViewById(R.id.header_control);
@@ -158,7 +161,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         }
 
         // animate
-        anims.playTogether(anim1, anim2, anim3, anim4, anim6, anim7, anim8, anim9);
+        anims.playTogether(anim1, anim2, anim3, anim4, anim5, anim6, anim7, anim8, anim9);
         anims.setDuration(500);
         anims.setInterpolator(new DecelerateInterpolator());
         anims.start();
