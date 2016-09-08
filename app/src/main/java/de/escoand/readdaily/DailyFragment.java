@@ -17,15 +17,19 @@
 
 package de.escoand.readdaily;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -38,6 +42,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     private static final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private static SimpleCursorAdapter adapter;
     private static Database db;
+    ListView list;
     private Cursor cursor;
     private Date date = new Date();
     private ArrayList<DataListener> listener = new ArrayList<>();
@@ -52,7 +57,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         adapter.setViewBinder(this);
 
         // list
-        ListView list = (ListView) v.findViewById(R.id.listView);
+        list = (ListView) v.findViewById(R.id.listView);
         list.setEmptyView(v.findViewById(R.id.listNoData));
         list.setAdapter(adapter);
         v.findViewById(R.id.buttonStore).setOnClickListener(new View.OnClickListener() {
@@ -117,6 +122,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     @Override
     public void onClick(View v) {
         Intent i = new Intent();
+        Animator anim;
         switch (v.getId()) {
 
             // show buttons
@@ -128,6 +134,20 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 toggleVisibility(v.getRootView().findViewById(R.id.floating_readall));
                 toggleVisibility(v.getRootView().findViewById(R.id.floating_share));
                 toggleVisibility(v.getRootView().findViewById(R.id.floating_voty));
+
+                // list
+                if (list.isEnabled()) {
+                    anim = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
+                    ((FloatingActionButton) v).setImageResource(R.drawable.icon_close);
+                } else {
+                    anim = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
+                    ((FloatingActionButton) v).setImageResource(R.drawable.icon_plus);
+                }
+                list.setEnabled(!list.isEnabled());
+                anim.setTarget(list);
+                anim.setDuration(500);
+                anim.setInterpolator(new DecelerateInterpolator());
+                anim.start();
                 break;
 
             // read bible
