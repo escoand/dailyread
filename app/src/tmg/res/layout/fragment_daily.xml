@@ -26,7 +26,7 @@
 
     <!-- floating action buttons -->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_more"
+        android:id="@+id/button_more"
         style="@style/FloatingActionButton.Mini"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -36,10 +36,10 @@
         android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_intro"
+        android:id="@+id/button_intro"
         style="@style/FloatingActionButton.Mini"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/floating_more"
+        android:layout_above="@+id/button_more"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/icon_intro"
@@ -48,27 +48,16 @@
         app:backgroundTint="#4a90e2" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_voty"
+        android:id="@+id/button_voty"
         style="@style/FloatingActionButton.Mini"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/floating_intro"
+        android:layout_above="@+id/button_intro"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/icon_voty"
         android:tint="@android:color/white"
         android:visibility="gone"
         app:backgroundTint="#50e3c2" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_other"
-        style="@style/FloatingActionButton.Mini"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/floating_voty"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:tint="@android:color/white"
-        android:visibility="gone"
-        app:backgroundTint="#f5a623" />
 
     <!-- content -->
     <ListView

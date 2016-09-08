@@ -68,18 +68,18 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         });
 
         // floating buttons
-        if (v.findViewById(R.id.floating_more) != null)
-            v.findViewById(R.id.floating_more).setOnClickListener(this);
-        if (v.findViewById(R.id.floating_note) != null)
-            v.findViewById(R.id.floating_note).setOnClickListener(this);
-        if (v.findViewById(R.id.floating_share) != null)
-            v.findViewById(R.id.floating_share).setOnClickListener(this);
-        if (v.findViewById(R.id.floating_read) != null)
-            v.findViewById(R.id.floating_read).setOnClickListener(this);
-        if (v.findViewById(R.id.floating_bible) != null)
-            v.findViewById(R.id.floating_bible).setOnClickListener(this);
-        if (v.findViewById(R.id.floating_readall) != null)
-            v.findViewById(R.id.floating_readall).setOnClickListener(this);
+        if (v.findViewById(R.id.button_more) != null)
+            v.findViewById(R.id.button_more).setOnClickListener(this);
+        if (v.findViewById(R.id.button_note) != null)
+            v.findViewById(R.id.button_note).setOnClickListener(this);
+        if (v.findViewById(R.id.button_share) != null)
+            v.findViewById(R.id.button_share).setOnClickListener(this);
+        if (v.findViewById(R.id.button_read) != null)
+            v.findViewById(R.id.button_read).setOnClickListener(this);
+        if (v.findViewById(R.id.button_bible) != null)
+            v.findViewById(R.id.button_bible).setOnClickListener(this);
+        if (v.findViewById(R.id.button_readall) != null)
+            v.findViewById(R.id.button_readall).setOnClickListener(this);
 
         refresh();
 
@@ -126,14 +126,14 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         switch (v.getId()) {
 
             // show buttons
-            case R.id.floating_more:
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_bible));
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_intro));
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_note));
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_read));
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_readall));
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_share));
-                toggleVisibility(v.getRootView().findViewById(R.id.floating_voty));
+            case R.id.button_more:
+                toggleVisibility(v.getRootView().findViewById(R.id.button_bible));
+                toggleVisibility(v.getRootView().findViewById(R.id.button_intro));
+                toggleVisibility(v.getRootView().findViewById(R.id.button_note));
+                toggleVisibility(v.getRootView().findViewById(R.id.button_read));
+                toggleVisibility(v.getRootView().findViewById(R.id.button_readall));
+                toggleVisibility(v.getRootView().findViewById(R.id.button_share));
+                toggleVisibility(v.getRootView().findViewById(R.id.button_voty));
 
                 // list
                 if (list.isEnabled()) {
@@ -151,14 +151,12 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 break;
 
             // today
-            case R.id.footer_today:
+            case R.id.button_today:
                 setDate(new Date());
                 break;
 
             // read bible
-            case R.id.read_bible:
-            case R.id.footer_bible:
-            case R.id.floating_bible:
+            case R.id.button_bible:
                 String verse = null;
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
@@ -173,7 +171,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 break;
 
             // note
-            case R.id.floating_note:
+            case R.id.button_note:
                 i.setAction("com.evernote.action.CREATE_NEW_NOTE");
                 i.putExtra(Intent.EXTRA_TITLE, "");
                 i.putExtra(Intent.EXTRA_TEXT, "");
@@ -184,13 +182,13 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 break;
 
             // mark
-            case R.id.floating_readall:
+            case R.id.button_readall:
                 db.markAsRead(date);
                 setDate(getDate());
                 break;
 
             // share
-            case R.id.floating_share:
+            case R.id.button_share:
                 // TODO date, title, bible, text, appname
                 i.setAction(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT)));
@@ -227,16 +225,16 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         // floating action buttons
         if (getView() != null) {
             if (adapter.getCursor().getCount() > 0)
-                toggleVisibility(getView().findViewById(R.id.floating_more), View.VISIBLE);
+                toggleVisibility(getView().findViewById(R.id.button_more), View.VISIBLE);
             else
-                toggleVisibility(getView().findViewById(R.id.floating_more), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_bible), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_intro), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_note), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_read), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_readall), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_share), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.floating_voty), View.GONE);
+                toggleVisibility(getView().findViewById(R.id.button_more), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_bible), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_intro), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_note), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_read), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_readall), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_share), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_voty), View.GONE);
         }
     }
 
