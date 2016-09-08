@@ -28,6 +28,7 @@
 
         <item
             android:id="@+id/navigation_list"
+            android:icon="@drawable/icon_list"
             android:title="@string/navigation_list" />
 
         <item
@@ -66,6 +67,7 @@
 
         <item
             android:id="@+id/navigation_store"
+            android:icon="@drawable/icon_store"
             android:title="@string/navigation_store" />
 
         <item
