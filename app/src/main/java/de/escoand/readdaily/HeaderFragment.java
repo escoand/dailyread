@@ -129,21 +129,21 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
         // alpha animations
         if (!isLarge) {
-            anim1.setTarget(R.id.header_progress);
-            anim2.setTarget(R.id.header_text);
+            anim1.setTarget(getView().findViewById(R.id.header_progress));
+            anim2.setTarget(getView().findViewById(R.id.header_text));
             anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
             anim4 = anim1.clone();
             anim5 = anim1.clone();
         } else {
-            anim1.setTarget(R.id.header_text);
-            anim2.setTarget(R.id.header_progress);
+            anim1.setTarget(getView().findViewById(R.id.header_text));
+            anim2.setTarget(getView().findViewById(R.id.header_progress));
             anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
             anim4 = anim2.clone();
             anim5 = anim2.clone();
         }
-        anim3.setTarget(R.id.header_image);
-        anim4.setTarget(R.id.header_forward);
-        anim5.setTarget(R.id.header_rewind);
+        anim3.setTarget(getView().findViewById(R.id.header_image));
+        anim4.setTarget(getView().findViewById(R.id.header_forward));
+        anim5.setTarget(getView().findViewById(R.id.header_rewind));
 
         // resize animation
         final View cntrl = getView().findViewById(R.id.header_control);
