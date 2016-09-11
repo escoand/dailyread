@@ -123,7 +123,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     public void onClick(@NonNull Integer id, @Nullable View v) {
         DialogFragment dialog = null;
-        Intent i = new Intent();
+        Intent i = null;
         Animator anim;
 
         switch (id) {
@@ -153,12 +153,12 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
             // store
             case R.id.button_store:
-                i.setClass(getActivity(), StoreActivity.class);
+                i = new Intent(getActivity(), StoreActivity.class);
                 break;
 
             // about
             case R.id.button_about:
-                i.setClass(getActivity(), AboutActivity.class);
+                i = new Intent(getActivity(), AboutActivity.class);
                 break;
 
             // show buttons
@@ -201,6 +201,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 }
                 if (verse != null) {
                     String url = getString(R.string.url_bible) + verse.replaceAll(" ", "");
+                    i = new Intent();
                     i.setAction(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                 }
@@ -208,6 +209,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
             // note
             case R.id.button_note:
+                i = new Intent();
                 i.setAction("com.evernote.action.CREATE_NEW_NOTE");
                 i.putExtra(Intent.EXTRA_TITLE, "");
                 i.putExtra(Intent.EXTRA_TEXT, "");
@@ -226,6 +228,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             // share
             case R.id.button_share:
                 // TODO date, title, bible, text, appname
+                i = new Intent();
                 i.setAction(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT)));
                 break;
@@ -238,8 +241,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         // start intent
         // TODO check intent-ed application
-        else if (i.getAction() != null || i.getClass() != null)
-            startActivityForResult(i, 0);
+        else if (i != null)
+            getActivity().startActivityForResult(i, 0);
     }
 
     public Date getDate() {
