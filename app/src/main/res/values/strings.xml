@@ -53,7 +53,27 @@
     <string name="message_recommend_subject">App-Empfehlung für dich</string>
     <string name="message_recommend">Ich möchte dir die folgende App empfehlen.\nProbier sie doch mal aus.\nhttps://play.google.com/store/apps/details?id=</string>
 
-    <string name="url_bible">http://www.bibleserver.com/text/LUT/</string>
+    <string name="url_bible">http://www.bibleserver.com/text/</string>
     <string name="url_tickets">https://github.com/escoand/dailyread/issues</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!--  settings -->
+    <string name="pref_notification">Benachrichtigung</string>
+    <string name="pref_font">Schriftart</string>
+    <string name="pref_translation">Bibelübersetzung</string>
+
+    <!-- settings values -->
+    <string-array name="bible_translations">
+        <item>Hoffnung für alle</item>
+        <item>Luther</item>
+        <item>Gute Nachricht</item>
+    </string-array>
+    <string-array name="bible_translation_values">
+        <item>HFA</item>
+        <item>LUT</item>
+        <item>GN</item>
+    </string-array>
 
 </resources>

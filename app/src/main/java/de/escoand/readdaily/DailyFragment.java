@@ -20,9 +20,11 @@ package de.escoand.readdaily;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -49,10 +51,13 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     private Cursor cursor;
     private Date date;
     private ArrayList<DataListener> listener = new ArrayList<>();
+    private SharedPreferences settings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_daily, container);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         // data
         db = new Database(getContext());
@@ -156,6 +161,11 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 break;
 
             // store
+            case R.id.button_settings:
+                i = new Intent(getActivity(), SettingsActivity.class);
+                break;
+
+            // store
             case R.id.button_store:
                 i = new Intent(getActivity(), StoreActivity.class);
                 break;
@@ -203,7 +213,9 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                         verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
                 }
                 if (verse != null) {
-                    String url = getString(R.string.url_bible) + verse.replaceAll(" ", "");
+                    String url = getString(R.string.url_bible)
+                            + settings.getString("bible_translation", "LUT") + "/"
+                            + verse.replaceAll(" ", "");
                     i = new Intent();
                     i.setAction(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
