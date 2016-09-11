@@ -21,39 +21,37 @@
 
     <item android:id="@android:id/secondaryProgress">
 
-        <rotate
-            android:fromDegrees="90"
-            android:toDegrees="90">
+        <scale android:scaleWidth="100%">
 
-            <shape
-                android:innerRadiusRatio="2.1"
-                android:shape="ring"
-                android:thickness="2dp">
+            <shape android:shape="line">
 
-                <solid android:color="@color/progress_secondary" />
+                <size android:height="2dp" />
+
+                <stroke
+                    android:width="2dp"
+                    android:color="@color/progress_secondary" />
 
             </shape>
 
-        </rotate>
+        </scale>
 
     </item>
 
     <item android:id="@android:id/progress">
 
-        <rotate
-            android:fromDegrees="90"
-            android:toDegrees="90">
+        <scale android:scaleWidth="100%">
 
-            <shape
-                android:innerRadiusRatio="2.1"
-                android:shape="ring"
-                android:thickness="2dp">
+            <shape android:shape="line">
 
-                <solid android:color="@color/progress_primary" />
+                <size android:height="2dp" />
+
+                <stroke
+                    android:width="2dp"
+                    android:color="@color/progress_primary" />
 
             </shape>
 
-        </rotate>
+        </scale>
 
     </item>
 

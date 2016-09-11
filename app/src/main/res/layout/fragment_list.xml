@@ -34,7 +34,7 @@
 
     <ProgressBar
         android:id="@+id/listLoading"
-        style="@style/Progress.Circular"
+        style="@style/Progress.Circular.Indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

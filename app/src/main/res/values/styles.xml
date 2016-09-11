@@ -100,8 +100,19 @@
         <item name="android:progressDrawable">@drawable/progress_circular</item>
     </style>
 
-    <style name="Progress.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_circular</item>
+    <style name="Progress.Circular.Indeterminate">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_circular</item>
+    </style>
+
+    <style name="Progress.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminate">false</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+    </style>
+
+    <style name="Progress.Horizontal.Indeterminate">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_horizontal</item>
     </style>
 
     <!-- text -->
