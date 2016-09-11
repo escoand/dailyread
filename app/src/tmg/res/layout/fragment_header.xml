@@ -52,7 +52,7 @@
             android:alpha="0">
 
             <ProgressBar
-                style="@style/Progress.Circular.Indeterminate"
+                style="@style/Progress.Circular"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:max="100"
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="00:04" />
+                android:text="00:00" />
 
         </FrameLayout>
 
