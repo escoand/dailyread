@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -125,6 +126,9 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         DialogFragment dialog = null;
         Intent i = null;
         Animator anim;
+        String title = null;
+        String verse = null;
+        String text = null;
 
         switch (id) {
 
@@ -193,7 +197,6 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
             // read bible
             case R.id.button_bible:
-                String verse = null;
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
@@ -209,8 +212,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
             // note
             case R.id.button_note:
-                i = new Intent();
-                i.setAction("com.evernote.action.CREATE_NEW_NOTE");
+                i = new Intent("com.evernote.action.CREATE_NEW_NOTE");
                 i.putExtra(Intent.EXTRA_TITLE, "");
                 i.putExtra(Intent.EXTRA_TEXT, "");
                 i.putExtra("TAG_NAME_LIST", new ArrayList<String>());
@@ -228,9 +230,20 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             // share
             case R.id.button_share:
                 // TODO date, title, bible, text, appname
-                i = new Intent();
-                i.setAction(Intent.ACTION_SEND);
-                i.putExtra(Intent.EXTRA_TEXT, cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT)));
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS)) {
+                        title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE));
+                        text = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                    } else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
+                        verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                }
+                if (title != null && text != null && verse != null) {
+                    i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_TEXT, DateFormat.getDateInstance().format(date) + "\n" +
+                            title + " (" + verse + ")\n" + text + "\n" + getString(R.string.app_title));
+                }
                 break;
         }
 
