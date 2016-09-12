@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
@@ -106,7 +107,7 @@ public class Database extends SQLiteOpenHelper {
                 COLUMN_SUBSCRIPTION + " TEXT NOT NULL REFERENCES " + TABLE_SETS + "(" + COLUMN_NAME + "), " +
                 COLUMN_TYPE + " TEXT NOT NULL REFERENCES " + TABLE_TYPES + "(" + COLUMN_NAME + "), " +
                 COLUMN_DATE + " INTEGER NOT NULL, " +
-                COLUMN_GROUP + " INTEGER, " +
+                COLUMN_GROUP + " REAL, " +
                 COLUMN_TITLE + " TEXT, " +
                 COLUMN_TEXT + " TEXT, " +
                 COLUMN_SOURCE + " TEXT, " +
@@ -216,12 +217,14 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public boolean loadDataXML(String subscription, int revision, File file) throws IOException, XmlPullParserException {
+		Random rand;
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
         try {
             XmlPullParser parser = Xml.newPullParser();
+            ContentValues values_exeg = new ContentValues();
             ContentValues values_day = new ContentValues();
             ContentValues values_week = new ContentValues();
             ContentValues values_month = new ContentValues();
@@ -242,152 +245,146 @@ public class Database extends SQLiteOpenHelper {
                 // start tag
                 if (parser.getEventType() == XmlPullParser.START_TAG) {
                     name = parser.getName();
-                }
 
-                // text element
-                else if (parser.getEventType() == XmlPullParser.TEXT) {
-
-                    // read values
                     switch (name) {
-                        case "tag":
-                            date = Integer.valueOf(parser.getAttributeValue(null, "datum").replaceAll("-", ""));
-                            Log.e("date", String.valueOf(date));
 
-                            // day
-                            values_day.put(COLUMN_SUBSCRIPTION, subscription);
-                            values_day.put(COLUMN_TYPE, TYPE_DAY);
-                            values_day.put(COLUMN_DATE, date);
-                            values_day.put(COLUMN_SOURCE, parser.getAttributeValue(null, "bibelstelle"));
-                            db.insertOrThrow(TABLE_TEXTS, null, values_day);
-
-                            // day
-                            values_day.clear();
-                            values_day.put(COLUMN_SUBSCRIPTION, subscription);
-                            values_day.put(COLUMN_TYPE, TYPE_EXEGESIS);
-                            values_day.put(COLUMN_DATE, date);
-
-                            // week
-                            values_week.put(COLUMN_SUBSCRIPTION, subscription);
-                            values_week.put(COLUMN_TYPE, TYPE_WEEK);
-                            values_week.put(COLUMN_DATE, date);
-
-                            // month
-                            values_month.put(COLUMN_SUBSCRIPTION, subscription);
-                            values_month.put(COLUMN_TYPE, TYPE_MONTH);
-                            values_month.put(COLUMN_DATE, date);
-
-                            // year
-                            values_year.put(COLUMN_SUBSCRIPTION, subscription);
-                            values_year.put(COLUMN_TYPE, TYPE_YEAR);
-                            values_year.put(COLUMN_DATE, date);
-
-                            // intro
+                        case "entry":
+							if(parser.getAttributeValue(null, "date"))
+								date = Integer.valueOf(parser.getAttributeValue(null, "date").replaceAll("-", ""));
+							else
+								date = rand.nextInt((99999999 - 30000000) + 1) + 30000000;
+							// description - ignore
                             values_intro.put(COLUMN_SUBSCRIPTION, subscription);
                             values_intro.put(COLUMN_TYPE, TYPE_INTRO);
                             values_intro.put(COLUMN_DATE, date);
+                            values_intro.put(COLUMN_GROUP, Integer.valueOf(parser.getAttributeValue(null, "sourceId")));
+							// source - ignore
+                            values_intro.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
+							// subtitle - ignore
+							break;
 
-                            break;
+                        case "exegesis":
+                            values_exeg.put(COLUMN_SUBSCRIPTION, subscription);
+                            values_exeg.put(COLUMN_TYPE, TYPE_EXEGESIS);
+                            values_exeg.put(COLUMN_DATE, date);
+							// source - ignore
+                            values_exeg.put(COLUMN_GROUP,
+								Integer.valueOf(parser.getAttributeValue(null, "sourceId") +
+								Integer.valueOf(parser.getAttributeValue(null, "sourceChapter") / 100
+							);
+							// sourceVerse - ignore
+                            values_exeg.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
+							// subtitle - ignore
+							break;
 
-                        case "datum_ergaenzung":
-                            // ignore
-                            break;
-                        case "wochentag":
-                            // ignore
-                            break;
+                        case "verse_of_the_day":
+                            values_day.put(COLUMN_SUBSCRIPTION, subscription);
+                            values_day.put(COLUMN_TYPE, TYPE_DAY);
+                            values_day.put(COLUMN_DATE, date);
+                            values_day.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
+							break;
 
-                        // day
-                        case "ueberschrift":
-                            if (!parser.getText().isEmpty())
-                                values_day.put(COLUMN_TITLE, parser.getText());
-                            break;
-                        case "auslegung":
-                            if (!parser.getText().isEmpty())
-                                values_day.put(COLUMN_TEXT, parser.getText());
-                            break;
-                        case "author":
-                            if (!parser.getText().isEmpty())
-                                values_day.put(COLUMN_SOURCE, parser.getText());
-                            break;
+                        case "verse_of_the_week":
+                            values_week.put(COLUMN_SUBSCRIPTION, subscription);
+                            values_week.put(COLUMN_TYPE, TYPE_WEEK);
+                            values_week.put(COLUMN_DATE, date);
+                            values_week.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
+							break;
 
-                        // week
-                        case "wochenspruch":
-                            if (!parser.getText().isEmpty())
-                                values_week.put(COLUMN_TEXT, parser.getText());
-                            break;
-                        case "bibelstelle3":
-                            if (!parser.getText().isEmpty())
-                                values_week.put(COLUMN_SOURCE, parser.getText());
-                            break;
+                        case "verse_of_the_month":
+                            values_month.put(COLUMN_SUBSCRIPTION, subscription);
+                            values_month.put(COLUMN_TYPE, TYPE_MONTH);
+                            values_month.put(COLUMN_DATE, date);
+                            values_month.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
+							break;
 
-                        // month
-                        case "monatsspruch":
-                            if (!parser.getText().isEmpty())
-                                values_month.put(COLUMN_TEXT, parser.getText());
-                            break;
-                        case "bibelstelle4":
-                            if (!parser.getText().isEmpty())
-                                values_month.put(COLUMN_SOURCE, parser.getText());
-                            break;
+                        case "thoughts_on_bible_quote_year":
+                            values_year.put(COLUMN_SUBSCRIPTION, subscription);
+                            values_year.put(COLUMN_TYPE, TYPE_YEAR);
+                            values_year.put(COLUMN_DATE, date);
+                            values_year.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
+                            // source - verse 
+                            // sourceVerse - verse content
+                            // author
+                            values_year.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
+							break;
 
-                        // year
-                        case "ueberschrift2":
-                            if (!parser.getText().isEmpty())
-                                values_year.put(COLUMN_TITLE, parser.getText());
-                            break;
-                        case "Gedanken_zur_Jahreslosung":
-                            if (!parser.getText().isEmpty())
-                                values_year.put(COLUMN_TEXT, parser.getText());
-                            break;
-                        case "bibelstelle5":
-                            if (!parser.getText().isEmpty())
-                                values_year.put(COLUMN_SOURCE, parser.getText());
-                            break;
+                }
 
-                        // intro
-                        case "ueberschrift3":
-                            if (!parser.getText().isEmpty())
-                                values_intro.put(COLUMN_TITLE, parser.getText());
-                            break;
-                        case "Eine_kleine_Einfuhrung1":
-                            if (!parser.getText().isEmpty())
-                                values_intro.put(COLUMN_TEXT, parser.getText());
-                            break;
+                // text element
+                else if (parser.getEventType() == XmlPullParser.TEXT && !parser.getText().isEmpty()) {
+
+                    switch (name) {
+
+                        case "entry":
+							values_intro.put(COLUMN_TEXT, parser.getText());
+							break;
+
+                        case "exegesis":
+                            values_exeg.put(COLUMN_TEXT, parser.getText());
+							break;
+
+                        case "verse_of_the_day":
+							values_day.put(COLUMN_TEXT, parser.getText());
+							break;
+
+                        case "verse_of_the_week":
+                            values_week.put(COLUMN_TEXT, parser.getText());
+							break;
+
+                        case "verse_of_the_month":
+                            values_month.put(COLUMN_TEXT, parser.getText());
+							break;
+
+                        case "thoughts_on_bible_quote_year":
+                            values_year.put(COLUMN_TEXT, parser.getText());
+							break;
+
                     }
                 }
 
                 // end tag
-                else if (parser.getEventType() == XmlPullParser.END_TAG && name.equals("tag")) {
+                else if (parser.getEventType() == XmlPullParser.END_TAG) {
 
-                    // day
-                    Log.e("insert", values_day.toString());
-                    if (values_day.containsKey(COLUMN_DATE) &&
-                            values_day.containsKey(COLUMN_TEXT))
-                        db.insertOrThrow(TABLE_TEXTS, null, values_day);
-                    values_day.clear();
+                    switch (name) {
 
-                    // week
-                    if (values_week.containsKey(COLUMN_DATE) &&
-                            values_week.containsKey(COLUMN_TEXT))
-                        db.insertOrThrow(TABLE_TEXTS, null, values_week);
-                    values_week.clear();
+                        case "entry":
+							if (values_intro.containsKey(COLUMN_TEXT))
+								db.insertOrThrow(TABLE_TEXTS, null, values_intro);
+							values_intro.clear();
+							break;
 
-                    // month
-                    if (values_month.containsKey(COLUMN_DATE) &&
-                            values_month.containsKey(COLUMN_TEXT))
-                        db.insertOrThrow(TABLE_TEXTS, null, values_month);
-                    values_month.clear();
+                        case "exegesis":
+							if (values_exeg.containsKey(COLUMN_DATE) && values_exeg.containsKey(COLUMN_TEXT))
+								db.insertOrThrow(TABLE_TEXTS, null, values_exeg);
+							values_exeg.clear();
+							break;
 
-                    // year
-                    if (values_year.containsKey(COLUMN_DATE) &&
-                            values_year.containsKey(COLUMN_TEXT))
-                        db.insertOrThrow(TABLE_TEXTS, null, values_year);
-                    values_year.clear();
+                        case "verse_of_the_day":
+							if (values_day.containsKey(COLUMN_DATE) && values_day.containsKey(COLUMN_TEXT))
+								db.insertOrThrow(TABLE_TEXTS, null, values_day);
+							values_day.clear();
+							break;
 
-                    // other
-                    if (values_intro.containsKey(COLUMN_DATE) &&
-                            values_intro.containsKey(COLUMN_TEXT))
-                        db.insertOrThrow(TABLE_TEXTS, null, values_intro);
-                    values_intro.clear();
+                        case "verse_of_the_week":
+							if (values_week.containsKey(COLUMN_DATE) && values_week.containsKey(COLUMN_TEXT))
+								db.insertOrThrow(TABLE_TEXTS, null, values_week);
+							values_week.clear();
+							break;
+
+                        case "verse_of_the_month":
+							if (values_month.containsKey(COLUMN_DATE) && values_month.containsKey(COLUMN_TEXT))
+								db.insertOrThrow(TABLE_TEXTS, null, values_month);
+							values_month.clear();
+							break;
+
+                        case "thoughts_on_bible_quote_year":
+							if (values_year.containsKey(COLUMN_DATE) && values_year.containsKey(COLUMN_TEXT))
+								db.insertOrThrow(TABLE_TEXTS, null, values_year);
+							values_year.clear();
+							break;
+
+                    }
                 }
             }
 
