@@ -32,33 +32,46 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class ListDialogFragment extends DialogFragment implements SimpleCursorAdapter.ViewBinder, DialogInterface.OnClickListener {
+    private String title = null;
     private String condition = null;
     private String[] values = null;
+    private String[] from = new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE};
+    private int[] to = new int[]{R.id.list_image, R.id.list_title, R.id.list_date};
     private OnDateSelectedListener listener;
     private SimpleCursorAdapter adapter;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public void setFilter(String condition, String[] values) {
         this.condition = condition;
         this.values = values;
     }
 
+    public void setMapping(String[] from, int[] to) {
+        this.from = from;
+        this.to = to;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (title == null)
+            title = getString(R.string.navigation_list);
 
         // adapter
         adapter = new SimpleCursorAdapter(
                 getContext(),
                 R.layout.item_list,
                 new Database(getContext()).getList(condition, values),
-                new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE},
-                new int[]{R.id.list_image, R.id.list_title, R.id.list_date},
+                from, to,
                 0);
         adapter.setViewBinder(this);
 
         // dialog
         return new AlertDialog.Builder(getContext())
-                .setTitle(R.string.navigation_list)
+                .setTitle(title)
                 .setAdapter(adapter, this)
                 .setNegativeButton(R.string.button_cancel, null)
                 .create();
