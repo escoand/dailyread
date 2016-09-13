@@ -47,7 +47,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
     public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_DATE = "date";
-    public static final String COLUMN_GROUP = "group";
+    public static final String COLUMN_GROUP = "groups";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_SOURCE = "author";
@@ -137,7 +137,10 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO
+        db.execSQL("DROP TABLE " + TABLE_SETS);
+        db.execSQL("DROP TABLE " + TABLE_TYPES);
+        db.execSQL("DROP TABLE " + TABLE_TEXTS);
+        onCreate(db);
     }
 
     public boolean loadDataCSV(String subscription, int revision, File file) throws IOException {
@@ -217,7 +220,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public boolean loadDataXML(String subscription, int revision, File file) throws IOException, XmlPullParserException {
-		Random rand;
+        Random rand = new Random();
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -231,7 +234,7 @@ public class Database extends SQLiteOpenHelper {
             ContentValues values_year = new ContentValues();
             ContentValues values_intro = new ContentValues();
             String name = "";
-            int date;
+            String date = "";
 
             // subscription
             values_day.put(COLUMN_NAME, subscription);
@@ -249,54 +252,55 @@ public class Database extends SQLiteOpenHelper {
                     switch (name) {
 
                         case "entry":
-							if(parser.getAttributeValue(null, "date"))
-								date = Integer.valueOf(parser.getAttributeValue(null, "date").replaceAll("-", ""));
-							else
-								date = rand.nextInt((99999999 - 30000000) + 1) + 30000000;
-							// description - ignore
+                            if (parser.getAttributeValue(null, "date") != null)
+                                date = parser.getAttributeValue(null, "date").replaceAll("-", "");
+                            else
+                                date = String.valueOf(rand.nextInt((99999999 - 30000000) + 1) + 30000000);
+                            // description - ignore
                             values_intro.put(COLUMN_SUBSCRIPTION, subscription);
                             values_intro.put(COLUMN_TYPE, TYPE_INTRO);
                             values_intro.put(COLUMN_DATE, date);
-                            values_intro.put(COLUMN_GROUP, Integer.valueOf(parser.getAttributeValue(null, "sourceId")));
-							// source - ignore
+                            if (parser.getAttributeValue(null, "sourceId") != null)
+                                values_intro.put(COLUMN_GROUP, Integer.valueOf(parser.getAttributeValue(null, "sourceId")));
+                            // source - ignore
                             values_intro.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
-							// subtitle - ignore
-							break;
+                            // subtitle - ignore
+                            break;
 
                         case "exegesis":
                             values_exeg.put(COLUMN_SUBSCRIPTION, subscription);
                             values_exeg.put(COLUMN_TYPE, TYPE_EXEGESIS);
                             values_exeg.put(COLUMN_DATE, date);
-							// source - ignore
+                            // source - ignore
                             values_exeg.put(COLUMN_GROUP,
-								Integer.valueOf(parser.getAttributeValue(null, "sourceId") +
-								Integer.valueOf(parser.getAttributeValue(null, "sourceChapter") / 100
-							);
-							// sourceVerse - ignore
+                                    Float.valueOf(parser.getAttributeValue(null, "sourceId")) +
+                                            Float.valueOf(parser.getAttributeValue(null, "sourceChapter")) / 100
+                            );
+                            // sourceVerse - ignore
                             values_exeg.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
-							// subtitle - ignore
-							break;
+                            // subtitle - ignore
+                            break;
 
                         case "verse_of_the_day":
                             values_day.put(COLUMN_SUBSCRIPTION, subscription);
                             values_day.put(COLUMN_TYPE, TYPE_DAY);
                             values_day.put(COLUMN_DATE, date);
                             values_day.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
-							break;
+                            break;
 
                         case "verse_of_the_week":
                             values_week.put(COLUMN_SUBSCRIPTION, subscription);
                             values_week.put(COLUMN_TYPE, TYPE_WEEK);
                             values_week.put(COLUMN_DATE, date);
                             values_week.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
-							break;
+                            break;
 
                         case "verse_of_the_month":
                             values_month.put(COLUMN_SUBSCRIPTION, subscription);
                             values_month.put(COLUMN_TYPE, TYPE_MONTH);
                             values_month.put(COLUMN_DATE, date);
                             values_month.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
-							break;
+                            break;
 
                         case "thoughts_on_bible_quote_year":
                             values_year.put(COLUMN_SUBSCRIPTION, subscription);
@@ -307,8 +311,9 @@ public class Database extends SQLiteOpenHelper {
                             // sourceVerse - verse content
                             // author
                             values_year.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
-							break;
+                            break;
 
+                    }
                 }
 
                 // text element
@@ -317,28 +322,28 @@ public class Database extends SQLiteOpenHelper {
                     switch (name) {
 
                         case "entry":
-							values_intro.put(COLUMN_TEXT, parser.getText());
-							break;
+                            values_intro.put(COLUMN_TEXT, parser.getText());
+                            break;
 
                         case "exegesis":
                             values_exeg.put(COLUMN_TEXT, parser.getText());
-							break;
+                            break;
 
                         case "verse_of_the_day":
-							values_day.put(COLUMN_TEXT, parser.getText());
-							break;
+                            values_day.put(COLUMN_TEXT, parser.getText());
+                            break;
 
                         case "verse_of_the_week":
                             values_week.put(COLUMN_TEXT, parser.getText());
-							break;
+                            break;
 
                         case "verse_of_the_month":
                             values_month.put(COLUMN_TEXT, parser.getText());
-							break;
+                            break;
 
                         case "thoughts_on_bible_quote_year":
                             values_year.put(COLUMN_TEXT, parser.getText());
-							break;
+                            break;
 
                     }
                 }
@@ -349,40 +354,44 @@ public class Database extends SQLiteOpenHelper {
                     switch (name) {
 
                         case "entry":
-							if (values_intro.containsKey(COLUMN_TEXT))
-								db.insertOrThrow(TABLE_TEXTS, null, values_intro);
-							values_intro.clear();
-							break;
+                            if (values_intro.containsKey(COLUMN_TEXT))
+                                db.insertOrThrow(TABLE_TEXTS, null, values_intro);
+                            values_intro.clear();
+                            break;
 
                         case "exegesis":
-							if (values_exeg.containsKey(COLUMN_DATE) && values_exeg.containsKey(COLUMN_TEXT))
-								db.insertOrThrow(TABLE_TEXTS, null, values_exeg);
-							values_exeg.clear();
-							break;
+                            Log.e(COLUMN_DATE, String.valueOf(date));
+                            Log.e(COLUMN_GROUP, String.valueOf(values_exeg.getAsFloat(COLUMN_GROUP)));
+                            Log.e(COLUMN_TITLE, values_exeg.getAsString(COLUMN_TITLE) + " ");
+                            Log.e(COLUMN_TEXT, values_exeg.getAsString(COLUMN_TEXT));
+                            if (values_exeg.containsKey(COLUMN_DATE) && values_exeg.containsKey(COLUMN_TEXT))
+                                db.insertOrThrow(TABLE_TEXTS, null, values_exeg);
+                            values_exeg.clear();
+                            break;
 
                         case "verse_of_the_day":
-							if (values_day.containsKey(COLUMN_DATE) && values_day.containsKey(COLUMN_TEXT))
-								db.insertOrThrow(TABLE_TEXTS, null, values_day);
-							values_day.clear();
-							break;
+                            if (values_day.containsKey(COLUMN_DATE) && values_day.containsKey(COLUMN_TEXT))
+                                db.insertOrThrow(TABLE_TEXTS, null, values_day);
+                            values_day.clear();
+                            break;
 
                         case "verse_of_the_week":
-							if (values_week.containsKey(COLUMN_DATE) && values_week.containsKey(COLUMN_TEXT))
-								db.insertOrThrow(TABLE_TEXTS, null, values_week);
-							values_week.clear();
-							break;
+                            if (values_week.containsKey(COLUMN_DATE) && values_week.containsKey(COLUMN_TEXT))
+                                db.insertOrThrow(TABLE_TEXTS, null, values_week);
+                            values_week.clear();
+                            break;
 
                         case "verse_of_the_month":
-							if (values_month.containsKey(COLUMN_DATE) && values_month.containsKey(COLUMN_TEXT))
-								db.insertOrThrow(TABLE_TEXTS, null, values_month);
-							values_month.clear();
-							break;
+                            if (values_month.containsKey(COLUMN_DATE) && values_month.containsKey(COLUMN_TEXT))
+                                db.insertOrThrow(TABLE_TEXTS, null, values_month);
+                            values_month.clear();
+                            break;
 
                         case "thoughts_on_bible_quote_year":
-							if (values_year.containsKey(COLUMN_DATE) && values_year.containsKey(COLUMN_TEXT))
-								db.insertOrThrow(TABLE_TEXTS, null, values_year);
-							values_year.clear();
-							break;
+                            if (values_year.containsKey(COLUMN_DATE) && values_year.containsKey(COLUMN_TEXT))
+                                db.insertOrThrow(TABLE_TEXTS, null, values_year);
+                            values_year.clear();
+                            break;
 
                     }
                 }
