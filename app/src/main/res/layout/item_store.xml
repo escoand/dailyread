@@ -86,7 +86,7 @@
         android:id="@+id/store_progress_data"
         style="@style/Progress.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:visibility="gone" />
 
