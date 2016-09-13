@@ -274,7 +274,7 @@ public class Database extends SQLiteOpenHelper {
                             // source - ignore
                             values_exeg.put(COLUMN_GROUP,
                                     Float.valueOf(parser.getAttributeValue(null, "sourceId")) +
-                                            Float.valueOf(parser.getAttributeValue(null, "sourceChapter")) / 100
+                                            Float.valueOf(parser.getAttributeValue(null, "sourceChapter")) / 1000
                             );
                             // sourceVerse - ignore
                             values_exeg.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
@@ -360,10 +360,6 @@ public class Database extends SQLiteOpenHelper {
                             break;
 
                         case "exegesis":
-                            Log.e(COLUMN_DATE, String.valueOf(date));
-                            Log.e(COLUMN_GROUP, String.valueOf(values_exeg.getAsFloat(COLUMN_GROUP)));
-                            Log.e(COLUMN_TITLE, values_exeg.getAsString(COLUMN_TITLE) + " ");
-                            Log.e(COLUMN_TEXT, values_exeg.getAsString(COLUMN_TEXT));
                             if (values_exeg.containsKey(COLUMN_DATE) && values_exeg.containsKey(COLUMN_TEXT))
                                 db.insertOrThrow(TABLE_TEXTS, null, values_exeg);
                             values_exeg.clear();
@@ -464,12 +460,10 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getList(String condition, String[] values) {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id",
-                        "CASE WHEN " + COLUMN_SOURCE + "!='' THEN " + COLUMN_SOURCE + " ELSE " + COLUMN_TEXT + " END " + COLUMN_SOURCE,
-                        COLUMN_DATE, COLUMN_READ},
+                new String[]{"rowid _id", COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
                 condition, values,
                 null, null,
-                COLUMN_SOURCE);
+                COLUMN_GROUP);
         if (c != null)
             c.moveToFirst();
         return c;
