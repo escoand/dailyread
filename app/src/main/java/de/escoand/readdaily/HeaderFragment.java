@@ -67,10 +67,10 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-            if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS))
-                title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE));
-            else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
-                subtitle = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+            if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY)) {
+                title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                subtitle = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
+            }
         }
 
         if (this.title != null && title != null && this.subtitle != null && subtitle != null) {
