@@ -69,11 +69,11 @@ public class StoreListItem {
         this.parent = parent;
         this.billing = billing;
         View v = activity.getLayoutInflater().inflate(R.layout.item_store, parent, false);
-        buttonRemove = (Button) v.findViewById(R.id.buttonRemove);
-        buttonAction = (Button) v.findViewById(R.id.buttonAction);
-        image = (ImageView) v.findViewById(R.id.productImage);
-        progressImage = (ProgressBar) v.findViewById(R.id.progressImage);
-        progressData = (ProgressBar) v.findViewById(R.id.progressData);
+        buttonRemove = (Button) v.findViewById(R.id.store_remove);
+        buttonAction = (Button) v.findViewById(R.id.store_action);
+        image = (ImageView) v.findViewById(R.id.store_image);
+        progressImage = (ProgressBar) v.findViewById(R.id.store_progress_image);
+        progressData = (ProgressBar) v.findViewById(R.id.store_progress_data);
 
         // details
         if (details == null) {
@@ -171,7 +171,7 @@ public class StoreListItem {
 
         // purchase
         else if (details != null) {
-            buttonAction.setText(activity.getString(R.string.button_purchase));
+            buttonAction.setText(details.priceText);
             buttonAction.setEnabled(true);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setOnClickListener(new View.OnClickListener() {

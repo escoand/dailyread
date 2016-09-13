@@ -47,6 +47,11 @@
     <color name="bottom_buttons_text">@color/darkgrey</color>
     <color name="bottom_buttons_icon">@color/darkgrey</color>
 
+    <color name="button_background">@color/blue</color>
+    <color name="button_text">@android:color/white</color>
+    <color name="button_light_background">@android:color/transparent</color>
+    <color name="button_light_text">@color/darkgrey</color>
+
     <color name="progress_primary">@color/blue</color>
     <color name="progress_secondary">@android:color/white</color>
 

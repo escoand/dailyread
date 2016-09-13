@@ -57,6 +57,17 @@
         <item name="android:tint">@color/bottom_buttons_icon</item>
     </style>
 
+    <!-- button -->
+    <style name="Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/button_background</item>
+        <item name="android:textColor">@color/button_text</item>
+    </style>
+
+    <style name="Button.Light" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/button_light_background</item>
+        <item name="android:textColor">@color/button_light_text</item>
+    </style>
+
     <!-- cardview -->
     <style name="Card.Wrapper">
         <item name="android:layout_width">match_parent</item>
@@ -94,7 +105,7 @@
         <item name="android:showDividers">beginning|middle|end</item>
     </style>
 
-    <!-- progress_circular -->
+    <!-- progress -->
     <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
         <item name="android:progressDrawable">@drawable/progress_circular</item>
