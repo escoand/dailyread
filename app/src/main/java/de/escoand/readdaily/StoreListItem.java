@@ -20,6 +20,7 @@ package de.escoand.readdaily;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -96,7 +97,7 @@ public class StoreListItem {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                error.printStackTrace();
+                errorHandling(error);
             }
         });
 
@@ -190,6 +191,6 @@ public class StoreListItem {
 
     private void errorHandling(Throwable e) {
         Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
-        e.printStackTrace();
+        Log.e("error", Log.getStackTraceString(e));
     }
 }
