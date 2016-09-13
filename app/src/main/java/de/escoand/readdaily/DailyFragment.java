@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,9 +94,6 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
         if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE)) {
             View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
-
-            source.setVisibility(View.VISIBLE);
-
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
                 case Database.TYPE_YEAR:
                     ((TextView) view).setText(getContext().getString(R.string.type_voty));
@@ -110,13 +108,10 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                     ((TextView) view).setText(getContext().getString(R.string.type_votd));
                     source.setVisibility(View.GONE);
                     return true;
-                case Database.TYPE_EXEGESIS:
-                    if (listener.size() == 0)
-                        view.setVisibility(View.VISIBLE);
-                    else
-                        view.setVisibility(View.GONE);
-                    return true;
             }
+        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TEXT)) {
+            ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
+            return true;
         }
 
         return false;
@@ -151,11 +146,14 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 break;
             case R.id.button_list_intro:
                 dialog = new ListDialogFragment();
-                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_INTRO});
+                ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_intro));
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TITLE + "!=''", new String[]{Database.TYPE_INTRO});
+                ((ListDialogFragment) dialog).setMapping(new String[]{Database.COLUMN_TITLE, Database.COLUMN_READ}, new int[]{R.id.list_title, R.id.list_image});
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
             case R.id.button_list_voty:
                 dialog = new ListDialogFragment();
+                ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
@@ -210,7 +208,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
-                        verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                        verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
                 }
                 if (verse != null) {
                     String url = getString(R.string.url_bible)
@@ -293,7 +291,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         // header interface
         for (DataListener tmp : listener)
             tmp.onDataUpdated(date, cursor);
-        if (listener.size() > 0)
+        if (listener.size() > 0 && date.getYear() < 1000)
             adapter.changeCursor(db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS}));
         else
             adapter.changeCursor(cursor);
