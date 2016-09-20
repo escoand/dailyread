@@ -451,7 +451,8 @@ public class Database extends SQLiteOpenHelper {
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS,
                 new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
-                null, null, null, null, null);
+                COLUMN_DATE + ">=20000000 AND " + COLUMN_DATE + "<21000000",
+                null, null, null, null);
         if (c != null)
             c.moveToFirst();
         return c;
