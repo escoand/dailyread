@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -254,8 +255,11 @@ public class Database extends SQLiteOpenHelper {
                         case "entry":
                             if (parser.getAttributeValue(null, "date") != null)
                                 date = parser.getAttributeValue(null, "date").replaceAll("-", "");
-                            else
-                                date = String.valueOf(rand.nextInt((99999999 - 30000000) + 1) + 30000000);
+                            else {
+                                GregorianCalendar tmp = new GregorianCalendar();
+                                tmp.set(rand.nextInt(7000) + 2100, rand.nextInt(12), rand.nextInt(31));
+                                date = String.valueOf(getIntFromDate(tmp.getTime()));
+                            }
                             // description - ignore
                             values_intro.put(COLUMN_SUBSCRIPTION, subscription);
                             values_intro.put(COLUMN_TYPE, TYPE_INTRO);
@@ -421,8 +425,8 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Cursor getDay(Date date, String condition, String[] values) {
-        String w = COLUMN_DATE + "=?";
-        String[] v = new String[]{String.valueOf(getIntFromDate(date))};
+        String w = "(" + COLUMN_DATE + "=? OR " + COLUMN_TYPE + "=? AND " + COLUMN_GROUP + " IN (SELECT CAST(" + COLUMN_GROUP + " AS INT) FROM " + TABLE_TEXTS + " WHERE " + COLUMN_DATE + "=?))";
+        String[] v = new String[]{String.valueOf(getIntFromDate(date)), TYPE_INTRO, String.valueOf(getIntFromDate(date))};
 
         if (condition != null && !condition.isEmpty() && values != null && values.length > 0) {
             w += " AND (" + condition + ")";
@@ -433,8 +437,7 @@ public class Database extends SQLiteOpenHelper {
 
         Cursor c = getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
-                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ,
-                        "(CASE WHEN " + COLUMN_PRIORITY + " IN (" + PRIORITY_INTRO + "," + PRIORITY_EXEGESIS + ") THEN 0 ELSE 1 END) " + COLUMN_HASONLINE},
+                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
                 w, v,
                 null, null,
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");

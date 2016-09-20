@@ -84,6 +84,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             v.findViewById(R.id.button_bible).setOnClickListener(this);
         if (v.findViewById(R.id.button_readall) != null)
             v.findViewById(R.id.button_readall).setOnClickListener(this);
+        if (v.findViewById(R.id.button_intro) != null)
+            v.findViewById(R.id.button_intro).setOnClickListener(this);
 
         setDate(new Date());
 
@@ -173,15 +175,30 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 i = new Intent(getActivity(), AboutActivity.class);
                 break;
 
-            // show buttons
+            // toggle buttons
             case R.id.button_more:
+                int hasIntro = View.GONE;
+                int hasVoty = View.GONE;
+
+                if (list.isEnabled()) {
+                    cursor.moveToPosition(-1);
+                    while (cursor.moveToNext()) {
+                        if (Database.getIntFromDate(date) == cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE)))
+                            continue;
+                        else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_INTRO))
+                            hasIntro = View.VISIBLE;
+                        else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_YEAR))
+                            hasVoty = View.VISIBLE;
+                    }
+                }
+
                 toggleVisibility(getView().findViewById(R.id.button_bible));
-                toggleVisibility(getView().findViewById(R.id.button_intro));
+                toggleVisibility(getView().findViewById(R.id.button_intro), hasIntro);
                 toggleVisibility(getView().findViewById(R.id.button_note));
                 toggleVisibility(getView().findViewById(R.id.button_read));
                 toggleVisibility(getView().findViewById(R.id.button_readall));
                 toggleVisibility(getView().findViewById(R.id.button_share));
-                toggleVisibility(getView().findViewById(R.id.button_voty));
+                toggleVisibility(getView().findViewById(R.id.button_voty), hasVoty);
 
                 // list
                 if (list.isEnabled()) {
@@ -217,6 +234,17 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                     i = new Intent();
                     i.setAction(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
+                }
+                break;
+
+            // intro
+            case R.id.button_intro:
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_INTRO)) {
+                        setDate(Database.getDateFromInt(cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE))));
+                        return;
+                    }
                 }
                 break;
 
@@ -288,7 +316,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         cursor = db.getDay(date);
 
-        // header interface
+        // data listeners
         for (DataListener tmp : listener)
             tmp.onDataUpdated(date, cursor);
         if (listener.size() > 0 && date.getYear() < 1000)
@@ -296,8 +324,11 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         else
             adapter.changeCursor(cursor);
 
-        // floating action buttons
+        // init views
         if (getView() != null) {
+            list.setAlpha(1);
+            list.setEnabled(true);
+            ((FloatingActionButton) getView().findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
             if (adapter.getCursor().getCount() > 0)
                 toggleVisibility(getView().findViewById(R.id.button_more), View.VISIBLE);
             else

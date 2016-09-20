@@ -104,6 +104,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
 
+        if (date.getYear() >= 200) {
+            toolbar.setTitle(null);
+            toolbar.setSubtitle(null);
+            return;
+        }
+
         pattern = getString(R.string.toolbar_title);
         pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
         pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");

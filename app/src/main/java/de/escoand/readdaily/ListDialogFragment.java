@@ -29,8 +29,6 @@ import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import java.util.Date;
-
 public class ListDialogFragment extends DialogFragment implements SimpleCursorAdapter.ViewBinder, DialogInterface.OnClickListener {
     private String title = null;
     private String condition = null;
@@ -100,9 +98,8 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     @Override
     public void onClick(DialogInterface dialog, int which) {
         Cursor c = (Cursor) adapter.getItem(which);
-        Date date = Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE)));
         if (listener != null)
-            listener.onDateSelected(date);
+            listener.onDateSelected(Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE))));
     }
 
     public void setOnDateSelectedListener(OnDateSelectedListener listener) {
