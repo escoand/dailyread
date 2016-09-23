@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -69,12 +70,11 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         list.setEmptyView(findViewById(R.id.listLoading));
         listAdapter = new StoreArrayAdapter(this, billing);
         list.setAdapter(listAdapter);
-
-        getPurchasesList();
     }
 
-    private void getPurchasesList() {
-        client.get(getString(R.string.products_list_url), new JsonHttpResponseHandler() {
+    @Override
+    public void onBillingInitialized() {
+        client.get(getString(R.string.product_list_url), new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -85,7 +85,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
                     try {
-                        listAdapter.add(new StoreListItem(response.getJSONObject(i)));
+                        listAdapter.add(new StoreListItem(response.getString(i)));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -113,12 +113,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-
-    }
-
-    @Override
-    public void onBillingInitialized() {
-
+        Log.e("billing", Log.getStackTraceString(error));
     }
 
     @Override

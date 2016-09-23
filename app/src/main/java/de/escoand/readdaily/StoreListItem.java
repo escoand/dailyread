@@ -26,13 +26,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.loopj.android.http.AsyncHttpClient;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.loopj.android.http.DataAsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.io.File;
 
@@ -40,66 +41,66 @@ import cz.msebera.android.httpclient.Header;
 
 public class StoreListItem {
     private final String productId;
-    private final String imageURL;
-    private final String dataURL;
-    private final String type;
-    private SkuDetails details = null;
-    private boolean isInstalled;
-    private boolean isPurchased;
-    private boolean isError = false;
+    private SkuDetails listing;
+    private TransactionDetails transaction;
 
     private Activity activity;
-    private ViewGroup parent;
+    private View parent;
     private ImageView image;
+    private TextView title;
+    private TextView description;
     private Button buttonRemove;
     private Button buttonAction;
-    private ProgressBar progressImage;
-    private ProgressBar progressData;
+    private ProgressBar progress;
 
     private BillingProcessor billing;
 
-    public StoreListItem(JSONObject json) throws JSONException {
-        productId = json.getString("name");
-        imageURL = json.getString("image");
-        dataURL = json.getString("data");
-        type = json.getString("type");
+    public StoreListItem(String productId) {
+        this.productId = productId;
     }
 
     public View getView(final Activity activity, ViewGroup parent, final BillingProcessor billing) {
         this.activity = activity;
-        this.parent = parent;
         this.billing = billing;
-        View v = activity.getLayoutInflater().inflate(R.layout.item_store, parent, false);
-        buttonRemove = (Button) v.findViewById(R.id.store_remove);
-        buttonAction = (Button) v.findViewById(R.id.store_action);
-        image = (ImageView) v.findViewById(R.id.store_image);
-        progressImage = (ProgressBar) v.findViewById(R.id.store_progress_image);
-        progressData = (ProgressBar) v.findViewById(R.id.store_progress_data);
 
-        // details
-        if (details == null) {
-            details = billing.getPurchaseListingDetails(productId);
-            isPurchased = billing.isPurchased(productId);
+        this.parent = activity.getLayoutInflater().inflate(R.layout.item_store, parent, false);
+        image = (ImageView) this.parent.findViewById(R.id.product_image);
+        title = (TextView) this.parent.findViewById(R.id.product_name);
+        description = (TextView) this.parent.findViewById(R.id.product_description);
+        buttonRemove = (Button) this.parent.findViewById(R.id.product_remove);
+        buttonAction = (Button) this.parent.findViewById(R.id.procuct_action);
+        progress = (ProgressBar) this.parent.findViewById(R.id.product_progress);
+
+        // listing
+        listing = billing.getPurchaseListingDetails(productId);
+        transaction = billing.getPurchaseTransactionDetails(productId);
+        if (listing != null) {
+            title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
+            description.setText(listing.description);
+        } else {
+            Log.e("product not found", productId);
+            this.parent.setVisibility(View.GONE);
         }
 
         // image
-        new AsyncHttpClient().get(imageURL, new DataAsyncProgressHandler(progressImage) {
+        new AsyncHttpClient().get(
+                String.format(activity.getString(R.string.product_img_url), productId),
+                new DataAsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        int len = 0;
+                        for (Header header : headers) {
+                            if (header.getName().equals("Content-Length"))
+                                len = Integer.valueOf(header.getValue());
+                        }
+                        image.setImageBitmap(BitmapFactory.decodeByteArray(responseBody, 0, len));
+                    }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                int len = 0;
-                for (Header header : headers) {
-                    if (header.getName().equals("Content-Length"))
-                        len = Integer.valueOf(header.getValue());
-                }
-                image.setImageBitmap(BitmapFactory.decodeByteArray(responseBody, 0, len));
-            }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                errorHandling(error);
-            }
-        });
+                    }
+                });
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,24 +112,17 @@ public class StoreListItem {
 
         refreshButton();
 
-        return v;
+        return this.parent;
     }
 
     private void refreshButton() {
+        boolean isInstalled = new Database(activity).isInstalled(productId);
 
         // remove
-        isInstalled = new Database(activity).isInstalled(productId);
         if (isInstalled) {
             buttonRemove.setVisibility(View.VISIBLE);
         } else
             buttonRemove.setVisibility(View.GONE);
-
-        // error
-        if (isError) {
-            buttonAction.setText(activity.getString(R.string.button_error));
-            buttonAction.setEnabled(false);
-            buttonAction.setVisibility(View.VISIBLE);
-        }
 
         // up-to-date
         if (new Database(activity).isInstalled(productId)) {
@@ -136,23 +130,29 @@ public class StoreListItem {
         }
 
         // download
-        else if (isPurchased || details == null) {
+        else if (listing != null && transaction != null) {
             buttonAction.setText(activity.getString(R.string.button_download));
             buttonAction.setEnabled(true);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    buttonAction.setClickable(false);
-                    new AsyncHttpClient().get(dataURL, new FileAsyncProgressHandler(activity, progressData) {
+                    RequestParams params = new RequestParams();
+                    AsyncHttpClient request = new AsyncHttpClient();
+
+                    buttonAction.setEnabled(false);
+
+                    params.add("data", transaction.purchaseInfo.responseData);
+                    params.add("product", productId);
+                    params.add("signature", transaction.purchaseInfo.signature);
+
+                    request.setUserAgent(BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME);
+                    request.post(activity.getString(R.string.product_data_url), params, new FileAsyncProgressHandler(activity, progress) {
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, File file) {
                             try {
-                                if (type.equals("xml"))
-                                    isError = new Database(activity).loadDataXML(productId, 0, file);
-                                else if (type.equals("csv"))
-                                    isError = new Database(activity).loadDataCSV(productId, 0, file);
+                                new Database(activity).loadDataXML(productId, 0, file);
                             } catch (Exception e) {
                                 errorHandling(e);
                             }
@@ -161,7 +161,6 @@ public class StoreListItem {
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable e, File file) {
-                            isError = true;
                             errorHandling(e);
                             refreshButton();
                         }
@@ -171,8 +170,8 @@ public class StoreListItem {
         }
 
         // purchase
-        else if (details != null) {
-            buttonAction.setText(details.priceText);
+        else if (listing != null) {
+            buttonAction.setText(listing.priceText);
             buttonAction.setEnabled(true);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setOnClickListener(new View.OnClickListener() {
@@ -182,15 +181,10 @@ public class StoreListItem {
                 }
             });
         }
-
-        // unknown
-        else {
-            buttonAction.setVisibility(View.GONE);
-        }
     }
 
     private void errorHandling(Throwable e) {
-        Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
         Log.e("error", Log.getStackTraceString(e));
+        Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
     }
 }
