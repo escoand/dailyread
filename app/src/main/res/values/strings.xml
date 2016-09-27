@@ -73,7 +73,7 @@
     <string-array name="bible_translation_values">
         <item>HFA</item>
         <item>LUT</item>
-        <item>GN</item>
+        <item>GNB</item>
     </string-array>
 
 </resources>
