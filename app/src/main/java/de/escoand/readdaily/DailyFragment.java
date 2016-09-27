@@ -80,8 +80,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             v.findViewById(R.id.button_share).setOnClickListener(this);
         if (v.findViewById(R.id.button_read) != null)
             v.findViewById(R.id.button_read).setOnClickListener(this);
-        if (v.findViewById(R.id.button_bible) != null)
-            v.findViewById(R.id.button_bible).setOnClickListener(this);
+        if (v.findViewById(R.id.button_bible_exegesis) != null)
+            v.findViewById(R.id.button_bible_exegesis).setOnClickListener(this);
         if (v.findViewById(R.id.button_readall) != null)
             v.findViewById(R.id.button_readall).setOnClickListener(this);
         if (v.findViewById(R.id.button_intro) != null)
@@ -114,6 +114,9 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TEXT)) {
             ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
             return true;
+        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_SOURCE)) {
+            if (cursor.isNull(columnIndex))
+                view.setVisibility(View.GONE);
         }
 
         return false;
@@ -143,7 +146,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             // list
             case R.id.button_list:
                 dialog = new ListDialogFragment();
-                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TEXT + "!=''", new String[]{Database.TYPE_DAY});
+                ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
                 break;
             case R.id.button_list_intro:
@@ -192,7 +195,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                     }
                 }
 
-                toggleVisibility(getView().findViewById(R.id.button_bible));
+                toggleVisibility(getView().findViewById(R.id.button_bible_exegesis));
                 toggleVisibility(getView().findViewById(R.id.button_intro), hasIntro);
                 toggleVisibility(getView().findViewById(R.id.button_note));
                 toggleVisibility(getView().findViewById(R.id.button_read));
@@ -220,11 +223,28 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 setDate(new Date());
                 break;
 
-            // read bible
-            case R.id.button_bible:
+            // read bible for day
+            case R.id.button_bible_day:
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
+                        verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
+                }
+                if (verse != null) {
+                    String url = getString(R.string.url_bible)
+                            + settings.getString("bible_translation", "LUT") + "/"
+                            + verse.replaceAll(" ", "");
+                    i = new Intent();
+                    i.setAction(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                }
+                break;
+
+            // read bible for exegesis
+            case R.id.button_bible_exegesis:
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS))
                         verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
                 }
                 if (verse != null) {
@@ -320,7 +340,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         for (DataListener tmp : listener)
             tmp.onDataUpdated(date, cursor);
         if (listener.size() > 0 && date.getYear() < 1000)
-            adapter.changeCursor(db.getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS}));
+            adapter.changeCursor(db.getDay(date, Database.COLUMN_TYPE + " IN (?,?,?)", new String[]{Database.TYPE_MONTH, Database.TYPE_WEEK, Database.TYPE_EXEGESIS}));
         else
             adapter.changeCursor(cursor);
 
@@ -333,7 +353,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 toggleVisibility(getView().findViewById(R.id.button_more), View.VISIBLE);
             else
                 toggleVisibility(getView().findViewById(R.id.button_more), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_bible), View.GONE);
+            toggleVisibility(getView().findViewById(R.id.button_bible_exegesis), View.GONE);
             toggleVisibility(getView().findViewById(R.id.button_intro), View.GONE);
             toggleVisibility(getView().findViewById(R.id.button_note), View.GONE);
             toggleVisibility(getView().findViewById(R.id.button_read), View.GONE);

@@ -34,7 +34,7 @@
         android:src="@drawable/icon_readall" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_bible"
+        android:id="@+id/button_bible_exegesis"
         style="@style/FloatingActionButton"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -44,7 +44,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_read"
         style="@style/FloatingActionButton.Mini"
-        android:layout_above="@id/button_bible"
+        android:layout_above="@id/button_bible_exegesis"
         android:layout_alignParentRight="true"
         android:src="@drawable/icon_read" />
 
