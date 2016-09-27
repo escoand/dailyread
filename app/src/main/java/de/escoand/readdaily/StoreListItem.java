@@ -143,7 +143,6 @@ public class StoreListItem {
                     buttonAction.setEnabled(false);
 
                     params.add("data", transaction.purchaseInfo.responseData);
-                    params.add("product", productId);
                     params.add("signature", transaction.purchaseInfo.signature);
 
                     request.setUserAgent(BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME);
