@@ -48,7 +48,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         image = (ImageView) root.findViewById(R.id.header_image);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
-        bible = root.findViewById(R.id.button_bible);
+        bible = root.findViewById(R.id.button_bible_day);
 
         image.setOnClickListener(this);
 
