@@ -39,7 +39,7 @@ public class FooterFragment extends Fragment implements DataListener {
     public void setOnClickListener(View.OnClickListener listener) {
         getView().findViewById(R.id.button_today).setOnClickListener(listener);
         getView().findViewById(R.id.button_share).setOnClickListener(listener);
-        getView().findViewById(R.id.button_bible).setOnClickListener(listener);
+        getView().findViewById(R.id.button_bible_exegesis).setOnClickListener(listener);
     }
 
     @Override

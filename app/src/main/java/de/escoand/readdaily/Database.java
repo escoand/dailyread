@@ -56,7 +56,6 @@ public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_REVISION = "revision";
     public static final String COLUMN_PRIORITY = "priority";
-    public static final String COLUMN_HASONLINE = "hasonline";
     public static final String TYPE_YEAR = "voty";
     public static final String TYPE_MONTH = "votm";
     public static final String TYPE_WEEK = "votw";
@@ -138,10 +137,6 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + TABLE_SETS);
-        db.execSQL("DROP TABLE " + TABLE_TYPES);
-        db.execSQL("DROP TABLE " + TABLE_TEXTS);
-        onCreate(db);
     }
 
     public boolean loadDataCSV(String subscription, int revision, File file) throws IOException {
@@ -275,12 +270,15 @@ public class Database extends SQLiteOpenHelper {
                             values_exeg.put(COLUMN_SUBSCRIPTION, subscription);
                             values_exeg.put(COLUMN_TYPE, TYPE_EXEGESIS);
                             values_exeg.put(COLUMN_DATE, date);
-                            // source - ignore
                             values_exeg.put(COLUMN_GROUP,
                                     Float.valueOf(parser.getAttributeValue(null, "sourceId")) +
                                             Float.valueOf(parser.getAttributeValue(null, "sourceChapter")) / 1000
                             );
-                            // sourceVerse - ignore
+                            values_exeg.put(COLUMN_SOURCE,
+                                    parser.getAttributeValue(null, "source") + " " +
+                                            parser.getAttributeValue(null, "sourceChapter") + "," +
+                                            parser.getAttributeValue(null, "sourceVerse")
+                            );
                             values_exeg.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
                             // subtitle - ignore
                             break;

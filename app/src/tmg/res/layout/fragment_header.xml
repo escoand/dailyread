@@ -109,7 +109,7 @@
                 android:gravity="right" />
 
             <ImageView
-                android:id="@+id/button_bible"
+                android:id="@+id/button_bible_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
