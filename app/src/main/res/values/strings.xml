@@ -49,7 +49,7 @@
     <string name="type_votw">Wochenlosung</string>
     <string name="type_votd">Tagestext</string>
 
-    <string name="message_nodata">Es konnte kein Text für dieses\nDatum gefunden werden.\nVieleicht gibt es im Store etwas.</string>
+    <string name="message_nodata">Es konnte kein Text für dieses\nDatum gefunden werden.\nWähle ein anderes Datum oder\nschaue, ob es im Store etwas gibt.</string>
     <string name="message_recommend_subject">App-Empfehlung für dich</string>
     <string name="message_recommend">Ich möchte dir die folgende App empfehlen.\nProbier sie doch mal aus.\nhttps://play.google.com/store/apps/details?id=</string>
 
