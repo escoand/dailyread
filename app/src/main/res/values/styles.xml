@@ -107,6 +107,7 @@
 
     <!-- progress -->
     <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:padding">5dp</item>
         <item name="android:indeterminate">false</item>
         <item name="android:progressDrawable">@drawable/progress_circular</item>
     </style>
