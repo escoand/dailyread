@@ -336,6 +336,9 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         cursor = db.getDay(date);
 
+        // workaround: scroll to top
+        adapter.changeCursor(null);
+
         // data listeners
         for (DataListener tmp : listener)
             tmp.onDataUpdated(date, cursor);
