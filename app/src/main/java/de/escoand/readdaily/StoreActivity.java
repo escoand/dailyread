@@ -29,16 +29,19 @@ import android.widget.ListView;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
-import cz.msebera.android.httpclient.Header;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class StoreActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
-    private final AsyncHttpClient client = new AsyncHttpClient();
+    private final OkHttpClient client = new OkHttpClient();
     private StoreArrayAdapter listAdapter;
     private BillingProcessor billing;
 
@@ -74,29 +77,34 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     public void onBillingInitialized() {
-        client.get(getString(R.string.product_list_url), new JsonHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                super.onStart();
-                listAdapter.clear();
-            }
+        billing.loadOwnedPurchasesFromGoogle();
 
+        Request request = new Request.Builder()
+                .url(getString(R.string.product_list_url))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        listAdapter.add(new StoreListItem(response.getString(i)));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            public void onResponse(Call call, Response response) throws IOException {
+                final String body = response.body().string();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONArray products = new JSONArray(body);
+                            for (int i = 0; i < products.length(); i++)
+                                listAdapter.add(new StoreListItem(products.getString(i)));
+                            listAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            // TODO non-technical message to user
+                            Log.e("error", Log.getStackTraceString(e));
+                        }
                     }
-                }
-                listAdapter.notifyDataSetChanged();
+                });
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                throwable.printStackTrace();
-                super.onFailure(statusCode, headers, responseString, throwable);
+            public void onFailure(Call call, IOException e) {
+                Log.e("error", Log.getStackTraceString(e));
             }
         });
     }
@@ -113,6 +121,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
+        // TODO non-technical message to user
         Log.e("billing", Log.getStackTraceString(error));
     }
 

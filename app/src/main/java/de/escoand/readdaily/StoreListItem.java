@@ -31,19 +31,22 @@ import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.DataAsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import java.io.File;
+import java.io.IOException;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class StoreListItem {
     private final String productId;
+    private final OkHttpClient client = new OkHttpClient();
     private SkuDetails listing;
     private TransactionDetails transaction;
-
     private Activity activity;
     private View parent;
     private ImageView image;
@@ -52,7 +55,6 @@ public class StoreListItem {
     private Button buttonRemove;
     private Button buttonAction;
     private ProgressBar progress;
-
     private BillingProcessor billing;
 
     public StoreListItem(String productId) {
@@ -78,29 +80,34 @@ public class StoreListItem {
             title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
             description.setText(listing.description);
         } else {
+            // TODO non-technical message to user
             Log.e("product not found", productId);
             this.parent.setVisibility(View.GONE);
         }
 
         // image
-        new AsyncHttpClient().get(
-                String.format(activity.getString(R.string.product_img_url), productId),
-                new DataAsyncHttpResponseHandler() {
+        Request request = new Request.Builder()
+                .url(String.format(activity.getString(R.string.product_img_url), productId))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final int len = Integer.valueOf(response.header("Content-Length"));
+                final byte[] data = response.body().bytes();
+                activity.runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        int len = 0;
-                        for (Header header : headers) {
-                            if (header.getName().equals("Content-Length"))
-                                len = Integer.valueOf(header.getValue());
-                        }
-                        image.setImageBitmap(BitmapFactory.decodeByteArray(responseBody, 0, len));
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                    public void run() {
+                        image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
                     }
                 });
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // TODO non-technical message to user
+                Log.e("error", Log.getStackTraceString(e));
+            }
+        });
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,31 +144,37 @@ public class StoreListItem {
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RequestParams params = new RequestParams();
-                    AsyncHttpClient request = new AsyncHttpClient();
-
                     buttonAction.setEnabled(false);
 
-                    params.add("data", transaction.purchaseInfo.responseData);
-                    params.add("signature", transaction.purchaseInfo.signature);
-
-                    request.setUserAgent(BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME);
-                    request.post(activity.getString(R.string.product_data_url), params, new FileAsyncProgressHandler(activity, progress) {
-
+                    // TODO progress
+                    RequestBody body = new FormBody.Builder()
+                            .add("data", transaction.purchaseInfo.responseData)
+                            .add("signature", transaction.purchaseInfo.signature)
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(activity.getString(R.string.product_data_url))
+                            .addHeader("User-Agent", BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME)
+                            .post(body)
+                            .build();
+                    client.newCall(request).enqueue(new Callback() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, File file) {
+                        public void onResponse(Call call, Response response) throws IOException {
                             try {
-                                new Database(activity).loadDataXML(productId, 0, file);
+                                new Database(activity).loadDataXML(productId, 0, response.body().byteStream());
                             } catch (Exception e) {
                                 errorHandling(e);
                             }
-                            refreshButton();
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshButton();
+                                }
+                            });
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable e, File file) {
+                        public void onFailure(Call call, IOException e) {
                             errorHandling(e);
-                            refreshButton();
                         }
                     });
                 }
@@ -184,6 +197,7 @@ public class StoreListItem {
 
     private void errorHandling(Throwable e) {
         Log.e("error", Log.getStackTraceString(e));
+        // TODO non-technical message to user
         Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
     }
 }
