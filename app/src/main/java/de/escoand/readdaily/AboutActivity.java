@@ -52,22 +52,22 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         // licenses
         ((TextView) v.findViewById(R.id.about_libraries)).setText(String.format("%s\n\n" +
-                        "Android Asynchronous Http Client %s\nApache License 2.0 by James Smith\n\n" +
                         "Android In-App Billing v3 Library %s\nApache License 2.0 by AnjLab\n\n" +
                         "Calligraphy %s\nApache License 2.0 by Christopher Jenkins\n\n" +
                         "CircleImageView %s\nApache License 2.0 by Henning Dodenhof\n\n" +
                         "Design Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "Material Calendar View %s\nby Prolific Interactive\n\n" +
+                        "OkHttp %s\nApache License 2.0 by Square, Inc.\n\n" +
                         "Percent Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "v7 appcompat library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "v7 cardview library %s\nApache License 2.0 by The Android Open Source Project",
                 getString(R.string.about_libraries),
-                com.loopj.android.http.BuildConfig.VERSION_NAME,
                 com.anjlab.android.iab.v3.BuildConfig.VERSION_NAME,
                 uk.co.chrisjenx.calligraphy.BuildConfig.VERSION_NAME,
                 de.hdodenhof.circleimageview.BuildConfig.VERSION_NAME,
                 android.support.design.BuildConfig.VERSION_NAME,
                 com.prolificinteractive.materialcalendarview.BuildConfig.VERSION_NAME,
+                "",
                 android.support.percent.BuildConfig.VERSION_NAME,
                 android.support.v7.appcompat.BuildConfig.VERSION_NAME,
                 android.support.v7.cardview.BuildConfig.VERSION_NAME

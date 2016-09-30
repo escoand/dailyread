@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -215,7 +216,7 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean loadDataXML(String subscription, int revision, File file) throws IOException, XmlPullParserException {
+    public boolean loadDataXML(String subscription, int revision, InputStream stream) throws IOException, XmlPullParserException {
         Random rand = new Random();
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
@@ -238,7 +239,7 @@ public class Database extends SQLiteOpenHelper {
             db.insertOrThrow(TABLE_SETS, null, values_day);
             values_day.clear();
 
-            parser.setInput(new FileInputStream(file), null);
+            parser.setInput(stream, null);
             while (parser.next() != XmlPullParser.END_DOCUMENT) {
 
                 // start tag
@@ -274,11 +275,14 @@ public class Database extends SQLiteOpenHelper {
                                     Float.valueOf(parser.getAttributeValue(null, "sourceId")) +
                                             Float.valueOf(parser.getAttributeValue(null, "sourceChapter")) / 1000
                             );
-                            values_exeg.put(COLUMN_SOURCE,
-                                    parser.getAttributeValue(null, "source") + " " +
-                                            parser.getAttributeValue(null, "sourceChapter") + "," +
-                                            parser.getAttributeValue(null, "sourceVerse")
-                            );
+                            if (parser.getAttributeValue(null, "source") != null &&
+                                    parser.getAttributeValue(null, "sourceChapter") != null &&
+                                    parser.getAttributeValue(null, "sourceChapter") != null)
+                                values_exeg.put(COLUMN_SOURCE,
+                                        parser.getAttributeValue(null, "source") +
+                                                (!parser.getAttributeValue(null, "sourceChapter").isEmpty() ? " " + parser.getAttributeValue(null, "sourceChapter") : "") +
+                                                (!parser.getAttributeValue(null, "sourceVerse").isEmpty() ? "," + parser.getAttributeValue(null, "sourceVerse") : "")
+                                );
                             values_exeg.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
                             // subtitle - ignore
                             break;
