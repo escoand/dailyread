@@ -17,8 +17,11 @@
 
 package de.escoand.readdaily;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends PreferenceActivity {
 
@@ -26,5 +29,10 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

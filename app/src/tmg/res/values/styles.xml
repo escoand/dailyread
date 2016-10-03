@@ -20,7 +20,7 @@
 <resources>
 
     <!-- card -->
-    <style name="Card">
+    <style name="Card.Daily">
         <item name="cardElevation">0dp</item>
         <item name="cardUseCompatPadding">false</item>
     </style>
@@ -78,6 +78,10 @@
     <style name="Text.BottomMenu">
         <item name="android:textColor">@color/bottom_buttons_text</item>
         <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="Text.Product.Title">
+        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
     </style>
 
 </resources>

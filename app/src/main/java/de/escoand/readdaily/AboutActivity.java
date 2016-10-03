@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -72,6 +75,11 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 android.support.v7.appcompat.BuildConfig.VERSION_NAME,
                 android.support.v7.cardview.BuildConfig.VERSION_NAME
         ));
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
