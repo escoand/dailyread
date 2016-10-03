@@ -30,22 +30,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Date;
 
 public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener {
+    private View root;
     private ImageView image;
+    private LinearLayout texts;
     private TextView title;
     private TextView subtitle;
     private View bible;
+
     private boolean isLarge = false;
+    private int smallWidth = 0;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_header, container);
+        root = inflater.inflate(R.layout.fragment_header, container);
         image = (ImageView) root.findViewById(R.id.header_image);
+        texts = (LinearLayout) root.findViewById(R.id.header_text);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
         bible = root.findViewById(R.id.button_bible_day);
@@ -127,15 +133,18 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         Animator anim3, anim4, anim5;
         ValueAnimator anim6, anim7, anim8, anim9;
 
+        if (smallWidth == 0)
+            smallWidth = root.getMeasuredWidth();
+
         // alpha animations
         if (!isLarge) {
             anim1.setTarget(getView().findViewById(R.id.header_progress));
-            anim2.setTarget(getView().findViewById(R.id.header_text));
+            anim2.setTarget(texts);
             anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
             anim4 = anim1.clone();
             anim5 = anim1.clone();
         } else {
-            anim1.setTarget(getView().findViewById(R.id.header_text));
+            anim1.setTarget(texts);
             anim2.setTarget(getView().findViewById(R.id.header_progress));
             anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
             anim4 = anim2.clone();
@@ -148,23 +157,89 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         // resize animation
         final View cntrl = getView().findViewById(R.id.header_control);
         if (!isLarge) {
-            anim6 = new WidthResizeAnimator(getView().findViewById(R.id.header_text), getView().findViewById(R.id.header_text).getMeasuredWidth(), 0);
+            anim6 = new WidthResizeAnimator(root, smallWidth, root.getMeasuredWidth() + texts.getMeasuredWidth());
             anim7 = new WidthResizeAnimator(getView().findViewById(R.id.header_rewind), 0, getView().findViewById(R.id.header_rewind).getMeasuredHeight());
             anim8 = new WidthResizeAnimator(getView().findViewById(R.id.header_forward), 0, getView().findViewById(R.id.header_forward).getMeasuredHeight());
             anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), getView().getMeasuredWidth() - 3 * getView().findViewById(R.id.header_rewind).getMeasuredHeight());
         } else {
-            anim6 = new WidthResizeAnimator(getView().findViewById(R.id.header_text), 0, getView().getMeasuredWidth() - 3 * getView().findViewById(R.id.header_rewind).getMeasuredHeight());
+            anim6 = new WidthResizeAnimator(root, root.getMeasuredWidth(), smallWidth);
             anim7 = new WidthResizeAnimator(getView().findViewById(R.id.header_rewind), getView().findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
             anim8 = new WidthResizeAnimator(getView().findViewById(R.id.header_forward), getView().findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
             anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), cntrl.getMeasuredHeight() / 2);
         }
+
+        // text size
+        anims.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (isLarge) {
+                    ViewGroup.LayoutParams lp = texts.getLayoutParams();
+                    lp.height = texts.getMeasuredHeight();
+                    lp.width = texts.getMeasuredWidth();
+                    texts.setLayoutParams(lp);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!isLarge)
+                    texts.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+
+        isLarge = !isLarge;
 
         // animate
         anims.playTogether(anim1, anim2, anim3, anim4, anim5, anim6, anim7, anim8, anim9);
         anims.setDuration(500);
         anims.setInterpolator(new DecelerateInterpolator());
         anims.start();
+    }
 
-        isLarge = !isLarge;
+    private class SquareResizeAnimator extends ValueAnimator {
+        View view;
+
+        public SquareResizeAnimator(final View view, int start, int end) {
+            this.view = view;
+            setIntValues(start, end);
+
+            addUpdateListener(new AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    ViewGroup.LayoutParams lp = view.getLayoutParams();
+                    lp.height = (int) getAnimatedValue();
+                    lp.width = (int) getAnimatedValue();
+                    view.setLayoutParams(lp);
+                }
+            });
+        }
+    }
+
+    private class WidthResizeAnimator extends ValueAnimator {
+        View view;
+
+        public WidthResizeAnimator(final View view, int start, int end) {
+            this.view = view;
+            setIntValues(start, end);
+
+            addUpdateListener(new AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    ViewGroup.LayoutParams lp = view.getLayoutParams();
+                    lp.width = (int) getAnimatedValue();
+                    view.setLayoutParams(lp);
+                }
+            });
+        }
     }
 }
