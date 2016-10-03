@@ -104,22 +104,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
 
-        if (date.getYear() >= 200) {
-            toolbar.setTitle(null);
-            toolbar.setSubtitle(null);
-            return;
+        // default title
+        toolbar.setTitle(getString(R.string.app_title));
+        toolbar.setSubtitle(null);
+
+        cursor.moveToPosition(-1);
+        while (cursor.moveToNext()) {
+
+            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+
+                // exegesis title
+                case Database.TYPE_EXEGESIS:
+                    pattern = getString(R.string.toolbar_title);
+                    pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+                    pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+                    frmt.applyPattern(pattern);
+                    toolbar.setTitle(frmt.format(date));
+                    pattern = getString(R.string.toolbar_subtitle);
+                    pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+                    pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+                    frmt.applyPattern(pattern);
+                    toolbar.setSubtitle(frmt.format(date));
+                    return;
+
+                // year title
+                case Database.TYPE_YEAR:
+                    toolbar.setTitle(getString(R.string.navigation_voty));
+                    toolbar.setSubtitle(cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE)));
+                    break;
+
+                // intro title
+                case Database.TYPE_INTRO:
+                    toolbar.setTitle(getString(R.string.navigation_intro));
+                    toolbar.setSubtitle(cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE)));
+                    break;
+
+            }
         }
-
-        pattern = getString(R.string.toolbar_title);
-        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
-        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
-        frmt.applyPattern(pattern);
-        toolbar.setTitle(frmt.format(date));
-
-        pattern = getString(R.string.toolbar_subtitle);
-        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
-        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
-        frmt.applyPattern(pattern);
-        toolbar.setSubtitle(frmt.format(date));
     }
 }
