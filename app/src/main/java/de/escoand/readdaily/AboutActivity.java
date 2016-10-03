@@ -61,7 +61,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                         "Design Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "Material Calendar View %s\nby Prolific Interactive\n\n" +
                         "OkHttp %s\nApache License 2.0 by Square, Inc.\n\n" +
-                        "Percent Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "v7 appcompat library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "v7 cardview library %s\nApache License 2.0 by The Android Open Source Project",
                 getString(R.string.about_libraries),
@@ -71,7 +70,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 android.support.design.BuildConfig.VERSION_NAME,
                 com.prolificinteractive.materialcalendarview.BuildConfig.VERSION_NAME,
                 "",
-                android.support.percent.BuildConfig.VERSION_NAME,
                 android.support.v7.appcompat.BuildConfig.VERSION_NAME,
                 android.support.v7.cardview.BuildConfig.VERSION_NAME
         ));

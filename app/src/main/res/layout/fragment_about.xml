@@ -18,7 +18,6 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -28,26 +27,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.percent.PercentFrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <!--suppress AndroidDomInspection -->
-            <ImageView
-                android:layout_gravity="center_horizontal"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/img_about"
-                app:layout_aspectRatio="178%"
-                app:layout_widthPercent="100%"
-                tools:ignore="ContentDescription" />
-
-        </android.support.percent.PercentFrameLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/img_about"
+            tools:ignore="ContentDescription" />
 
         <TextView
             style="@style/Text.About.Title"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:text="@string/app_title" />

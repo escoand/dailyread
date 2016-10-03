@@ -208,9 +208,14 @@
         <item name="android:textColor">@color/about_text</item>
     </style>
 
-    <style name="Text.About.Title" parent="Text.Daily.Title"></style>
+    <style name="Text.About.Title">
+        <item name="android:padding">0dp</item>
+    </style>
 
-    <style name="Text.About.Subtitle"></style>
+    <style name="Text.About.Subtitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">0dp</item>
+    </style>
 
     <style name="Text.About.Action">
         <item name="android:textColor">@color/about_action</item>
