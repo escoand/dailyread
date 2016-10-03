@@ -18,6 +18,7 @@
 package de.escoand.readdaily;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -39,11 +40,17 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class StoreActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
     private final OkHttpClient client = new OkHttpClient();
     private StoreArrayAdapter listAdapter;
     private BillingProcessor billing;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

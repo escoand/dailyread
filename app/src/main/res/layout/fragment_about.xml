@@ -45,27 +45,27 @@
         </android.support.percent.PercentFrameLayout>
 
         <TextView
+            style="@style/Text.About.Title"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/app_title"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="@string/app_title" />
 
         <TextView
+            style="@style/Text.About.Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/app_subtitle"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="@string/app_subtitle" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription"
-            android:layout_weight="1" />
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_version"
@@ -77,53 +77,53 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription"
-            android:layout_weight="1" />
+            tools:ignore="ContentDescription" />
 
         <TextView
             style="@style/Text.About"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:text="@string/about_copyright"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="@string/about_copyright" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription"
-            android:layout_weight="1" />
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_recommend"
             style="@style/Text.About.Action"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:text="@string/about_recommend"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="@string/about_recommend" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription"
-            android:layout_weight="1" />
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_tickets"
             style="@style/Text.About.Action"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:text="@string/about_tickets"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="@string/about_tickets" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:src="@drawable/divider_list"
-            tools:ignore="ContentDescription"
-            android:layout_weight="1" />
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/about_libraries"
