@@ -114,7 +114,7 @@
 
     <style name="Progress.Circular.Indeterminate">
         <item name="android:indeterminate">true</item>
-        <item name="android:indeterminateDrawable">@drawable/progress_circular</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_circular_indeterminate</item>
     </style>
 
     <style name="Progress.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal">
