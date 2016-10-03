@@ -141,8 +141,10 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         @Override
         protected void onPostExecute(Integer[] integers) {
             if (integers.length >= 2) {
-                cal.setMinimumDate(Database.getDateFromInt(integers[0]));
-                cal.setMaximumDate(Database.getDateFromInt(integers[1]));
+                cal.state().edit()
+                        .setMinimumDate(Database.getDateFromInt(integers[0]))
+                        .setMaximumDate(Database.getDateFromInt(integers[1]))
+                        .commit();
             }
             cal.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
