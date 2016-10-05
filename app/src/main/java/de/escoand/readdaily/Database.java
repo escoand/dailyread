@@ -28,12 +28,11 @@ import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -44,6 +43,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
@@ -57,17 +58,23 @@ public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_REVISION = "revision";
     public static final String COLUMN_PRIORITY = "priority";
+    public static final String COLUMN_ID = "id";
+
     public static final String TYPE_YEAR = "voty";
     public static final String TYPE_MONTH = "votm";
     public static final String TYPE_WEEK = "votw";
     public static final String TYPE_DAY = "votd";
     public static final String TYPE_EXEGESIS = "exeg";
     public static final String TYPE_INTRO = "intr";
+
     private static final String TABLE_TEXTS = "texts";
     private static final String TABLE_SETS = "sets";
     private static final String TABLE_TYPES = "types";
+    private static final String TABLE_DOWNLOADS = "downloads";
     private static final String DATABASE_NAME = "data";
-    private static final int DATABASE_VERSION = 1;
+
+    private static final int DATABASE_VERSION = 2;
+
     private static final int PRIORITY_YEAR = 50;
     private static final int PRIORITY_MONTH = 40;
     private static final int PRIORITY_WEEK = 30;
@@ -98,9 +105,13 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
+                COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
+                COLUMN_REVISION + " INTEGER NOT NULL, " +
+                COLUMN_ID + " INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE " + TABLE_SETS + " (" +
                 COLUMN_NAME + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
-                COLUMN_REVISION + " INTEGER NOT NULL)");
+                COLUMN_REVISION + " LONG NOT NULL)");
         db.execSQL("CREATE TABLE " + TABLE_TYPES + " (" +
                 COLUMN_NAME + " TEXT PRIMARY KEY, " +
                 COLUMN_PRIORITY + " INTEGER NOT NULL)");
@@ -138,9 +149,15 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
+                    COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
+                    COLUMN_REVISION + " INTEGER NOT NULL, " +
+                    COLUMN_ID + " LONG NOT NULL)");
+        }
     }
 
-    public boolean loadDataCSV(String subscription, int revision, File file) throws IOException {
+    public boolean loadDataCSV(final String subscription, final int revision, final File file) throws Exception {
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -216,7 +233,7 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean loadDataXML(String subscription, int revision, InputStream stream) throws IOException, XmlPullParserException {
+    public boolean loadDataXML(final String subscription, final int revision, final InputStream stream) throws Exception {
         Random rand = new Random();
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
@@ -408,22 +425,71 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean isInstalled(String set) {
+    public boolean loadDataZIP(final String subscription, final int revision, final InputStream stream, final Context context) throws Exception {
         boolean result = false;
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+
+        try {
+            ContentValues values = new ContentValues();
+            ZipInputStream zip = new ZipInputStream(stream);
+            ZipEntry entry;
+            byte[] buffer = new byte[1024];
+            int count;
+
+            // subscription
+            values.put(COLUMN_NAME, subscription);
+            values.put(COLUMN_REVISION, revision);
+            db.insertOrThrow(TABLE_SETS, null, values);
+
+            // read entries
+            while ((entry = zip.getNextEntry()) != null) {
+                String filename = entry.getName();
+                FileOutputStream file = new FileOutputStream(new File(context.getFilesDir(), filename));
+                while ((count = zip.read(buffer)) != -1)
+                    file.write(buffer, 0, count);
+                file.close();
+                zip.closeEntry();
+            }
+            zip.close();
+
+            db.setTransactionSuccessful();
+            result = true;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+
+        return result;
+    }
+
+    public void addDownload(String set, int revision, long downloadId) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SUBSCRIPTION, set);
+        values.put(COLUMN_REVISION, revision);
+        values.put(COLUMN_ID, downloadId);
+        getWritableDatabase().insertOrThrow(TABLE_DOWNLOADS, null, values);
+    }
+
+    public Cursor getDownloads() {
+        return getReadableDatabase().query(TABLE_DOWNLOADS, new String[]{COLUMN_SUBSCRIPTION, COLUMN_REVISION, COLUMN_ID}, null, null, null, null, null);
+    }
+
+    public void removeDownload(long downloadId) {
+        getWritableDatabase().delete(TABLE_DOWNLOADS, COLUMN_ID + "=?", new String[]{String.valueOf(downloadId)});
+    }
+
+    public boolean isInstalled(String set) {
         Cursor c = getReadableDatabase().query(
                 TABLE_SETS,
-                new String[]{"COUNT(*)"},
+                new String[]{COLUMN_NAME},
                 COLUMN_NAME + "=?",
                 new String[]{set},
                 null, null, null
         );
-        if (c != null) {
-            c.moveToFirst();
-            if (c.getInt(0) > 0)
-                result = true;
-            c.close();
-        }
-        return result;
+        if (c.moveToFirst())
+            return true;
+        return false;
     }
 
     public Cursor getDay(Date date, String condition, String[] values) {

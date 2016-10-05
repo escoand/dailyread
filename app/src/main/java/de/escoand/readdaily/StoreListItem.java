@@ -36,15 +36,12 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class StoreListItem {
     private final String productId;
-    private final OkHttpClient client = new OkHttpClient();
     private SkuDetails listing;
     private TransactionDetails transaction;
     private Activity activity;
@@ -80,7 +77,6 @@ public class StoreListItem {
             title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
             description.setText(listing.description);
         } else {
-            // TODO non-technical message to user
             Log.e("product not found", productId);
             this.parent.setVisibility(View.GONE);
         }
@@ -89,23 +85,26 @@ public class StoreListItem {
         Request request = new Request.Builder()
                 .url(String.format(activity.getString(R.string.product_img_url), productId))
                 .build();
-        client.newCall(request).enqueue(new Callback() {
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final int len = Integer.valueOf(response.header("Content-Length"));
-                final byte[] data = response.body().bytes();
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
-                    }
-                });
+                try {
+                    final int len = Integer.valueOf(response.header("Content-Length"));
+                    final byte[] data = response.body().bytes();
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
+                        }
+                    });
+                } catch (Exception e) {
+                    errorHandling(e);
+                }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                // TODO non-technical message to user
-                Log.e("error", Log.getStackTraceString(e));
+                errorHandling(e);
             }
         });
 
@@ -123,81 +122,76 @@ public class StoreListItem {
     }
 
     private void refreshButton() {
+        float downloadProgress = DownloadHandler.downloadProgress(activity, productId);
         boolean isInstalled = new Database(activity).isInstalled(productId);
 
-        // remove
-        if (isInstalled) {
-            buttonRemove.setVisibility(View.VISIBLE);
-        } else
-            buttonRemove.setVisibility(View.GONE);
-
         // up-to-date
-        if (new Database(activity).isInstalled(productId)) {
+        if (isInstalled) {
+            progress.setVisibility(View.GONE);
+            buttonRemove.setVisibility(View.VISIBLE);
             buttonAction.setVisibility(View.GONE);
+        }
+
+        // downloading
+        else if (listing != null && transaction != null && downloadProgress >= 0) {
+            progress.setVisibility(View.VISIBLE);
+            buttonRemove.setVisibility(View.GONE);
+            buttonAction.setVisibility(View.VISIBLE);
+            buttonAction.setText(activity.getString(R.string.button_downloading));
+            buttonAction.setEnabled(false);
+            //refreshButton();
         }
 
         // download
         else if (listing != null && transaction != null) {
+            progress.setVisibility(View.GONE);
+            buttonRemove.setVisibility(View.GONE);
+            buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(activity.getString(R.string.button_download));
             buttonAction.setEnabled(true);
-            buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     buttonAction.setEnabled(false);
-
-                    // TODO progress
-                    RequestBody body = new FormBody.Builder()
-                            .add("data", transaction.purchaseInfo.responseData)
-                            .add("signature", transaction.purchaseInfo.signature)
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(activity.getString(R.string.product_data_url))
-                            .addHeader("User-Agent", BuildConfig.APPLICATION_ID + " " + BuildConfig.VERSION_NAME)
-                            .post(body)
-                            .build();
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            try {
-                                new Database(activity).loadDataXML(productId, 0, response.body().byteStream());
-                            } catch (Exception e) {
-                                errorHandling(e);
-                            }
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    refreshButton();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            errorHandling(e);
-                        }
-                    });
+                    DownloadHandler.startDownload(
+                            activity,
+                            transaction.purchaseInfo.signature,
+                            transaction.purchaseInfo.responseData,
+                            activity.getString(R.string.app_title),
+                            0
+                    );
+                    refreshButton();
                 }
             });
         }
 
         // purchase
         else if (listing != null) {
+            progress.setVisibility(View.GONE);
+            buttonRemove.setVisibility(View.GONE);
+            buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(listing.priceText);
             buttonAction.setEnabled(true);
-            buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     billing.purchase(activity, productId);
+                    listing = billing.getPurchaseListingDetails(productId);
+                    transaction = billing.getSubscriptionTransactionDetails(productId);
+                    refreshButton();
                 }
             });
         }
     }
 
-    private void errorHandling(Throwable e) {
+    private void errorHandling(final Throwable e) {
         Log.e("error", Log.getStackTraceString(e));
         // TODO non-technical message to user
-        Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 }
