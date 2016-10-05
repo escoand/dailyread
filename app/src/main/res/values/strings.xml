@@ -40,6 +40,7 @@
     <string name="button_cancel">Abbrechen</string>
     <string name="button_error">Fehler</string>
     <string name="button_download">Laden</string>
+    <string name="button_downloading">Lädt</string>
     <string name="button_purchase">Kaufen</string>
     <string name="button_remove">Entfernen</string>
     <string name="button_bible">Bibel lesen</string>
