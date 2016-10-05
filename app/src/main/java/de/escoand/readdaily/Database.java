@@ -31,7 +31,6 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -157,13 +156,13 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public boolean loadDataCSV(final String subscription, final int revision, final File file) throws Exception {
+    public boolean loadDataCSV(final String subscription, final int revision, final InputStream stream) throws Exception {
         boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             String line;
             ContentValues values = new ContentValues();
 
@@ -422,6 +421,7 @@ public class Database extends SQLiteOpenHelper {
             db.endTransaction();
             db.close();
         }
+
         return result;
     }
 
@@ -487,9 +487,7 @@ public class Database extends SQLiteOpenHelper {
                 new String[]{set},
                 null, null, null
         );
-        if (c.moveToFirst())
-            return true;
-        return false;
+        return c.moveToFirst();
     }
 
     public Cursor getDay(Date date, String condition, String[] values) {

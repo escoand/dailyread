@@ -114,6 +114,11 @@ public class DownloadHandler extends BroadcastReceiver {
 
                 switch (manager.getMimeTypeForDownloadedFile(id)) {
 
+                    // csv data
+                    case "text/plain":
+                        new Database(context).loadDataCSV(name, revision, stream);
+                        break;
+
                     // xml data
                     case "application/xml":
                         new Database(context).loadDataXML(name, revision, stream);
