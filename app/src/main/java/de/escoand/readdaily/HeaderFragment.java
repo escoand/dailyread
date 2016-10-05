@@ -22,6 +22,8 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,17 +33,23 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Date;
 
-public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener {
+public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener, Runnable {
     private View root;
     private ImageView image;
+    private ProgressBar progress;
+    private TextView progressText;
     private LinearLayout texts;
     private TextView title;
     private TextView subtitle;
     private View bible;
+
+    private MediaPlayer player = null;
 
     private boolean isLarge = false;
     private int smallWidth = 0;
@@ -51,12 +59,12 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_header, container);
         image = (ImageView) root.findViewById(R.id.header_image);
+        progress = (ProgressBar) root.findViewById(R.id.header_progress);
+        progressText = (TextView) root.findViewById(R.id.header_progress_text);
         texts = (LinearLayout) root.findViewById(R.id.header_text);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
         bible = root.findViewById(R.id.button_bible_day);
-
-        image.setOnClickListener(this);
 
         return root;
     }
@@ -123,6 +131,18 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
             getView().setVisibility(View.VISIBLE);
         } else
             getView().setVisibility(View.GONE);
+
+        // audio file
+        File file = new File(getActivity().getFilesDir(), Database.getIntFromDate(date) + ".mp3");
+        if (file.exists()) {
+            image.setOnClickListener(this);
+            player = MediaPlayer.create(getContext(), Uri.parse(file.getAbsolutePath()));
+        } else {
+            image.setOnClickListener(null);
+            if (player != null)
+                player.release();
+            player = null;
+        }
     }
 
     @Override
@@ -138,14 +158,14 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
         // alpha animations
         if (!isLarge) {
-            anim1.setTarget(getView().findViewById(R.id.header_progress));
+            anim1.setTarget(getView().findViewById(R.id.header_progress_wrapper));
             anim2.setTarget(texts);
             anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
             anim4 = anim1.clone();
             anim5 = anim1.clone();
         } else {
             anim1.setTarget(texts);
-            anim2.setTarget(getView().findViewById(R.id.header_progress));
+            anim2.setTarget(getView().findViewById(R.id.header_progress_wrapper));
             anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
             anim4 = anim2.clone();
             anim5 = anim2.clone();
@@ -177,15 +197,25 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
                     lp.height = texts.getMeasuredHeight();
                     lp.width = texts.getMeasuredWidth();
                     texts.setLayoutParams(lp);
+                } else {
+                    if (player != null) {
+                        player.pause();
+                        player.seekTo(0);
+                    }
                 }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (!isLarge)
+                if (isLarge) {
+                    if (player != null) {
+                        player.start();
+                    }
+                } else {
                     texts.setLayoutParams(new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
+                }
             }
 
             @Override
@@ -204,6 +234,22 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         anims.setDuration(500);
         anims.setInterpolator(new DecelerateInterpolator());
         anims.start();
+        new Thread(this).start();
+    }
+
+    @Override
+    public void run() {
+        while (player != null) {
+            try {
+                Thread.sleep(1000);
+                progress.setMax(player.getDuration());
+                progress.setProgress(player.getCurrentPosition());
+                progress.setSecondaryProgress(player.getDuration());
+                //progressText.setText(String.format("%02d:%02d", player.getCurrentPosition() / 60000, (player.getCurrentPosition() / 100) % 60));
+            } catch (Exception e) {
+                return;
+            }
+        }
     }
 
     private class SquareResizeAnimator extends ValueAnimator {
