@@ -180,7 +180,7 @@ public class Database extends SQLiteOpenHelper {
                 // subscription
                 values.clear();
                 values.put(COLUMN_NAME, subscription);
-                //values.put(COLUMN_REVISION, revision);
+                values.put(COLUMN_REVISION, 0);
                 db.insertOrThrow(TABLE_SETS, null, values);
 
                 // verse of the day
@@ -252,7 +252,7 @@ public class Database extends SQLiteOpenHelper {
 
             // subscription
             values_day.put(COLUMN_NAME, subscription);
-            //values_day.put(COLUMN_REVISION, revision);
+            values_day.put(COLUMN_REVISION, 0);
             db.insertOrThrow(TABLE_SETS, null, values_day);
             values_day.clear();
 
@@ -436,7 +436,7 @@ public class Database extends SQLiteOpenHelper {
 
             // subscription
             values.put(COLUMN_NAME, subscription);
-            //values.put(COLUMN_REVISION, revision);
+            values.put(COLUMN_REVISION, 0);
             db.insertOrThrow(TABLE_SETS, null, values);
 
             // read entries
