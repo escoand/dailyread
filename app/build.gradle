@@ -18,7 +18,7 @@
 apply plugin: 'com.android.application'
 apply from: 'versioning.gradle'
 
-version = "1.0.0-beta10"
+version = "1.0.0-beta11"
 
 android {
     compileSdkVersion 24
