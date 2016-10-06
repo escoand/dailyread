@@ -157,8 +157,7 @@ public class StoreListItem {
                             activity,
                             transaction.purchaseInfo.signature,
                             transaction.purchaseInfo.responseData,
-                            listing.title,
-                            0
+                            (String) title.getText()
                     );
                     refreshButton();
                 }
