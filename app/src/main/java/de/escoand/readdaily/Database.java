@@ -72,7 +72,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String TABLE_DOWNLOADS = "downloads";
     private static final String DATABASE_NAME = "data";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final int PRIORITY_YEAR = 50;
     private static final int PRIORITY_MONTH = 40;
@@ -107,7 +107,6 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                 COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
-                COLUMN_REVISION + " INTEGER NOT NULL, " +
                 COLUMN_ID + " INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE " + TABLE_SETS + " (" +
                 COLUMN_NAME + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
@@ -149,15 +148,21 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1 && newVersion == 2) {
+        if (oldVersion < 2) {
             db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                     COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                     COLUMN_REVISION + " INTEGER NOT NULL, " +
                     COLUMN_ID + " LONG NOT NULL)");
         }
+        if (oldVersion < 3) {
+            db.rawQuery("DROP TABLE " + TABLE_DOWNLOADS, new String[]{});
+            db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
+                    COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
+                    COLUMN_ID + " LONG NOT NULL)");
+        }
     }
 
-    public void importCSV(final String subscription, final int revision, final InputStream stream) throws Exception {
+    public void importCSV(final String subscription, final InputStream stream) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -175,7 +180,7 @@ public class Database extends SQLiteOpenHelper {
                 // subscription
                 values.clear();
                 values.put(COLUMN_NAME, subscription);
-                values.put(COLUMN_REVISION, revision);
+                //values.put(COLUMN_REVISION, revision);
                 db.insertOrThrow(TABLE_SETS, null, values);
 
                 // verse of the day
@@ -229,7 +234,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importXML(final String subscription, final int revision, final InputStream stream) throws Exception {
+    public void importXML(final String subscription, final InputStream stream) throws Exception {
         Random rand = new Random();
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -247,7 +252,7 @@ public class Database extends SQLiteOpenHelper {
 
             // subscription
             values_day.put(COLUMN_NAME, subscription);
-            values_day.put(COLUMN_REVISION, revision);
+            //values_day.put(COLUMN_REVISION, revision);
             db.insertOrThrow(TABLE_SETS, null, values_day);
             values_day.clear();
 
@@ -418,7 +423,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importZIP(final String subscription, final int revision, final InputStream stream) throws Exception {
+    public void importZIP(final String subscription, final InputStream stream) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -431,7 +436,7 @@ public class Database extends SQLiteOpenHelper {
 
             // subscription
             values.put(COLUMN_NAME, subscription);
-            values.put(COLUMN_REVISION, revision);
+            //values.put(COLUMN_REVISION, revision);
             db.insertOrThrow(TABLE_SETS, null, values);
 
             // read entries
@@ -452,16 +457,15 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void addDownload(String set, int revision, long downloadId) {
+    public void addDownload(String set, long downloadId) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUBSCRIPTION, set);
-        values.put(COLUMN_REVISION, revision);
         values.put(COLUMN_ID, downloadId);
         getWritableDatabase().insertOrThrow(TABLE_DOWNLOADS, null, values);
     }
 
     public Cursor getDownloads() {
-        return getReadableDatabase().query(TABLE_DOWNLOADS, new String[]{COLUMN_SUBSCRIPTION, COLUMN_REVISION, COLUMN_ID}, null, null, null, null, null);
+        return getReadableDatabase().query(TABLE_DOWNLOADS, new String[]{COLUMN_SUBSCRIPTION, COLUMN_ID}, null, null, null, null, null);
     }
 
     public void removeDownload(long downloadId) {

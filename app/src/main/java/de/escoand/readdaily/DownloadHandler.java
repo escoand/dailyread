@@ -33,7 +33,7 @@ import java.io.FileInputStream;
 
 public class DownloadHandler extends BroadcastReceiver {
 
-    public static long startDownload(Context context, String signature, String responseData, String title, int revision) {
+    public static long startDownload(Context context, String signature, String responseData, String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
 
@@ -49,9 +49,9 @@ public class DownloadHandler extends BroadcastReceiver {
                 .addRequestHeader("App-Signature", signature)
                 .addRequestHeader("App-ResponseData", responseData)
                 .setDestinationInExternalFilesDir(context, null, name)
-                .setTitle(context.getString(R.string.app_title))
-                .setDescription(title));
-        new Database(context).addDownload(name, revision, id);
+                .setTitle(title)
+                .setDescription(context.getString(R.string.app_title)));
+        new Database(context).addDownload(name, id);
 
         return id;
     }
@@ -90,7 +90,6 @@ public class DownloadHandler extends BroadcastReceiver {
         downloads.moveToPosition(-1);
         while (downloads.moveToNext()) {
             final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
-            final int revision = downloads.getInt(downloads.getColumnIndex(Database.COLUMN_REVISION));
             final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
 
             final Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
@@ -118,17 +117,17 @@ public class DownloadHandler extends BroadcastReceiver {
 
                             // csv data
                             case "text/plain":
-                                new Database(context).importCSV(name, revision, stream);
+                                new Database(context).importCSV(name, stream);
                                 break;
 
                             // xml data
                             case "application/xml":
-                                new Database(context).importXML(name, revision, stream);
+                                new Database(context).importXML(name, stream);
                                 break;
 
                             // zipped data
                             case "application/zip":
-                                new Database(context).importZIP(name, revision, stream);
+                                new Database(context).importZIP(name, stream);
                                 break;
                         }
 
