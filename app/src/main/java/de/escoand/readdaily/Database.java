@@ -80,12 +80,13 @@ public class Database extends SQLiteOpenHelper {
     private static final int PRIORITY_DAY = 20;
     private static final int PRIORITY_EXEGESIS = 10;
     private static final int PRIORITY_INTRO = 25;
-
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    private final Context context;
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     public static int getIntFromDate(Date date) {
@@ -156,8 +157,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public boolean loadDataCSV(final String subscription, final int revision, final InputStream stream) throws Exception {
-        boolean result = false;
+    public void importCSV(final String subscription, final int revision, final InputStream stream) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -223,18 +223,14 @@ public class Database extends SQLiteOpenHelper {
 
             reader.close();
             db.setTransactionSuccessful();
-            result = true;
         } finally {
             db.endTransaction();
             db.close();
         }
-
-        return result;
     }
 
-    public boolean loadDataXML(final String subscription, final int revision, final InputStream stream) throws Exception {
+    public void importXML(final String subscription, final int revision, final InputStream stream) throws Exception {
         Random rand = new Random();
-        boolean result = false;
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -416,17 +412,13 @@ public class Database extends SQLiteOpenHelper {
             }
 
             db.setTransactionSuccessful();
-            result = true;
         } finally {
             db.endTransaction();
             db.close();
         }
-
-        return result;
     }
 
-    public boolean loadDataZIP(final String subscription, final int revision, final InputStream stream, final Context context) throws Exception {
-        boolean result = false;
+    public void importZIP(final String subscription, final int revision, final InputStream stream) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -454,13 +446,10 @@ public class Database extends SQLiteOpenHelper {
             zip.close();
 
             db.setTransactionSuccessful();
-            result = true;
         } finally {
             db.endTransaction();
             db.close();
         }
-
-        return result;
     }
 
     public void addDownload(String set, int revision, long downloadId) {
