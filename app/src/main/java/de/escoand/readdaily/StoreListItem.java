@@ -122,8 +122,8 @@ public class StoreListItem {
     }
 
     private void refreshButton() {
-        float downloadProgress = DownloadHandler.downloadProgress(activity, productId);
         boolean isInstalled = new Database(activity).isInstalled(productId);
+        float dlProgress = DownloadHandler.downloadProgress(activity, productId);
 
         // up-to-date
         if (isInstalled) {
@@ -133,7 +133,7 @@ public class StoreListItem {
         }
 
         // downloading
-        else if (listing != null && transaction != null && downloadProgress >= 0) {
+        else if (listing != null && transaction != null && dlProgress >= 0) {
             progress.setVisibility(View.VISIBLE);
             buttonRemove.setVisibility(View.GONE);
             buttonAction.setVisibility(View.VISIBLE);
@@ -157,7 +157,7 @@ public class StoreListItem {
                             activity,
                             transaction.purchaseInfo.signature,
                             transaction.purchaseInfo.responseData,
-                            activity.getString(R.string.app_title),
+                            listing.title,
                             0
                     );
                     refreshButton();
