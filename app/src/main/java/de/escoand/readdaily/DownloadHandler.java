@@ -30,7 +30,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 
 public class DownloadHandler extends BroadcastReceiver {
 
@@ -81,20 +80,20 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        Database database = new Database(context);
+    public void onReceive(final Context context, Intent intent) {
+        final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        final Database database = new Database(context);
         Cursor downloads = database.getDownloads();
 
         Log.w("DownloadHandler", "received");
 
         downloads.moveToPosition(-1);
         while (downloads.moveToNext()) {
-            String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
-            int revision = downloads.getInt(downloads.getColumnIndex(Database.COLUMN_REVISION));
-            long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
+            final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
+            final int revision = downloads.getInt(downloads.getColumnIndex(Database.COLUMN_REVISION));
+            final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
 
-            Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
+            final Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
 
             // download exists
             download.moveToPosition(-1);
@@ -107,38 +106,43 @@ public class DownloadHandler extends BroadcastReceiver {
 
             Log.w("DownloadHandler", "import " + name);
 
-            // import file
-            try {
-                File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
-                InputStream stream = new FileInputStream(file);
+            // import file in background
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
+                        FileInputStream stream = new FileInputStream(file);
 
-                switch (manager.getMimeTypeForDownloadedFile(id)) {
+                        switch (manager.getMimeTypeForDownloadedFile(id)) {
 
-                    // csv data
-                    case "text/plain":
-                        new Database(context).loadDataCSV(name, revision, stream);
-                        break;
+                            // csv data
+                            case "text/plain":
+                                new Database(context).importCSV(name, revision, stream);
+                                break;
 
-                    // xml data
-                    case "application/xml":
-                        new Database(context).loadDataXML(name, revision, stream);
-                        break;
+                            // xml data
+                            case "application/xml":
+                                new Database(context).importXML(name, revision, stream);
+                                break;
 
-                    // zipped data
-                    case "application/zip":
-                        new Database(context).loadDataZIP(name, revision, stream, context);
-                        break;
+                            // zipped data
+                            case "application/zip":
+                                new Database(context).importZIP(name, revision, stream);
+                                break;
+                        }
+
+                        // clean
+                        stream.close();
+                        file.delete();
+                        manager.remove(id);
+                        database.removeDownload(id);
+
+                    } catch (Exception e) {
+                        Log.e("DownloadHandler", Log.getStackTraceString(e));
+                    }
                 }
-
-                // clean
-                stream.close();
-                file.delete();
-                manager.remove(id);
-                database.removeDownload(id);
-
-            } catch (Exception e) {
-                Log.e("DownloadHandler", Log.getStackTraceString(e));
-            }
+            }).start();
 
             Log.w("DownloadHandler", "finished " + name);
         }
