@@ -33,6 +33,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,6 +42,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataListener {
     private DrawerLayout layout;
     private Toolbar toolbar;
+    private View playerButton;
     private DailyFragment daily;
 
     @Override
@@ -60,13 +62,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 layout.openDrawer(GravityCompat.START);
             }
         });
+        playerButton = toolbar.findViewById(R.id.toolbar_player);
 
         // drawer
         ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(this);
 
         // fragments
         FragmentManager fm = getSupportFragmentManager();
-        HeaderFragment header = (HeaderFragment) fm.findFragmentById(R.id.header);
+        final HeaderFragment header = (HeaderFragment) fm.findFragmentById(R.id.header);
         daily = (DailyFragment) fm.findFragmentById(R.id.content);
         FooterFragment footer = (FooterFragment) fm.findFragmentById(R.id.footer);
         header.setOnClickListener(daily);
@@ -74,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         daily.registerDataListener(this);
         daily.registerDataListener(header);
         daily.registerDataListener(footer);
+
+        // player button
+        playerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                header.togglePlayer();
+            }
+        });
     }
 
     @Override
@@ -103,6 +114,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDataUpdated(Date date, Cursor cursor) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
+
+        // player button
+        File file = new File(getFilesDir(), Database.getIntFromDate(date) + ".mp3");
+        if (file.exists())
+            playerButton.setVisibility(View.VISIBLE);
+        else
+            playerButton.setVisibility(View.GONE);
 
         // default title
         toolbar.setTitle(getString(R.string.app_title));
