@@ -155,7 +155,7 @@ public class Database extends SQLiteOpenHelper {
                     COLUMN_ID + " LONG NOT NULL)");
         }
         if (oldVersion < 3) {
-            db.rawQuery("DROP TABLE " + TABLE_DOWNLOADS, new String[]{});
+            db.execSQL("DROP TABLE " + TABLE_DOWNLOADS);
             db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                     COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                     COLUMN_ID + " LONG NOT NULL)");
