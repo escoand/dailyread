@@ -41,9 +41,11 @@ import java.util.Date;
 
 public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener, Runnable {
     private View root;
-    private ImageView image;
-    private ProgressBar progress;
-    private TextView progressText;
+    private View playerControls;
+    private ImageView playerImage;
+    private View playerContainer;
+    private ProgressBar playerProgress;
+    private TextView playerText;
     private LinearLayout texts;
     private TextView title;
     private TextView subtitle;
@@ -58,10 +60,12 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_header, container);
-        image = (ImageView) root.findViewById(R.id.header_image);
-        progress = (ProgressBar) root.findViewById(R.id.header_progress);
-        progressText = (TextView) root.findViewById(R.id.header_progress_text);
-        texts = (LinearLayout) root.findViewById(R.id.header_text);
+        playerControls = root.findViewById(R.id.player_control);
+        playerImage = (ImageView) root.findViewById(R.id.player_image);
+        playerContainer = root.findViewById(R.id.player_container);
+        playerProgress = (ProgressBar) root.findViewById(R.id.player_progress);
+        playerText = (TextView) root.findViewById(R.id.player_text);
+        texts = (LinearLayout) root.findViewById(R.id.header_texts);
         title = (TextView) root.findViewById(R.id.header_title);
         subtitle = (TextView) root.findViewById(R.id.header_subtitle);
         bible = root.findViewById(R.id.button_bible_day);
@@ -90,40 +94,40 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         if (this.title != null && title != null && this.subtitle != null && subtitle != null) {
             switch (date.getMonth()) {
                 case 0:
-                    image.setImageResource(R.mipmap.img_month_01);
+                    playerImage.setImageResource(R.mipmap.img_month_01);
                     break;
                 case 1:
-                    image.setImageResource(R.mipmap.img_month_02);
+                    playerImage.setImageResource(R.mipmap.img_month_02);
                     break;
                 case 2:
-                    image.setImageResource(R.mipmap.img_month_03);
+                    playerImage.setImageResource(R.mipmap.img_month_03);
                     break;
                 case 3:
-                    image.setImageResource(R.mipmap.img_month_04);
+                    playerImage.setImageResource(R.mipmap.img_month_04);
                     break;
                 case 4:
-                    image.setImageResource(R.mipmap.img_month_05);
+                    playerImage.setImageResource(R.mipmap.img_month_05);
                     break;
                 case 5:
-                    image.setImageResource(R.mipmap.img_month_06);
+                    playerImage.setImageResource(R.mipmap.img_month_06);
                     break;
                 case 6:
-                    image.setImageResource(R.mipmap.img_month_07);
+                    playerImage.setImageResource(R.mipmap.img_month_07);
                     break;
                 case 7:
-                    image.setImageResource(R.mipmap.img_month_08);
+                    playerImage.setImageResource(R.mipmap.img_month_08);
                     break;
                 case 8:
-                    image.setImageResource(R.mipmap.img_month_09);
+                    playerImage.setImageResource(R.mipmap.img_month_09);
                     break;
                 case 9:
-                    image.setImageResource(R.mipmap.img_month_10);
+                    playerImage.setImageResource(R.mipmap.img_month_10);
                     break;
                 case 10:
-                    image.setImageResource(R.mipmap.img_month_11);
+                    playerImage.setImageResource(R.mipmap.img_month_11);
                     break;
                 case 11:
-                    image.setImageResource(R.mipmap.img_month_12);
+                    playerImage.setImageResource(R.mipmap.img_month_12);
                     break;
             }
             this.title.setText(title);
@@ -135,10 +139,10 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         // audio file
         File file = new File(getActivity().getFilesDir(), Database.getIntFromDate(date) + ".mp3");
         if (file.exists()) {
-            image.setOnClickListener(this);
+            playerImage.setOnClickListener(this);
             player = MediaPlayer.create(getContext(), Uri.parse(file.getAbsolutePath()));
         } else {
-            image.setOnClickListener(null);
+            playerImage.setOnClickListener(null);
             if (player != null)
                 player.release();
             player = null;
@@ -147,109 +151,71 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
     @Override
     public void onClick(View view) {
-        AnimatorSet anims = new AnimatorSet();
-        Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
-        Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
-        Animator anim3, anim4, anim5;
-        ValueAnimator anim6, anim7, anim8, anim9;
-
-        if (smallWidth == 0)
-            smallWidth = root.getMeasuredWidth();
-
-        // alpha animations
-        if (!isLarge) {
-            anim1.setTarget(getView().findViewById(R.id.header_progress_wrapper));
-            anim2.setTarget(texts);
-            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
-            anim4 = anim1.clone();
-            anim5 = anim1.clone();
-        } else {
-            anim1.setTarget(texts);
-            anim2.setTarget(getView().findViewById(R.id.header_progress_wrapper));
-            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
-            anim4 = anim2.clone();
-            anim5 = anim2.clone();
-        }
-        anim3.setTarget(getView().findViewById(R.id.header_image));
-        anim4.setTarget(getView().findViewById(R.id.header_forward));
-        anim5.setTarget(getView().findViewById(R.id.header_rewind));
-
-        // resize animation
-        final View cntrl = getView().findViewById(R.id.header_control);
-        if (!isLarge) {
-            anim6 = new WidthResizeAnimator(root, smallWidth, root.getMeasuredWidth() + texts.getMeasuredWidth());
-            anim7 = new WidthResizeAnimator(getView().findViewById(R.id.header_rewind), 0, getView().findViewById(R.id.header_rewind).getMeasuredHeight());
-            anim8 = new WidthResizeAnimator(getView().findViewById(R.id.header_forward), 0, getView().findViewById(R.id.header_forward).getMeasuredHeight());
-            anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), getView().getMeasuredWidth() - 3 * getView().findViewById(R.id.header_rewind).getMeasuredHeight());
-        } else {
-            anim6 = new WidthResizeAnimator(root, root.getMeasuredWidth(), smallWidth);
-            anim7 = new WidthResizeAnimator(getView().findViewById(R.id.header_rewind), getView().findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
-            anim8 = new WidthResizeAnimator(getView().findViewById(R.id.header_forward), getView().findViewById(R.id.header_rewind).getMeasuredWidth(), 0);
-            anim9 = new SquareResizeAnimator(cntrl, cntrl.getMeasuredWidth(), cntrl.getMeasuredHeight() / 2);
-        }
-
-        // text size
-        anims.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if (isLarge) {
-                    ViewGroup.LayoutParams lp = texts.getLayoutParams();
-                    lp.height = texts.getMeasuredHeight();
-                    lp.width = texts.getMeasuredWidth();
-                    texts.setLayoutParams(lp);
-                } else {
-                    if (player != null) {
-                        player.pause();
-                        player.seekTo(0);
-                    }
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (isLarge) {
-                    if (player != null) {
-                        player.start();
-                    }
-                } else {
-                    texts.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT));
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        });
-
-        isLarge = !isLarge;
-
-        // animate
-        anims.playTogether(anim1, anim2, anim3, anim4, anim5, anim6, anim7, anim8, anim9);
-        anims.setDuration(500);
-        anims.setInterpolator(new DecelerateInterpolator());
-        anims.start();
-        new Thread(this).start();
+        togglePlayer();
     }
 
     @Override
     public void run() {
         while (player != null) {
+            final int duration = player.getDuration();
+            final int progress = player.getCurrentPosition();
+            final String text = String.format("%02d:%02d", progress / 60000, (progress / 1000) % 60);
+
+            // update player ui
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    playerProgress.setMax(duration);
+                    playerProgress.setProgress(progress);
+                    playerProgress.setSecondaryProgress(duration);
+                    playerText.setText(text);
+                }
+            });
+
+            // TODO close player on finish
+
+            // sleep 1 second
             try {
                 Thread.sleep(1000);
-                progress.setMax(player.getDuration());
-                progress.setProgress(player.getCurrentPosition());
-                progress.setSecondaryProgress(player.getDuration());
-                //progressText.setText(String.format("%02d:%02d", player.getCurrentPosition() / 60000, (player.getCurrentPosition() / 100) % 60));
             } catch (Exception e) {
                 return;
             }
         }
+    }
+
+    private void togglePlayer() {
+        AnimatorSet anims = new AnimatorSet();
+        Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
+        Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
+        Animator anim3;
+        ValueAnimator anim4, anim5;
+
+        if (smallWidth == 0)
+            smallWidth = root.getMeasuredWidth();
+
+        // animations
+        if (!isLarge) {
+            anim1.setTarget(playerContainer);
+            anim2.setTarget(texts);
+            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
+            anim4 = new WidthResizeAnimator(root, smallWidth, root.getMeasuredWidth() + texts.getMeasuredWidth());
+            anim5 = new SquareResizeAnimator(playerControls, playerControls.getMeasuredWidth(), playerControls.getMeasuredHeight() * 2);
+        } else {
+            anim1.setTarget(texts);
+            anim2.setTarget(playerContainer);
+            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
+            anim4 = new WidthResizeAnimator(root, root.getMeasuredWidth(), smallWidth);
+            anim5 = new SquareResizeAnimator(playerControls, playerControls.getMeasuredWidth(), playerControls.getMeasuredHeight() / 2);
+        }
+        anim3.setTarget(playerImage);
+
+        // animate
+        anims.playTogether(anim1, anim2, anim3, anim4, anim5);
+        anims.addListener(new AnimListener());
+        anims.setDuration(500);
+        anims.setInterpolator(new DecelerateInterpolator());
+        anims.start();
+        new Thread(this).start();
     }
 
     private class SquareResizeAnimator extends ValueAnimator {
@@ -286,6 +252,42 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
                     view.setLayoutParams(lp);
                 }
             });
+        }
+    }
+
+    private class AnimListener implements Animator.AnimatorListener {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            if (!isLarge) {
+                ViewGroup.LayoutParams lp = texts.getLayoutParams();
+                lp.height = texts.getMeasuredHeight();
+                lp.width = texts.getMeasuredWidth();
+                texts.setLayoutParams(lp);
+            } else {
+                player.pause();
+                player.seekTo(0);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (!isLarge) {
+                player.start();
+            } else {
+                texts.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+            }
+
+            isLarge = !isLarge;
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
         }
     }
 }
