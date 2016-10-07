@@ -130,13 +130,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // year title
                 case Database.TYPE_YEAR:
                     toolbar.setTitle(getString(R.string.navigation_voty));
-                    toolbar.setSubtitle(cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE)));
                     break;
 
                 // intro title
                 case Database.TYPE_INTRO:
                     toolbar.setTitle(getString(R.string.navigation_intro));
-                    toolbar.setSubtitle(cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE)));
                     break;
 
             }
