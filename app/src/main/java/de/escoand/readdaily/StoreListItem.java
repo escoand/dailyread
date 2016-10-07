@@ -135,7 +135,7 @@ public class StoreListItem implements Runnable {
         }
 
         // downloading
-        else if (listing != null && transaction != null && downloadProgress >= 0) {
+        else if (listing != null && transaction != null && downloadProgress >= 0 && downloadProgress < 1) {
             buttonRemove.setVisibility(View.VISIBLE);
             buttonRemove.setText(activity.getString(R.string.button_cancel));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +216,7 @@ public class StoreListItem implements Runnable {
     }
 
     private void errorHandling(final Throwable e) {
-        Log.e("error", Log.getStackTraceString(e));
+        Log.e("StoreListItem", Log.getStackTraceString(e));
         // TODO non-technical message to user
         activity.runOnUiThread(new Runnable() {
             @Override
