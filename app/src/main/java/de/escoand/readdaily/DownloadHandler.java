@@ -57,31 +57,31 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     public static float downloadProgress(Context context, String name) {
-        Cursor c = new Database(context).getDownloads();
+        Cursor cursor = new Database(context).getDownloads();
         long id = 0;
         float progress;
 
         // get download id
-        while (c.moveToNext())
-            if (c.getString(c.getColumnIndex(Database.COLUMN_SUBSCRIPTION)).equals(name)) {
-                id = c.getLong(c.getColumnIndex(Database.COLUMN_ID));
+        while (cursor.moveToNext())
+            if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_SUBSCRIPTION)).equals(name)) {
+                id = cursor.getLong(cursor.getColumnIndex(Database.COLUMN_ID));
                 break;
             }
-        c.close();
+        cursor.close();
         if (id <= 0)
             return -2;
 
         // get download
-        c = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE))
+        cursor = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE))
                 .query(new DownloadManager.Query().setFilterById(id));
-        if (!c.moveToFirst())
+        if (!cursor.moveToFirst())
             return -1;
 
         // get progress
-        progress = c.getFloat(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
-                c.getFloat(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+        progress = cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
+                cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
-        c.close();
+        cursor.close();
         return progress;
     }
 
@@ -111,13 +111,12 @@ public class DownloadHandler extends BroadcastReceiver {
         final Database database = new Database(context);
         Cursor downloads = database.getDownloads();
 
-        Log.w("DownloadHandler", "received");
+        Log.w("DownloadHandler", "receiving");
 
         downloads.moveToPosition(-1);
         while (downloads.moveToNext()) {
             final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
             final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
-
             final Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
 
             // download exists
@@ -129,12 +128,12 @@ public class DownloadHandler extends BroadcastReceiver {
             if (download.getInt(download.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
                 continue;
 
-            Log.w("DownloadHandler", "import " + name);
-
             // import file in background
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.w("DownloadHandler", "import " + name);
+
                     try {
                         File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
                         FileInputStream stream = new FileInputStream(file);
@@ -166,14 +165,14 @@ public class DownloadHandler extends BroadcastReceiver {
                     } catch (Exception e) {
                         Log.e("DownloadHandler", Log.getStackTraceString(e));
                     }
+
+                    Log.w("DownloadHandler", "finished " + name);
                 }
             }).start();
 
-            download.close();
-            Log.w("DownloadHandler", "finished " + name);
         }
         downloads.close();
 
-        Log.w("DownloadHandler", "receive done");
+        Log.w("DownloadHandler", "receiving done");
     }
 }
