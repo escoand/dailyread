@@ -183,7 +183,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         }
     }
 
-    private void togglePlayer() {
+    public void togglePlayer() {
         AnimatorSet anims = new AnimatorSet();
         Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
         Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
