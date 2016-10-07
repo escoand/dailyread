@@ -40,8 +40,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class StoreListItem {
+public class StoreListItem implements Runnable {
     private final String productId;
+    Thread refrehThread = null;
+    float downloadProgress = -1;
     private SkuDetails listing;
     private TransactionDetails transaction;
     private Activity activity;
@@ -108,47 +110,56 @@ public class StoreListItem {
             }
         });
 
-        buttonRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Database(activity).removeData(productId);
-                refreshButton();
-            }
-        });
-
-        refreshButton();
+        refreshUI();
 
         return this.parent;
     }
 
-    private void refreshButton() {
+    private void refreshUI() {
         boolean isInstalled = new Database(activity).isInstalled(productId);
-        float dlProgress = DownloadHandler.downloadProgress(activity, productId);
+        downloadProgress = DownloadHandler.downloadProgress(activity, productId);
 
         // up-to-date
         if (isInstalled) {
-            progress.setVisibility(View.GONE);
             buttonRemove.setVisibility(View.VISIBLE);
+            buttonRemove.setText(activity.getString(R.string.button_remove));
+            buttonRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new Database(activity).removeData(productId);
+                    refreshUI();
+                }
+            });
             buttonAction.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
         }
 
         // downloading
-        else if (listing != null && transaction != null && dlProgress >= 0) {
+        else if (listing != null && transaction != null && downloadProgress >= 0) {
+            buttonRemove.setVisibility(View.VISIBLE);
+            buttonRemove.setText(activity.getString(R.string.button_cancel));
+            buttonRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DownloadHandler.stopDownload(activity, productId);
+                    refreshUI();
+                }
+            });
+            buttonAction.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            buttonRemove.setVisibility(View.GONE);
-            buttonAction.setVisibility(View.VISIBLE);
-            buttonAction.setText(activity.getString(R.string.button_downloading));
-            buttonAction.setEnabled(false);
-            //refreshButton();
+            progress.setMax(100);
+            progress.setProgress((int) (100 * downloadProgress));
+            if (refrehThread == null || !refrehThread.isAlive()) {
+                refrehThread = new Thread(this);
+                refrehThread.start();
+            }
         }
 
         // download
         else if (listing != null && transaction != null) {
-            progress.setVisibility(View.GONE);
             buttonRemove.setVisibility(View.GONE);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(activity.getString(R.string.button_download));
-            buttonAction.setEnabled(true);
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -159,27 +170,48 @@ public class StoreListItem {
                             transaction.purchaseInfo.responseData,
                             (String) title.getText()
                     );
-                    refreshButton();
+                    refreshUI();
                 }
             });
+            progress.setVisibility(View.GONE);
         }
 
         // purchase
         else if (listing != null) {
-            progress.setVisibility(View.GONE);
             buttonRemove.setVisibility(View.GONE);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(listing.priceText);
-            buttonAction.setEnabled(true);
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     billing.purchase(activity, productId);
                     listing = billing.getPurchaseListingDetails(productId);
                     transaction = billing.getSubscriptionTransactionDetails(productId);
-                    refreshButton();
+                    refreshUI();
                 }
             });
+            progress.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void run() {
+        while (downloadProgress >= 0 && downloadProgress < 1) {
+
+            // refresh ui
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refreshUI();
+                }
+            });
+
+            // sleep 5 second
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                return;
+            }
         }
     }
 

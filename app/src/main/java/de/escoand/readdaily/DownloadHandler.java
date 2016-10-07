@@ -59,6 +59,7 @@ public class DownloadHandler extends BroadcastReceiver {
     public static float downloadProgress(Context context, String name) {
         Cursor c = new Database(context).getDownloads();
         long id = 0;
+        float progress;
 
         // get download id
         while (c.moveToNext())
@@ -66,6 +67,7 @@ public class DownloadHandler extends BroadcastReceiver {
                 id = c.getLong(c.getColumnIndex(Database.COLUMN_ID));
                 break;
             }
+        c.close();
         if (id <= 0)
             return -2;
 
@@ -75,8 +77,32 @@ public class DownloadHandler extends BroadcastReceiver {
         if (!c.moveToFirst())
             return -1;
 
-        return c.getFloat(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
+        // get progress
+        progress = c.getFloat(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
                 c.getFloat(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+        c.close();
+        return progress;
+    }
+
+    public static void stopDownload(Context context, String name) {
+        Database db = new Database(context);
+        Cursor c = db.getDownloads();
+        long id = 0;
+
+        // get download id
+        while (c.moveToNext())
+            if (c.getString(c.getColumnIndex(Database.COLUMN_SUBSCRIPTION)).equals(name)) {
+                id = c.getLong(c.getColumnIndex(Database.COLUMN_ID));
+                break;
+            }
+        c.close();
+        if (id <= 0)
+            return;
+
+        // stop download
+        ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).remove(id);
+        db.removeDownload(id);
     }
 
     @Override
@@ -143,8 +169,10 @@ public class DownloadHandler extends BroadcastReceiver {
                 }
             }).start();
 
+            download.close();
             Log.w("DownloadHandler", "finished " + name);
         }
+        downloads.close();
 
         Log.w("DownloadHandler", "receive done");
     }
