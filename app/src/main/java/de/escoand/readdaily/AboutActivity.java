@@ -59,6 +59,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                         "Calligraphy %s\nApache License 2.0 by Christopher Jenkins\n\n" +
                         "CircleImageView %s\nApache License 2.0 by Henning Dodenhof\n\n" +
                         "Design Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
+                        "Google Firebase Core %s\nApache License 2.0 by The Google\n\n" +
+                        "Google Firebase Messaging %s\nApache License 2.0 by Google\n\n" +
                         "Material Calendar View %s\nby Prolific Interactive\n\n" +
                         "OkHttp %s\nApache License 2.0 by Square, Inc.\n\n" +
                         "v7 appcompat library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
@@ -68,6 +70,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 uk.co.chrisjenx.calligraphy.BuildConfig.VERSION_NAME,
                 de.hdodenhof.circleimageview.BuildConfig.VERSION_NAME,
                 android.support.design.BuildConfig.VERSION_NAME,
+                "",
+                "",
                 com.prolificinteractive.materialcalendarview.BuildConfig.VERSION_NAME,
                 "",
                 android.support.v7.appcompat.BuildConfig.VERSION_NAME,
