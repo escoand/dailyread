@@ -39,7 +39,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.Date;
 
-public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener, Runnable {
+public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener, MediaPlayer.OnCompletionListener, Runnable {
     private View root;
     private View playerControls;
     private ImageView playerImage;
@@ -141,6 +141,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         if (file.exists()) {
             playerImage.setOnClickListener(this);
             player = MediaPlayer.create(getContext(), Uri.parse(file.getAbsolutePath()));
+            player.setOnCompletionListener(this);
         } else {
             playerImage.setOnClickListener(null);
             if (player != null)
@@ -151,6 +152,11 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
     @Override
     public void onClick(View view) {
+        togglePlayer();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
         togglePlayer();
     }
 
@@ -171,8 +177,6 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
                     playerText.setText(text);
                 }
             });
-
-            // TODO close player on finish
 
             // sleep 1 second
             try {
