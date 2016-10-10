@@ -33,7 +33,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -114,17 +113,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDataUpdated(Date date, Cursor cursor) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
-
-        // player button
-        File file = new File(getFilesDir(), Database.getIntFromDate(date) + ".mp3");
-        if (file.exists())
-            playerButton.setVisibility(View.VISIBLE);
-        else
-            playerButton.setVisibility(View.GONE);
+        boolean hasTitle = false;
 
         // default title
         toolbar.setTitle(getString(R.string.app_title));
         toolbar.setSubtitle(null);
+        playerButton.setVisibility(View.GONE);
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
@@ -143,16 +137,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
                     frmt.applyPattern(pattern);
                     toolbar.setSubtitle(frmt.format(date));
-                    return;
+                    hasTitle = true;
+                    break;
 
                 // year title
                 case Database.TYPE_YEAR:
-                    toolbar.setTitle(getString(R.string.navigation_voty));
+                    if (!hasTitle)
+                        toolbar.setTitle(getString(R.string.navigation_voty));
                     break;
 
                 // intro title
                 case Database.TYPE_INTRO:
-                    toolbar.setTitle(getString(R.string.navigation_intro));
+                    if (!hasTitle)
+                        toolbar.setTitle(getString(R.string.navigation_intro));
+                    break;
+
+                // audio player
+                case Database.TYPE_MEDIA:
+                    playerButton.setVisibility(View.VISIBLE);
                     break;
 
             }
