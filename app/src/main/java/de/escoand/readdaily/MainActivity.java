@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
                 // exegesis title

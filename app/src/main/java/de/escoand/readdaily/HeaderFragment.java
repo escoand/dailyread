@@ -36,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.Date;
 
 public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener, MediaPlayer.OnCompletionListener, Runnable {
@@ -83,14 +82,33 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         String title = null;
         String subtitle = null;
 
+        // clear audio
+        playerImage.setOnClickListener(null);
+        if (player != null)
+            player.release();
+        player = null;
+
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-            if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)) != null && cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY)) {
-                title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
-                subtitle = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
+            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+
+                // day
+                case Database.TYPE_DAY:
+                    title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                    subtitle = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
+                    break;
+
+                // audio
+                case Database.TYPE_MEDIA:
+                    playerImage.setOnClickListener(this);
+                    player = MediaPlayer.create(getContext(), Uri.parse(cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE))));
+                    player.setOnCompletionListener(this);
+                    break;
+
             }
         }
 
+        // image
         if (this.title != null && title != null && this.subtitle != null && subtitle != null) {
             switch (date.getMonth()) {
                 case 0:
@@ -135,19 +153,6 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
             getView().setVisibility(View.VISIBLE);
         } else
             getView().setVisibility(View.GONE);
-
-        // audio file
-        File file = new File(getActivity().getFilesDir(), Database.getIntFromDate(date) + ".mp3");
-        if (file.exists()) {
-            playerImage.setOnClickListener(this);
-            player = MediaPlayer.create(getContext(), Uri.parse(file.getAbsolutePath()));
-            player.setOnCompletionListener(this);
-        } else {
-            playerImage.setOnClickListener(null);
-            if (player != null)
-                player.release();
-            player = null;
-        }
     }
 
     @Override
@@ -188,6 +193,9 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     }
 
     public void togglePlayer() {
+        if (player == null)
+            return;
+
         AnimatorSet anims = new AnimatorSet();
         Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
         Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
