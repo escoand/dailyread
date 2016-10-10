@@ -51,13 +51,13 @@ public class DownloadHandler extends BroadcastReceiver {
                 .setDestinationInExternalFilesDir(context, null, name)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
-        new Database(context).addDownload(name, id);
+        ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
 
         return id;
     }
 
     public static float downloadProgress(Context context, String name) {
-        Cursor cursor = new Database(context).getDownloads();
+        Cursor cursor = ((ReadDailyApp) context.getApplicationContext()).getDatabase().getDownloads();
         long id = 0;
         float progress;
 
@@ -86,7 +86,7 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     public static void stopDownload(Context context, String name) {
-        Database db = new Database(context);
+        Database db = ((ReadDailyApp) context.getApplicationContext()).getDatabase();
         Cursor c = db.getDownloads();
         long id = 0;
 
@@ -108,8 +108,8 @@ public class DownloadHandler extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        final Database database = new Database(context);
-        Cursor downloads = database.getDownloads();
+        final Database db = ((ReadDailyApp) context.getApplicationContext()).getDatabase();
+        Cursor downloads = db.getDownloads();
 
         Log.w("DownloadHandler", "receiving");
 
@@ -142,17 +142,17 @@ public class DownloadHandler extends BroadcastReceiver {
 
                             // csv data
                             case "text/plain":
-                                new Database(context).importCSV(name, stream);
+                                db.importCSV(name, stream);
                                 break;
 
                             // xml data
                             case "application/xml":
-                                new Database(context).importXML(name, stream);
+                                db.importXML(name, stream);
                                 break;
 
                             // zipped data
                             case "application/zip":
-                                new Database(context).importZIP(name, stream);
+                                db.importZIP(name, stream);
                                 break;
                         }
 
@@ -160,7 +160,7 @@ public class DownloadHandler extends BroadcastReceiver {
                         stream.close();
                         file.delete();
                         manager.remove(id);
-                        database.removeDownload(id);
+                        db.removeDownload(id);
 
                     } catch (Exception e) {
                         Log.e("DownloadHandler", Log.getStackTraceString(e));

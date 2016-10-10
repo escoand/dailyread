@@ -116,7 +116,8 @@ public class StoreListItem implements Runnable {
     }
 
     private void refreshUI() {
-        boolean isInstalled = new Database(activity).isInstalled(productId);
+        final Database db = ((ReadDailyApp) activity.getApplication()).getDatabase();
+        final boolean isInstalled = db.isInstalled(productId);
         downloadProgress = DownloadHandler.downloadProgress(activity, productId);
 
         // up-to-date
@@ -126,7 +127,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new Database(activity).removeData(productId);
+                    db.removeData(productId);
                     refreshUI();
                 }
             });
