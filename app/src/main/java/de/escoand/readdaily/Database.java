@@ -494,15 +494,12 @@ public class Database extends SQLiteOpenHelper {
             v = list.toArray(new String[list.size()]);
         }
 
-        Cursor c = getReadableDatabase().query(
+        return getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
                 new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
                 w, v,
                 null, null,
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
-        if (c != null)
-            c.moveToFirst();
-        return c;
     }
 
     public Cursor getDay(Date date) {
@@ -510,26 +507,20 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Cursor getCalendar() {
-        Cursor c = getReadableDatabase().query(
+        return getReadableDatabase().query(
                 TABLE_TEXTS,
                 new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
                 COLUMN_DATE + ">='20000000' AND " + COLUMN_DATE + "<'21000000'",
                 null, null, null, null);
-        if (c != null)
-            c.moveToFirst();
-        return c;
     }
 
     public Cursor getList(String condition, String[] values) {
-        Cursor c = getReadableDatabase().query(
+        return getReadableDatabase().query(
                 TABLE_TEXTS,
                 new String[]{"rowid _id", COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
                 condition, values,
                 null, null,
                 COLUMN_GROUP);
-        if (c != null)
-            c.moveToFirst();
-        return c;
     }
 
     public Cursor getList() {
