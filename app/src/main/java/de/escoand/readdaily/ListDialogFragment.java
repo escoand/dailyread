@@ -62,7 +62,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
         adapter = new SimpleCursorAdapter(
                 getContext(),
                 R.layout.item_list,
-                new Database(getContext()).getList(condition, values),
+                ((ReadDailyApp) getActivity().getApplication()).getDatabase().getList(condition, values),
                 from, to,
                 0);
         adapter.setViewBinder(this);
