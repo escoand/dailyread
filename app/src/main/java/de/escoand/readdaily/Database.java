@@ -537,9 +537,22 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         int result = 0;
 
+        // remove from db
         result += db.delete(TABLE_TEXTS, COLUMN_SUBSCRIPTION + "=?", new String[]{subscription});
         result += db.delete(TABLE_SETS, COLUMN_NAME + "=?", new String[]{subscription});
         db.close();
+
+        // remove from disk
+        File outdir = new File(context.getFilesDir(), subscription);
+        if (outdir.exists() && outdir.isDirectory()) {
+            Log.i("removeData", "directory " + outdir.getAbsolutePath());
+            File[] files = outdir.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                Log.i("removeData", "file " + files[i].getAbsolutePath());
+                files[i].delete();
+            }
+        }
+        outdir.delete();
 
         Log.w("removeData", subscription + " removed " + result);
     }
