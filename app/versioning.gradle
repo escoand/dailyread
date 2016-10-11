@@ -29,6 +29,9 @@ ext {
         } else if (patch.contains("-beta")) {
             (patch, candidate) = patch.tokenize("-")
             candidate = 50 + candidate.replaceAll("[^0-9]", "").toInteger()
+        } else if (patch.contains("-rc")) {
+            (patch, candidate) = patch.tokenize("-")
+            candidate = 90 + candidate.replaceAll("[^0-9]", "").toInteger()
         }
 
         (major, minor, patch, candidate) = [major, minor, patch, candidate].collect {
