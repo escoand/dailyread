@@ -29,7 +29,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.id.preference_notification);
+        addPreferencesFromResource(R.xml.settings);
 
         findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

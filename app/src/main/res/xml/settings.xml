@@ -27,7 +27,6 @@
         android:title="@string/pref_translation" />
 
     <SwitchPreference
-        android:id="@+id/preference_notification"
         android:defaultValue="true"
         android:key="notifications"
         android:title="@string/pref_notification" />
