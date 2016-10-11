@@ -30,8 +30,24 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
+
+    public static long startInvisibleDownload(Context context, String url, String title) {
+        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        String name = String.valueOf(new Random().nextInt());
+
+        Log.w("DownloadHandler", "load invisible " + url);
+
+        long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
+                .setVisibleInDownloadsUi(false)
+                .setDestinationInExternalFilesDir(context, null, name)
+                .setTitle(title));
+        ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
+
+        return id;
+    }
 
     public static long startDownload(Context context, String signature, String responseData, String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -140,6 +156,13 @@ public class DownloadHandler extends BroadcastReceiver {
 
                         switch (manager.getMimeTypeForDownloadedFile(id)) {
 
+                            // register feedback
+                            case "application/json":
+                                byte[] buf = new byte[1024];
+                                stream.read(buf);
+                                Log.w("DownloadHandler", "register feedback " + new String(buf));
+                                break;
+
                             // csv data
                             case "text/plain":
                                 db.importCSV(name, stream);
@@ -159,6 +182,7 @@ public class DownloadHandler extends BroadcastReceiver {
                         // clean
                         stream.close();
                         file.delete();
+                        download.close();
                         manager.remove(id);
                         db.removeDownload(id);
 
