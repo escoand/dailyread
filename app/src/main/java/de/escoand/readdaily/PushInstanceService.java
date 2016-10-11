@@ -17,22 +17,30 @@
 
 package de.escoand.readdaily;
 
+import android.content.Context;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class PushInstanceService extends FirebaseInstanceIdService {
+    public static void setRegistration(Context context, boolean activate) {
+        DownloadHandler.startInvisibleDownload(
+                context,
+                String.format(
+                        context.getString(activate ? R.string.push_register_url : R.string.push_unregister_url),
+                        Uri.encode(FirebaseInstanceId.getInstance().getToken())),
+                context.getString(R.string.message_push_register));
+    }
+
     @Override
     public void onTokenRefresh() {
         String token = FirebaseInstanceId.getInstance().getToken();
 
         Log.w("PushInstanceService", "token refreshed " + token);
 
-        DownloadHandler.startInvisibleDownload(
-                this,
-                String.format(getString(R.string.push_register_url), Uri.encode(token)),
-                getString(R.string.message_push_register));
+        setRegistration(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications", true));
     }
 }

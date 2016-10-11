@@ -19,22 +19,17 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:enabled="false"
-        android:key="notifications"
-        android:title="@string/pref_notification" />
-
     <ListPreference
-        android:enabled="false"
-        android:key="font"
-        android:title="@string/pref_font" />
-
-    <ListPreference
-        android:defaultValue="LUT"
+        android:defaultValue="@string/bible_translation_default"
         android:entries="@array/bible_translations"
         android:entryValues="@array/bible_translation_values"
         android:key="bible_translation"
         android:title="@string/pref_translation" />
+
+    <SwitchPreference
+        android:id="@+id/preference_notification"
+        android:defaultValue="true"
+        android:key="notifications"
+        android:title="@string/pref_notification" />
 
 </PreferenceScreen>
