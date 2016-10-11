@@ -21,4 +21,6 @@ import java.util.Date;
 
 public interface OnDateSelectedListener {
     void onDateSelected(Date date);
+
+    void onDateSelected(Date date, String condition, String[] values);
 }

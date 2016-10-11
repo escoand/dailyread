@@ -33,10 +33,14 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     private String title = null;
     private String condition = null;
     private String[] values = null;
+
+    private SimpleCursorAdapter adapter;
     private String[] from = new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE};
     private int[] to = new int[]{R.id.list_image, R.id.list_title, R.id.list_date};
+
     private OnDateSelectedListener listener;
-    private SimpleCursorAdapter adapter;
+    private String listenerCondition = null;
+    private String[] listenerValues = null;
 
     public void setTitle(String title) {
         this.title = title;
@@ -99,10 +103,20 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     public void onClick(DialogInterface dialog, int which) {
         Cursor c = (Cursor) adapter.getItem(which);
         if (listener != null)
-            listener.onDateSelected(Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE))));
+            listener.onDateSelected(
+                    Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE))),
+                    listenerCondition,
+                    listenerValues
+            );
     }
 
     public void setOnDateSelectedListener(OnDateSelectedListener listener) {
+        setOnDateSelectedListener(listener, null, null);
+    }
+
+    public void setOnDateSelectedListener(OnDateSelectedListener listener, String condition, String[] values) {
         this.listener = listener;
+        this.listenerCondition = condition;
+        this.listenerValues = values;
     }
 }
