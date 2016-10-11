@@ -44,13 +44,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener, OnDateSelectedListener {
-    private static final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
-    private static final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
-    private static SimpleCursorAdapter adapter;
-    private static Database db;
-    ListView list;
-    private Cursor cursor;
+    private final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
+    private final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private Date date;
+    private String condition = null;
+    private String[] values = null;
+    private Database db;
+    private SimpleCursorAdapter adapter;
+    private Cursor cursor;
+    private ListView list;
     private ArrayList<DataListener> listener = new ArrayList<>();
     private SharedPreferences settings;
 
@@ -86,8 +88,10 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             v.findViewById(R.id.button_readall).setOnClickListener(this);
         if (v.findViewById(R.id.button_intro) != null)
             v.findViewById(R.id.button_intro).setOnClickListener(this);
+        if (v.findViewById(R.id.button_voty) != null)
+            v.findViewById(R.id.button_voty).setOnClickListener(this);
 
-        setDate(new Date());
+        onDateSelected(new Date());
 
         return v;
     }
@@ -137,13 +141,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         switch (id) {
 
-            // calendar
-            case R.id.button_calendar:
-                dialog = new CalendarDialogFragment();
-                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
-                break;
-
-            // list
+            // list dialogs
             case R.id.button_list:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
@@ -160,10 +158,16 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(this, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_YEAR});
                 break;
 
-            // store
+            // calendar
+            case R.id.button_calendar:
+                dialog = new CalendarDialogFragment();
+                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+
+            // settings
             case R.id.button_settings:
                 i = new Intent(getActivity(), SettingsActivity.class);
                 break;
@@ -176,6 +180,11 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             // about
             case R.id.button_about:
                 i = new Intent(getActivity(), AboutActivity.class);
+                break;
+
+            // today
+            case R.id.button_today:
+                onDateSelected(new Date());
                 break;
 
             // toggle buttons
@@ -220,11 +229,6 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 anim.start();
                 break;
 
-            // today
-            case R.id.button_today:
-                setDate(new Date());
-                break;
-
             // read bible for day
             case R.id.button_bible_day:
                 cursor.moveToPosition(-1);
@@ -264,32 +268,35 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_INTRO)) {
-                        setDate(Database.getDateFromInt(cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE))));
-                        return;
+                        onDateSelected(Database.getDateFromInt(cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE))));
+                        break;
                     }
                 }
                 break;
 
-            // note
-            case R.id.button_note:
-                i = new Intent("com.evernote.action.CREATE_NEW_NOTE");
-                i.putExtra(Intent.EXTRA_TITLE, "");
-                i.putExtra(Intent.EXTRA_TEXT, "");
-                i.putExtra("TAG_NAME_LIST", new ArrayList<String>());
-                i.putExtra("AUTHOR", "");
-                i.putExtra("SOURCE_URL", "");
-                i.putExtra("SOURCE_APP", "");
+            // voty
+            case R.id.button_voty:
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_YEAR)) {
+                        onDateSelected(
+                                Database.getDateFromInt(cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE))),
+                                Database.COLUMN_TYPE + "=?",
+                                new String[]{Database.TYPE_YEAR}
+                        );
+                        break;
+                    }
+                }
                 break;
 
             // mark
             case R.id.button_readall:
                 db.markAsRead(date);
-                setDate(getDate());
+                refreshUI();
                 break;
 
             // share
             case R.id.button_share:
-                // TODO date, title, bible, text, appname
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS)) {
@@ -305,6 +312,17 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                             title + " (" + verse + ")\n" + text + "\n" + getString(R.string.app_title));
                 }
                 break;
+
+            // note
+            case R.id.button_note:
+                i = new Intent("com.evernote.action.CREATE_NEW_NOTE");
+                i.putExtra(Intent.EXTRA_TITLE, "");
+                i.putExtra(Intent.EXTRA_TEXT, "");
+                i.putExtra("TAG_NAME_LIST", new ArrayList<String>());
+                i.putExtra("AUTHOR", "");
+                i.putExtra("SOURCE_URL", "");
+                i.putExtra("SOURCE_APP", "");
+                break;
         }
 
         // start dialog
@@ -318,25 +336,27 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             getActivity().startActivityForResult(i, 0);
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
+    @Override
+    public void onDateSelected(Date date) {
         this.date = date;
-        refresh();
+        this.condition = null;
+        this.values = null;
+        refreshUI();
     }
 
     @Override
-    public void onDateSelected(Date date) {
-        setDate(date);
+    public void onDateSelected(Date date, String condition, String[] values) {
+        this.date = date;
+        this.condition = condition;
+        this.values = values;
+        refreshUI();
     }
 
-    private void refresh() {
+    private void refreshUI() {
         if (adapter == null || db == null)
             return;
 
-        cursor = db.getDay(date);
+        cursor = db.getDay(date, condition, values);
 
         // workaround: scroll to top
         adapter.changeCursor(null);
