@@ -180,28 +180,30 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
             // toggle buttons
             case R.id.button_more:
-                int hasIntro = View.GONE;
-                int hasVoty = View.GONE;
 
-                if (list.isEnabled()) {
-                    cursor.moveToPosition(-1);
-                    while (cursor.moveToNext()) {
-                        if (Database.getIntFromDate(date) == cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE)))
-                            continue;
-                        else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_INTRO))
-                            hasIntro = View.VISIBLE;
-                        else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_YEAR))
-                            hasVoty = View.VISIBLE;
-                    }
-                }
-
+                // toggle action buttons
                 toggleVisibility(getView().findViewById(R.id.button_bible_exegesis));
-                toggleVisibility(getView().findViewById(R.id.button_intro), hasIntro);
                 toggleVisibility(getView().findViewById(R.id.button_note));
                 toggleVisibility(getView().findViewById(R.id.button_read));
                 toggleVisibility(getView().findViewById(R.id.button_readall));
                 toggleVisibility(getView().findViewById(R.id.button_share));
-                toggleVisibility(getView().findViewById(R.id.button_voty), hasVoty);
+
+                // toggle linked buttons
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+
+                    switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+
+                        case Database.TYPE_YEAR:
+                            toggleVisibility(getView().findViewById(R.id.button_voty));
+                            break;
+
+                        case Database.TYPE_INTRO:
+                            toggleVisibility(getView().findViewById(R.id.button_intro));
+                            break;
+
+                    }
+                }
 
                 // list
                 if (list.isEnabled()) {
@@ -347,23 +349,36 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         else
             adapter.changeCursor(cursor);
 
+        if (getView() == null)
+            return;
+
         // init views
-        if (getView() != null) {
-            list.setAlpha(1);
-            list.setEnabled(true);
-            ((FloatingActionButton) getView().findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
-            if (adapter.getCursor().getCount() > 0)
-                toggleVisibility(getView().findViewById(R.id.button_more), View.VISIBLE);
-            else
-                toggleVisibility(getView().findViewById(R.id.button_more), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_bible_exegesis), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_intro), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_note), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_read), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_readall), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_share), View.GONE);
-            toggleVisibility(getView().findViewById(R.id.button_voty), View.GONE);
+        list.setAlpha(1);
+        list.setEnabled(true);
+        ((FloatingActionButton) getView().findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
+        toggleVisibility(getView().findViewById(R.id.button_more), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_bible_exegesis), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_intro), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_note), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_read), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_readall), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_share), View.GONE);
+        toggleVisibility(getView().findViewById(R.id.button_voty), View.GONE);
+
+        // plus button
+        int entries = 0;
+        cursor.moveToPosition(-1);
+        while (cursor.moveToNext()) {
+            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+                case Database.TYPE_EXEGESIS:
+                case Database.TYPE_YEAR:
+                case Database.TYPE_INTRO:
+                    entries++;
+                    break;
+            }
         }
+        if (entries > 1)
+            toggleVisibility(getView().findViewById(R.id.button_more), View.VISIBLE);
     }
 
     public void registerDataListener(DataListener listener) {
@@ -371,18 +386,19 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         listener.onDataUpdated(date, cursor);
     }
 
-    private void toggleVisibility(View v, int force) {
+    private boolean toggleVisibility(View v, int force) {
         if (v == null)
-            return;
+            return false;
         if (force >= 0)
             v.setVisibility(force);
         else if (v.getVisibility() == View.VISIBLE)
             v.setVisibility(View.GONE);
         else
             v.setVisibility(View.VISIBLE);
+        return true;
     }
 
-    private void toggleVisibility(View v) {
-        toggleVisibility(v, -1);
+    private boolean toggleVisibility(View v) {
+        return toggleVisibility(v, -1);
     }
 }
