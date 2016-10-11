@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -26,7 +27,12 @@ public class PushInstanceService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         String token = FirebaseInstanceId.getInstance().getToken();
+
         Log.w("PushInstanceService", "token refreshed " + token);
-        // TODO send token upstream
+
+        DownloadHandler.startInvisibleDownload(
+                this,
+                String.format(getString(R.string.push_register_url), Uri.encode(token)),
+                getString(R.string.message_push_register));
     }
 }
