@@ -119,31 +119,45 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     @Override
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-        if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TITLE)) {
-            View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
-            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
-                case Database.TYPE_YEAR:
-                    ((TextView) view).setText(getContext().getString(R.string.type_voty));
-                    return true;
-                case Database.TYPE_MONTH:
-                    ((TextView) view).setText(getContext().getString(R.string.type_votm));
-                    return true;
-                case Database.TYPE_WEEK:
-                    ((TextView) view).setText(getContext().getString(R.string.type_votw));
-                    return true;
-                case Database.TYPE_DAY:
-                    ((TextView) view).setText(getContext().getString(R.string.type_votd));
-                    source.setVisibility(View.GONE);
-                    return true;
-            }
-        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TEXT) && cursor.getString(columnIndex) != null) {
-            ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
-            return true;
-        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_SOURCE)) {
-            if (cursor.isNull(columnIndex))
-                view.setVisibility(View.GONE);
-        }
+        View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
+        switch (cursor.getColumnName(columnIndex)) {
 
+            // title
+            case Database.COLUMN_TITLE:
+                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+                    case Database.TYPE_YEAR:
+                        ((TextView) view).setText(getContext().getString(R.string.type_voty));
+                        return true;
+                    case Database.TYPE_MONTH:
+                        ((TextView) view).setText(getContext().getString(R.string.type_votm));
+                        return true;
+                    case Database.TYPE_WEEK:
+                        ((TextView) view).setText(getContext().getString(R.string.type_votw));
+                        return true;
+                    case Database.TYPE_DAY:
+                        ((TextView) view).setText(getContext().getString(R.string.type_votd));
+                        source.setVisibility(View.GONE);
+                        return true;
+                }
+                break;
+
+            // text
+            case Database.COLUMN_TEXT:
+                if (cursor.getString(columnIndex) != null) {
+                    ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
+                    return true;
+                }
+                break;
+
+            // source
+            case Database.COLUMN_SOURCE:
+                if (cursor.isNull(columnIndex)) {
+                    view.setVisibility(View.GONE);
+                    return true;
+                }
+                break;
+
+        }
         return false;
     }
 
