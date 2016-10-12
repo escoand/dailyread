@@ -46,7 +46,7 @@ import java.util.Date;
 public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener, OnDateSelectedListener {
     private final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     private final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
-    private Date date;
+    private Date date = null;
     private String condition = null;
     private String[] values = null;
     private Database db;
@@ -91,9 +91,30 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         if (v.findViewById(R.id.button_voty) != null)
             v.findViewById(R.id.button_voty).setOnClickListener(this);
 
-        onDateSelected(new Date());
-
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // set initial date
+        if (savedInstanceState != null) {
+            onDateSelected(
+                    Database.getDateFromInt(savedInstanceState.getInt("date")),
+                    savedInstanceState.getString("condition"),
+                    savedInstanceState.getStringArray("values")
+            );
+        } else
+            onDateSelected(new Date());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("date", Database.getIntFromDate(date));
+        outState.putString("condition", condition);
+        outState.putStringArray("values", values);
     }
 
     @Override
@@ -115,7 +136,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                     source.setVisibility(View.GONE);
                     return true;
             }
-        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TEXT)) {
+        } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_TEXT) && cursor.getString(columnIndex) != null) {
             ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
             return true;
         } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_SOURCE)) {
@@ -403,7 +424,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     public void registerDataListener(DataListener listener) {
         this.listener.add(listener);
-        listener.onDataUpdated(date, cursor);
+        if (date != null && cursor != null)
+            listener.onDataUpdated(date, cursor);
     }
 
     private boolean toggleVisibility(View v, int force) {
