@@ -17,6 +17,13 @@
 
 package de.escoand.readdaily;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -25,8 +32,37 @@ import com.google.firebase.messaging.RemoteMessage;
 public class PushMessageService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-        Log.w("PushMessageService", remoteMessage.toString());
-        // TODO show notification
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        String title = getString(R.string.app_title);
+        String message = "";
+
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Log.w("PushMessageService", "received message");
+
+        // get title
+        if (notification != null && notification.getTitle() != null && !notification.getTitle().isEmpty())
+            title = notification.getTitle();
+
+        // get message
+        if (notification != null && notification.getBody() != null && !notification.getBody().isEmpty())
+            message = notification.getBody();
+        else if (remoteMessage.getData().containsKey("message"))
+            message = remoteMessage.getData().get("message");
+
+        // build notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.icon_notification)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent);
+
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+                .notify(remoteMessage.hashCode(), builder.build());
     }
 }
