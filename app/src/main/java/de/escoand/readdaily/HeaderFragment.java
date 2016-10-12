@@ -37,6 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.Locale;
 
 public class HeaderFragment extends Fragment implements DataListener, View.OnClickListener, MediaPlayer.OnCompletionListener, Runnable {
     private View root;
@@ -170,7 +171,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
         while (player != null) {
             final int duration = player.getDuration();
             final int progress = player.getCurrentPosition();
-            final String text = String.format("%02d:%02d", progress / 60000, (progress / 1000) % 60);
+            final String text = String.format(Locale.getDefault(), "%02d:%02d", progress / 60000, (progress / 1000) % 60);
 
             // update player ui
             getActivity().runOnUiThread(new Runnable() {
@@ -231,12 +232,8 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     }
 
     private class SquareResizeAnimator extends ValueAnimator {
-        View view;
-
         public SquareResizeAnimator(final View view, int start, int end) {
-            this.view = view;
             setIntValues(start, end);
-
             addUpdateListener(new AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -250,12 +247,8 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     }
 
     private class WidthResizeAnimator extends ValueAnimator {
-        View view;
-
         public WidthResizeAnimator(final View view, int start, int end) {
-            this.view = view;
             setIntValues(start, end);
-
             addUpdateListener(new AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {

@@ -454,6 +454,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         return true;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private boolean toggleVisibility(View v) {
         return toggleVisibility(v, -1);
     }

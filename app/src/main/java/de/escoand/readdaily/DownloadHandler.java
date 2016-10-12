@@ -146,6 +146,7 @@ public class DownloadHandler extends BroadcastReceiver {
 
             // import file in background
             new Thread(new Runnable() {
+                @SuppressWarnings("ResultOfMethodCallIgnored")
                 @Override
                 public void run() {
                     Log.w("DownloadHandler", "import " + name);
