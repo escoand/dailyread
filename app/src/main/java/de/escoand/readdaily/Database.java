@@ -45,6 +45,7 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
     public static final String COLUMN_TYPE = "type";
@@ -575,9 +576,9 @@ public class Database extends SQLiteOpenHelper {
         if (outdir.exists() && outdir.isDirectory()) {
             Log.i("removeData", "directory " + outdir.getAbsolutePath());
             File[] files = outdir.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                Log.i("removeData", "file " + files[i].getAbsolutePath());
-                files[i].delete();
+            for (File file : files) {
+                Log.i("removeData", "file " + file.getAbsolutePath());
+                file.delete();
             }
         }
         outdir.delete();

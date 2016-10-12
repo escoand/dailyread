@@ -21,8 +21,6 @@
 
     <item android:id="@android:id/progress">
 
-        <size android:height="2dp" />
-
         <scale android:scaleWidth="100%">
 
             <shape android:shape="line">
