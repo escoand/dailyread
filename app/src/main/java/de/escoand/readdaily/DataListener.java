@@ -18,6 +18,7 @@
 package de.escoand.readdaily;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import java.util.Date;
@@ -25,5 +26,5 @@ import java.util.Date;
 public interface DataListener {
     void setOnClickListener(View.OnClickListener listener);
 
-    void onDataUpdated(Date date, Cursor cursor);
+    void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor);
 }

@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressLint("SimpleDateFormat")
     @Override
-    public void onDataUpdated(Date date, Cursor cursor) {
+    public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
         boolean hasTitle = false;
@@ -115,42 +116,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setSubtitle(null);
         playerButton.setVisibility(View.GONE);
 
-        cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
-            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+        if (cursor != null) {
+            cursor.moveToPosition(-1);
+            while (cursor.moveToNext()) {
+                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
-                // exegesis title
-                case Database.TYPE_EXEGESIS:
-                    pattern = getString(R.string.toolbar_title);
-                    pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
-                    pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
-                    frmt.applyPattern(pattern);
-                    toolbar.setTitle(frmt.format(date));
-                    pattern = getString(R.string.toolbar_subtitle);
-                    pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
-                    pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
-                    frmt.applyPattern(pattern);
-                    toolbar.setSubtitle(frmt.format(date));
-                    hasTitle = true;
-                    break;
+                    // exegesis title
+                    case Database.TYPE_EXEGESIS:
+                        pattern = getString(R.string.toolbar_title);
+                        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+                        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+                        frmt.applyPattern(pattern);
+                        toolbar.setTitle(frmt.format(date));
+                        pattern = getString(R.string.toolbar_subtitle);
+                        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+                        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+                        frmt.applyPattern(pattern);
+                        toolbar.setSubtitle(frmt.format(date));
+                        hasTitle = true;
+                        break;
 
-                // year title
-                case Database.TYPE_YEAR:
-                    if (!hasTitle)
-                        toolbar.setTitle(getString(R.string.navigation_voty));
-                    break;
+                    // year title
+                    case Database.TYPE_YEAR:
+                        if (!hasTitle)
+                            toolbar.setTitle(getString(R.string.navigation_voty));
+                        break;
 
-                // intro title
-                case Database.TYPE_INTRO:
-                    if (!hasTitle)
-                        toolbar.setTitle(getString(R.string.navigation_intro));
-                    break;
+                    // intro title
+                    case Database.TYPE_INTRO:
+                        if (!hasTitle)
+                            toolbar.setTitle(getString(R.string.navigation_intro));
+                        break;
 
-                // audio player
-                case Database.TYPE_MEDIA:
-                    playerButton.setVisibility(View.VISIBLE);
-                    break;
+                    // audio player
+                    case Database.TYPE_MEDIA:
+                        playerButton.setVisibility(View.VISIBLE);
+                        break;
 
+                }
             }
         }
     }

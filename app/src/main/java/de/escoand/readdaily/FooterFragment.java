@@ -43,8 +43,8 @@ public class FooterFragment extends Fragment implements DataListener {
     }
 
     @Override
-    public void onDataUpdated(Date date, Cursor cursor) {
-        if (cursor.getCount() > 0)
+    public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
+        if (cursor != null && cursor.getCount() > 0)
             getView().setVisibility(View.VISIBLE);
         else
             getView().setVisibility(View.GONE);

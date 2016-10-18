@@ -86,7 +86,7 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     }
 
     @Override
-    public void onDataUpdated(Date date, Cursor cursor) {
+    public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
         String title = null;
         String subtitle = null;
 
@@ -96,23 +96,25 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
             player.release();
         player = null;
 
-        cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
-            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+        if (cursor != null) {
+            cursor.moveToPosition(-1);
+            while (cursor.moveToNext()) {
+                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
-                // day
-                case Database.TYPE_DAY:
-                    title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
-                    subtitle = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
-                    break;
+                    // day
+                    case Database.TYPE_DAY:
+                        title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
+                        subtitle = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
+                        break;
 
-                // audio
-                case Database.TYPE_MEDIA:
-                    playerImage.setOnClickListener(this);
-                    player = MediaPlayer.create(getContext(), Uri.parse(cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE))));
-                    player.setOnCompletionListener(this);
-                    break;
+                    // audio
+                    case Database.TYPE_MEDIA:
+                        playerImage.setOnClickListener(this);
+                        player = MediaPlayer.create(getContext(), Uri.parse(cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE))));
+                        player.setOnCompletionListener(this);
+                        break;
 
+                }
             }
         }
 
