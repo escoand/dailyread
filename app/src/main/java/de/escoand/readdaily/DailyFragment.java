@@ -102,13 +102,17 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
         // set initial date
         if (savedInstanceState != null) {
-            onDateSelected(
-                    Database.getDateFromInt(savedInstanceState.getInt("date")),
-                    savedInstanceState.getString("condition"),
-                    savedInstanceState.getStringArray("values")
-            );
+            date = Database.getDateFromInt(savedInstanceState.getInt("date"));
+            condition = savedInstanceState.getString("condition");
+            values = savedInstanceState.getStringArray("values");
         } else
-            onDateSelected(new Date());
+            date = new Date();
+    }
+
+    @Override
+    public void onResume() {
+        onDateSelected(date, condition, values);
+        super.onResume();
     }
 
     @Override
@@ -384,10 +388,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     @Override
     public void onDateSelected(Date date) {
-        this.date = date;
-        this.condition = null;
-        this.values = null;
-        refreshUI();
+        onDateSelected(date, null, null);
     }
 
     @Override
