@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         daily.registerDataListener(this);
         daily.registerDataListener(header);
         daily.registerDataListener(footer);
+        daily.setSearchView((SearchView) toolbar.findViewById(R.id.toolbar_search));
 
         // player button
         playerButton.setOnClickListener(new View.OnClickListener() {

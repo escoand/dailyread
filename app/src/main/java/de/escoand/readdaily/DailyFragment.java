@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -43,7 +44,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener, OnDateSelectedListener {
+public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewBinder, View.OnClickListener, OnDateSelectedListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
     private final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     private final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     private Date date = null;
@@ -55,6 +56,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
     private ListView list;
     private ArrayList<DataListener> listener = new ArrayList<>();
     private SharedPreferences settings;
+    private SearchView search = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -200,6 +202,15 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             case R.id.button_calendar:
                 dialog = new CalendarDialogFragment();
                 ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
+                break;
+
+            // search
+            case R.id.button_search:
+                if (search != null) {
+                    search.setVisibility(View.VISIBLE);
+                    search.setIconified(false);
+                    search.requestFocus();
+                }
                 break;
 
             // settings
@@ -385,6 +396,31 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         this.condition = condition;
         this.values = values;
         refreshUI();
+    }
+
+    public void setSearchView(SearchView search) {
+        this.search = search;
+        if (search != null)
+            search.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        adapter.changeCursor(db.getSearch(newText));
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        adapter.changeCursor(db.getSearch(query));
+        search.setVisibility(View.GONE);
+        return true;
+    }
+
+    @Override
+    public boolean onClose() {
+        search.setVisibility(View.GONE);
+        return true;
     }
 
     private void refreshUI() {
