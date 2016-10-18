@@ -74,6 +74,13 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
     }
 
     @Override
+    public void onPause() {
+        if (player != null)
+            player.release();
+        super.onPause();
+    }
+
+    @Override
     public void setOnClickListener(View.OnClickListener listener) {
         bible.setOnClickListener(listener);
     }
@@ -168,24 +175,24 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
     @Override
     public void run() {
-        while (player != null) {
-            final int duration = player.getDuration();
-            final int progress = player.getCurrentPosition();
-            final String text = String.format(Locale.getDefault(), "%02d:%02d", progress / 60000, (progress / 1000) % 60);
-
-            // update player ui
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    playerProgress.setMax(duration);
-                    playerProgress.setProgress(progress);
-                    playerProgress.setSecondaryProgress(duration);
-                    playerText.setText(text);
-                }
-            });
-
-            // sleep 1 second
+        while (getActivity() != null && player != null) {
             try {
+                final int duration = player.getDuration();
+                final int progress = player.getCurrentPosition();
+                final String text = String.format(Locale.getDefault(), "%02d:%02d", progress / 60000, (progress / 1000) % 60);
+
+                // update player ui
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        playerProgress.setMax(duration);
+                        playerProgress.setProgress(progress);
+                        playerProgress.setSecondaryProgress(duration);
+                        playerText.setText(text);
+                    }
+                });
+
+                // sleep 1 second
                 Thread.sleep(1000);
             } catch (Exception e) {
                 return;
