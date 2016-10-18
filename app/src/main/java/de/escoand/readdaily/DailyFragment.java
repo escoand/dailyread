@@ -214,6 +214,8 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                     search.setVisibility(View.VISIBLE);
                     search.setIconified(false);
                     search.requestFocus();
+                    for (DataListener tmp : listener)
+                        tmp.onDataUpdated(null, null);
                 }
                 break;
 
