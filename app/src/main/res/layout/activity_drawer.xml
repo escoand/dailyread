@@ -51,6 +51,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
+                        <SearchView
+                            android:id="@+id/toolbar_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:iconifiedByDefault="false"
+                            android:visibility="gone" />
+
                         <ImageView
                             android:id="@+id/toolbar_player"
                             style="@style/Toolbar.Icon"

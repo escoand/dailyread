@@ -512,6 +512,15 @@ public class Database extends SQLiteOpenHelper {
         ).moveToFirst();
     }
 
+    private Cursor getDay(String condition, String[] values) {
+        return getReadableDatabase().query(
+                TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
+                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
+                condition, values,
+                null, null,
+                TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
+    }
+
     public Cursor getDay(Date date, String condition, String[] values) {
         String w = "(" + COLUMN_DATE + "=? OR " + COLUMN_TYPE + "=? AND " + COLUMN_GROUP + " IN (SELECT CAST(" + COLUMN_GROUP + " AS INT) FROM " + TABLE_TEXTS + " WHERE " + COLUMN_DATE + "=?))";
         String[] v = new String[]{String.valueOf(getIntFromDate(date)), TYPE_INTRO, String.valueOf(getIntFromDate(date))};
@@ -523,16 +532,15 @@ public class Database extends SQLiteOpenHelper {
             v = list.toArray(new String[list.size()]);
         }
 
-        return getReadableDatabase().query(
-                TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
-                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
-                w, v,
-                null, null,
-                TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
+        return getDay(w, v);
     }
 
     public Cursor getDay(Date date) {
         return getDay(date, null, null);
+    }
+
+    public Cursor getSearch(String pattern) {
+        return getDay(COLUMN_TEXT + " MATCH ?", new String[]{pattern});
     }
 
     public Cursor getCalendar() {
