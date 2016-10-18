@@ -61,9 +61,14 @@
     <!-- Strings related to Settings -->
 
     <!--  settings -->
-    <string name="pref_notification">Benachrichtigung</string>
+    <string name="pref_group_display">Anzeige</string>
+    <string name="pref_group_other">Sonstiges</string>
     <string name="pref_font">Schriftart</string>
+    <string name="pref_font_desc"></string>
     <string name="pref_translation">Bibelübersetzung</string>
+    <string name="pref_translation_desc">Übersetzung der Onlinebibel</string>
+    <string name="pref_notification">Benachrichtigung</string>
+    <string name="pref_notification_desc">erhalte gelegentlich Informationen über Neuigkeiten zur App</string>
 
     <!-- settings values -->
     <string-array name="bible_translations">

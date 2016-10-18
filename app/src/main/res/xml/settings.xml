@@ -19,16 +19,26 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
-        android:defaultValue="@string/bible_translation_default"
-        android:entries="@array/bible_translations"
-        android:entryValues="@array/bible_translation_values"
-        android:key="bible_translation"
-        android:title="@string/pref_translation" />
+    <PreferenceCategory android:title="@string/pref_group_display">
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="notifications"
-        android:title="@string/pref_notification" />
+        <ListPreference
+            android:defaultValue="@string/bible_translation_default"
+            android:entries="@array/bible_translations"
+            android:entryValues="@array/bible_translation_values"
+            android:key="bible_translation"
+            android:summary="@string/pref_translation_desc"
+            android:title="@string/pref_translation" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_group_other">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notifications"
+            android:summary="@string/pref_notification_desc"
+            android:title="@string/pref_notification" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
