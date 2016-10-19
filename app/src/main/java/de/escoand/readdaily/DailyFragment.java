@@ -219,6 +219,11 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 }
                 break;
 
+            // reminder
+            case R.id.button_reminder:
+                dialog = new ReminderDialogFragment();
+                break;
+
             // settings
             case R.id.button_settings:
                 i = new Intent(getActivity(), SettingsActivity.class);
