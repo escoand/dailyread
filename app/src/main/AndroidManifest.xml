@@ -46,13 +46,12 @@
         <activity android:name=".StoreActivity" />
         <activity android:name=".AboutActivity" />
 
-        <receiver
-            android:name=".DownloadHandler"
-            android:exported="true">
+        <receiver android:name=".DownloadHandler">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ReminderHandler" />
 
         <service android:name=".PushInstanceService">
             <intent-filter>
