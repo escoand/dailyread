@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,8 +159,8 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
                     playerImage.setImageResource(R.mipmap.img_month_12);
                     break;
             }
-            this.title.setText(title);
-            this.subtitle.setText(subtitle);
+            this.title.setText(Html.fromHtml(title));
+            this.subtitle.setText(Html.fromHtml(subtitle));
             getView().setVisibility(View.VISIBLE);
         } else
             getView().setVisibility(View.GONE);
