@@ -147,14 +147,6 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 }
                 break;
 
-            // text
-            case Database.COLUMN_TEXT:
-                if (cursor.getString(columnIndex) != null) {
-                    ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
-                    return true;
-                }
-                break;
-
             // source
             case Database.COLUMN_SOURCE:
                 if (cursor.isNull(columnIndex)) {
@@ -164,8 +156,16 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
                 break;
 
         }
+
+        // text view
+        if (view instanceof TextView) {
+            ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
+            return true;
+        }
+
         return false;
     }
+
 
     @Override
     public void onClick(View v) {
