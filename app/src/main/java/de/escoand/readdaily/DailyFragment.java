@@ -60,7 +60,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_daily, container);
+        View v = inflater.inflate(R.layout.fragment_daily, container, false);
 
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -105,7 +105,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
             date = Database.getDateFromInt(savedInstanceState.getInt("date"));
             condition = savedInstanceState.getString("condition");
             values = savedInstanceState.getStringArray("values");
-        } else
+        } else if (date == null)
             date = new Date();
     }
 
