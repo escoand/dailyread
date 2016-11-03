@@ -25,14 +25,12 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout layout;
     private Toolbar toolbar;
     private View playerButton;
-    private DailyFragment daily;
+    private EndlessDailyPager pager;
+    private HeaderFragment header;
+    private FooterFragment footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +68,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(this);
 
         // fragments
-        FragmentManager fm = getSupportFragmentManager();
-        final HeaderFragment header = (HeaderFragment) fm.findFragmentById(R.id.header);
-        daily = (DailyFragment) fm.findFragmentById(R.id.content);
-        FooterFragment footer = (FooterFragment) fm.findFragmentById(R.id.footer);
-        header.setOnClickListener(daily);
-        footer.setOnClickListener(daily);
-        daily.registerDataListener(this);
-        daily.registerDataListener(header);
-        daily.registerDataListener(footer);
-        daily.setSearchView((SearchView) toolbar.findViewById(R.id.toolbar_search));
+        pager = (EndlessDailyPager) findViewById(R.id.content_pager);
+        header = (HeaderFragment) getSupportFragmentManager().findFragmentById(R.id.header);
+        footer = (FooterFragment) getSupportFragmentManager().findFragmentById(R.id.footer);
+        pager.addDataListener(this);
+        pager.addDataListener(header);
+        pager.addDataListener(footer);
+
+        //daily.setSearchView((SearchView) toolbar.findViewById(R.id.toolbar_search));
 
         // player button
         playerButton.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         layout.closeDrawers();
-        daily.onClick(item.getItemId(), null);
+        pager.OnClick(item.getItemId());
         return true;
     }
 
