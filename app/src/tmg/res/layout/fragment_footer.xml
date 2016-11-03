@@ -68,7 +68,7 @@
             style="@style/Text.BottomMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Teilen" />
+            android:text="@string/navigation_share" />
 
     </LinearLayout>
 
@@ -89,7 +89,7 @@
             style="@style/Text.BottomMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Onlinebibel" />
+            android:text="@string/navigation_bible" />
 
     </LinearLayout>
 
