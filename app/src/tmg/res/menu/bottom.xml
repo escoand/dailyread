@@ -17,10 +17,22 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.design.widget.BottomNavigationView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/bottom_buttons_background"
-    android:elevation="8dp"
-    app:menu="@menu/bottom" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/button_today"
+        android:icon="@drawable/icon_today"
+        android:showAsAction="withText"
+        android:title="@string/navigation_today" />
+
+    <item
+        android:id="@+id/button_share"
+        android:icon="@drawable/icon_share"
+        android:title="@string/navigation_share" />
+
+    <item
+        android:id="@+id/button_bible_exegesis"
+        android:icon="@drawable/icon_bible"
+        android:title="@string/navigation_bible" />
+
+</menu>
