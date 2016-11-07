@@ -66,8 +66,8 @@ public class Database extends SQLiteOpenHelper {
     public static final String TYPE_EXEGESIS = "exeg";
     public static final String TYPE_INTRO = "intr";
     public static final String TYPE_MEDIA = "media";
+    public static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "data";
-    private static final int DATABASE_VERSION = 4;
     private static final String TABLE_TEXTS = "texts";
     private static final String TABLE_SETS = "sets";
     private static final String TABLE_TYPES = "types";
@@ -152,13 +152,13 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_DOWNLOADS + " (" +
                     COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                     COLUMN_REVISION + " INTEGER NOT NULL, " +
                     COLUMN_ID + " LONG NOT NULL)");
         }
         if (oldVersion < 3) {
-            db.execSQL("DROP TABLE " + TABLE_DOWNLOADS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOWNLOADS);
             db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                     COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                     COLUMN_ID + " LONG NOT NULL)");
@@ -546,9 +546,9 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getCalendar() {
         return getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
+                new String[]{"MAX(rowid) _id", COLUMN_DATE, "MAX(" + COLUMN_READ + ") " + COLUMN_READ},
                 COLUMN_DATE + ">='20000000' AND " + COLUMN_DATE + "<'21000000'",
-                null, null, null, null);
+                null, COLUMN_DATE, null, null, null);
     }
 
     public Cursor getList(String condition, String[] values) {
