@@ -42,7 +42,7 @@ public class DownloadHandler extends BroadcastReceiver {
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setVisibleInDownloadsUi(false)
-                .setDestinationInExternalFilesDir(context, null, name)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
         ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
 
@@ -64,7 +64,7 @@ public class DownloadHandler extends BroadcastReceiver {
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
                 .addRequestHeader("App-ResponseData", responseData)
-                .setDestinationInExternalFilesDir(context, null, name)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
         ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
