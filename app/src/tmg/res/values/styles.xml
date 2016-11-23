@@ -31,10 +31,6 @@
         <item name="android:textSize">14dp</item>
     </style>
 
-    <style name="Text.Toolbar">
-        <item name="fontPath">fonts/Nunito-Light.ttf</item>
-    </style>
-
     <style name="Text.Toolbar.Title">
         <item name="android:textColor">@color/toolbar_title</item>
     </style>
@@ -58,22 +54,26 @@
 
     <style name="Text.Drawer.Title">
         <item name="android:textColor">@color/drawer_title</item>
-        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
+        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
     </style>
 
     <style name="Text.Daily">
         <item name="android:layout_marginBottom">19dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:textColor">@color/daily_text</item>
         <item name="android:textSize">16dp</item>
     </style>
 
     <style name="Text.Daily.Title">
-        <item name="android:lineSpacingExtra">9dp</item>
-        <item name="android:textSize">16dp</item>
         <item name="fontPath">fonts/Nunito-Bold.ttf</item>
+        <item name="android:lineSpacingExtra">9dp</item>
+        <item name="android:textColor">@color/daily_title</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
-    <style name="Text.Daily.Source"></style>
+    <style name="Text.Daily.Source">
+        <item name="android:textColor">@color/daily_source</item>
+    </style>
 
     <style name="Text.BottomMenu">
         <item name="android:textColor">@color/bottom_buttons_text</item>
@@ -81,11 +81,11 @@
     </style>
 
     <style name="Text.Product.Title">
-        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
+        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
     </style>
 
     <style name="Text.About.Title">
-        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
+        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
         <item name="android:padding">0dp</item>
     </style>
 
