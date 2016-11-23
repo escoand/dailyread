@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private EndlessDailyPager pager;
     private HeaderFragment header;
     private FooterFragment footer;
+    private InformationFragment info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_drawer);
 
         layout = (DrawerLayout) findViewById(R.id.wrapper);
+        //layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
 
         // toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,9 +73,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pager = (EndlessDailyPager) findViewById(R.id.content_pager);
         header = (HeaderFragment) getSupportFragmentManager().findFragmentById(R.id.header);
         footer = (FooterFragment) getSupportFragmentManager().findFragmentById(R.id.footer);
+        info = (InformationFragment) getSupportFragmentManager().findFragmentById(R.id.content_info);
         pager.addDataListener(this);
         pager.addDataListener(header);
         pager.addDataListener(footer);
+        pager.addDataListener(info);
 
         //daily.setSearchView((SearchView) toolbar.findViewById(R.id.toolbar_search));
 
