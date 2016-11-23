@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -34,6 +35,9 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
+            setTheme(R.style.AppTheme_Readability);
         setContentView(R.layout.activity_nodrawer);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

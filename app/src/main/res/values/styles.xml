@@ -22,6 +22,14 @@
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
         <item name="colorPrimary">@color/toolbar_background</item>
         <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="android:textAppearance">@style/Text</item>
+    </style>
+
+    <style name="AppTheme.Readability">
+        <item name="android:textColor">@color/readability_text_dark</item>
+        <item name="android:textColorPrimary">@color/readability_text_dark</item>
+        <item name="android:textColorSecondary">@color/readability_text_dark</item>
+        <item name="android:textColorTertiary">@color/readability_text_dark</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
@@ -193,7 +201,7 @@
 
     <style name="Text.Daily.Title">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">@color/daily_title</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <style name="Text.Daily.Source">
