@@ -25,6 +25,13 @@
         <item name="android:textAppearance">@style/Text</item>
     </style>
 
+    <style name="AppTheme.Readability">
+        <item name="android:textColor">@color/readability_text_dark</item>
+        <item name="android:textColorPrimary">@color/readability_text_dark</item>
+        <item name="android:textColorSecondary">@color/readability_text_dark</item>
+        <item name="android:textColorTertiary">@color/readability_text_dark</item>
+    </style>
+
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/toolbar_background</item>
         <item name="navigationIcon">@drawable/toolbar_menu</item>

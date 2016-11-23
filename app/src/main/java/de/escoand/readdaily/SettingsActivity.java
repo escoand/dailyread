@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -28,6 +29,9 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
+            setTheme(R.style.AppTheme_Readability);
+
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
