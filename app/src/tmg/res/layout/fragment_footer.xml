@@ -25,7 +25,7 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentRight="true"
     android:layout_alignParentStart="true"
-    android:background="@color/bottom_buttons_background"
+    android:background="?attr/color_bottom_buttons_background"
     android:elevation="8dp"
     android:gravity="center_horizontal"
     android:orientation="horizontal">

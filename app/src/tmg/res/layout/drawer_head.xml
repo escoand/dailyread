@@ -64,6 +64,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:src="@color/drawer_divider" />
+        android:src="?attr/color_drawer_divider" />
 
 </LinearLayout>

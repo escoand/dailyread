@@ -20,7 +20,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/header_background"
+    android:background="?attr/color_header_background"
     android:gravity="center_vertical|center"
     android:orientation="horizontal"
     android:padding="10dp">
@@ -99,7 +99,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="0"
                 android:src="@drawable/icon_bible"
-                android:tint="@color/statusbar_background" />
+                android:tint="?attr/color_statusbar_background" />
 
         </LinearLayout>
 

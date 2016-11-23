@@ -22,7 +22,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/daily_background">
+    android:background="?attr/color_daily_background">
 
     <!-- content -->
     <ListView
