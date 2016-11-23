@@ -46,7 +46,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
+            setTheme(R.style.AppTheme_Readability);
         setContentView(R.layout.activity_drawer);
 
         layout = (DrawerLayout) findViewById(R.id.wrapper);
