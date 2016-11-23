@@ -20,9 +20,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
+        <item name="android:textAppearance">@style/Text</item>
         <item name="colorPrimary">?attr/color_toolbar_background</item>
         <item name="colorPrimaryDark">?attr/color_statusbar_background</item>
-        <item name="android:textAppearance">@style/Text</item>
         <item name="color_statusbar_background">#113366</item>
         <item name="color_toolbar_background">#4466aa</item>
         <item name="color_toolbar_title">@android:color/white</item>
