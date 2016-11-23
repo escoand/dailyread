@@ -21,6 +21,12 @@
 
     <PreferenceCategory android:title="@string/pref_group_display">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="readability"
+            android:summary="@string/pref_readability_desc"
+            android:title="@string/pref_readability" />
+
         <ListPreference
             android:defaultValue="@string/bible_translation_default"
             android:entries="@array/bible_translations"
