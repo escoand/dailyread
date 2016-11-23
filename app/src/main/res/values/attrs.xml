@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2016 escoand.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <declare-styleable name="AppTheme">
+
+        <attr name="color_statusbar_background" format="reference|color" />
+
+        <attr name="color_toolbar_background" format="reference|color" />
+        <attr name="color_toolbar_title" format="reference|color" />
+        <attr name="color_toolbar_subtitle" format="reference|color" />
+
+        <attr name="color_header_background" format="reference|color" />
+        <attr name="color_header_title" format="reference|color" />
+        <attr name="color_header_subtitle" format="reference|color" />
+
+        <attr name="color_drawer_background" format="reference|color" />
+        <attr name="color_drawer_divider" format="reference|color" />
+        <attr name="color_drawer_icon" format="reference|color" />
+        <attr name="color_drawer_text" format="reference|color" />
+        <attr name="color_drawer_title" format="reference|color" />
+        <attr name="color_drawer_subtitle" format="reference|color" />
+
+        <attr name="color_floating_background" format="reference|color" />
+        <attr name="color_floating_icon" format="reference|color" />
+
+        <attr name="color_button_background" format="reference|color" />
+        <attr name="color_button_text" format="reference|color" />
+        <attr name="color_button_light_background" format="reference|color" />
+        <attr name="color_button_light_text" format="reference|color" />
+
+        <attr name="color_bottom_buttons_background" format="reference|color" />
+        <attr name="color_bottom_buttons_text" format="reference|color" />
+        <attr name="color_bottom_buttons_icon" format="reference|color" />
+
+        <attr name="color_progress_primary" format="reference|color" />
+        <attr name="color_progress_secondary" format="reference|color" />
+
+        <attr name="color_daily_background" format="reference|color" />
+        <attr name="color_daily_text" format="reference|color" />
+        <attr name="color_daily_title" format="reference|color" />
+        <attr name="color_daily_source" format="reference|color" />
+
+        <attr name="color_about_background" format="reference|color" />
+        <attr name="color_about_text" format="reference|color" />
+        <attr name="color_about_action" format="reference|color" />
+
+    </declare-styleable>
+
+</resources>

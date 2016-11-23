@@ -22,46 +22,7 @@
     <color name="grey">#e6e6e6</color>
     <color name="darkblue">#007f98</color>
     <color name="darkgrey">#8d8d8d</color>
-
-    <color name="statusbar_background">@color/blue</color>
-
-    <color name="toolbar_background">@color/blue</color>
-    <color name="toolbar_title">@color/darkblue</color>
-    <color name="toolbar_subtitle">@color/darkblue</color>
-
-    <color name="header_background">@color/darkblue</color>
-    <color name="header_title">@android:color/white</color>
-    <color name="header_subtitle">@color/blue</color>
-
-    <color name="drawer_background">@color/grey</color>
-    <color name="drawer_divider">@color/darkgrey</color>
-    <color name="drawer_icon">@color/darkblue</color>
-    <color name="drawer_text">@color/darkblue</color>
-    <color name="drawer_title">@color/darkblue</color>
-    <color name="drawer_subtitle">@color/blue</color>
-
-    <color name="floating_background">@android:color/white</color>
-    <color name="floating_icon">@android:color/black</color>
-
-    <color name="bottom_buttons_background">@android:color/white</color>
-    <color name="bottom_buttons_text">@color/darkgrey</color>
-    <color name="bottom_buttons_icon">@color/darkgrey</color>
-
-    <color name="button_background">@color/blue</color>
-    <color name="button_text">@android:color/white</color>
-    <color name="button_light_background">@android:color/transparent</color>
-    <color name="button_light_text">@color/darkgrey</color>
-
+    <!-- workaround for pre-lollipop -->
     <color name="progress_primary">@color/blue</color>
     <color name="progress_secondary">@android:color/white</color>
-
-    <color name="daily_background">@android:color/white</color>
-    <color name="daily_text">@color/darkgrey</color>
-    <color name="daily_title">@color/darkgrey</color>
-    <color name="daily_source">@color/darkgrey</color>
-
-    <color name="about_background">@android:color/white</color>
-    <color name="about_text">@color/darkgrey</color>
-    <color name="about_action">@color/darkgrey</color>
-
 </resources>

@@ -19,6 +19,43 @@
 
 <resources>
 
+    <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
+        <item name="colorPrimary">?attr/color_toolbar_background</item>
+        <item name="colorPrimaryDark">?attr/color_statusbar_background</item>
+        <item name="android:textAppearance">@style/Text</item>
+        <item name="color_statusbar_background">@color/blue</item>
+        <item name="color_toolbar_background">@color/blue</item>
+        <item name="color_toolbar_title">@color/darkblue</item>
+        <item name="color_toolbar_subtitle">@color/darkblue</item>
+        <item name="color_header_background">@color/darkblue</item>
+        <item name="color_header_title">@android:color/white</item>
+        <item name="color_header_subtitle">@color/blue</item>
+        <item name="color_drawer_background">@color/grey</item>
+        <item name="color_drawer_divider">@color/darkgrey</item>
+        <item name="color_drawer_icon">@color/darkblue</item>
+        <item name="color_drawer_text">@color/darkblue</item>
+        <item name="color_drawer_title">@color/darkblue</item>
+        <item name="color_drawer_subtitle">@color/blue</item>
+        <item name="color_floating_background">@android:color/white</item>
+        <item name="color_floating_icon">@android:color/black</item>
+        <item name="color_button_background">@color/blue</item>
+        <item name="color_button_text">@android:color/white</item>
+        <item name="color_button_light_background">@android:color/transparent</item>
+        <item name="color_button_light_text">@color/darkgrey</item>
+        <item name="color_bottom_buttons_background">@android:color/white</item>
+        <item name="color_bottom_buttons_text">@color/darkgrey</item>
+        <item name="color_bottom_buttons_icon">@color/darkgrey</item>
+        <item name="color_progress_primary">@color/blue</item>
+        <item name="color_progress_secondary">@android:color/white</item>
+        <item name="color_daily_background">@android:color/white</item>
+        <item name="color_daily_text">@color/darkgrey</item>
+        <item name="color_daily_title">@color/darkgrey</item>
+        <item name="color_daily_source">@color/darkgrey</item>
+        <item name="color_about_background">@android:color/white</item>
+        <item name="color_about_text">@color/darkgrey</item>
+        <item name="color_about_action">@color/darkgrey</item>
+    </style>
+
     <!-- card -->
     <style name="Card.Daily">
         <item name="cardElevation">0dp</item>
@@ -32,51 +69,51 @@
     </style>
 
     <style name="Text.Toolbar.Title">
-        <item name="android:textColor">@color/toolbar_title</item>
+        <item name="android:textColor">?attr/color_toolbar_title</item>
     </style>
 
     <style name="Text.Header">
-        <item name="android:textColor">@color/header_title</item>
+        <item name="android:textColor">?attr/color_header_title</item>
         <item name="android:textSize">16dp</item>
     </style>
 
     <style name="Text.Header.Small">
-        <item name="android:textColor">@color/header_subtitle</item>
+        <item name="android:textColor">?attr/color_header_subtitle</item>
         <item name="android:textSize">12dp</item>
     </style>
 
     <style name="Text.Drawer">
         <item name="android:textSize">14dp</item>
-        <item name="itemIconTint">@color/drawer_icon</item>
+        <item name="itemIconTint">?attr/color_drawer_icon</item>
         <item name="itemTextAppearance">@style/Text</item>
-        <item name="itemTextColor">@color/drawer_text</item>
+        <item name="itemTextColor">?attr/color_drawer_text</item>
     </style>
 
     <style name="Text.Drawer.Title">
-        <item name="android:textColor">@color/drawer_title</item>
+        <item name="android:textColor">?attr/color_drawer_title</item>
         <item name="fontPath">fonts/Nunito-Regular.ttf</item>
     </style>
 
     <style name="Text.Daily">
         <item name="android:layout_marginBottom">19dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
-        <item name="android:textColor">@color/daily_text</item>
+        <item name="android:textColor">?attr/color_daily_text</item>
         <item name="android:textSize">16dp</item>
     </style>
 
     <style name="Text.Daily.Title">
         <item name="fontPath">fonts/Nunito-Bold.ttf</item>
         <item name="android:lineSpacingExtra">9dp</item>
-        <item name="android:textColor">@color/daily_title</item>
+        <item name="android:textColor">?attr/color_daily_title</item>
         <item name="android:textSize">16dp</item>
     </style>
 
     <style name="Text.Daily.Source">
-        <item name="android:textColor">@color/daily_source</item>
+        <item name="android:textColor">?attr/color_daily_source</item>
     </style>
 
     <style name="Text.BottomMenu">
-        <item name="android:textColor">@color/bottom_buttons_text</item>
+        <item name="android:textColor">?attr/color_bottom_buttons_text</item>
         <item name="android:textSize">14dp</item>
     </style>
 

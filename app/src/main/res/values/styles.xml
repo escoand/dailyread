@@ -20,27 +20,63 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
-        <item name="colorPrimary">@color/toolbar_background</item>
-        <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="colorPrimary">?attr/color_toolbar_background</item>
+        <item name="colorPrimaryDark">?attr/color_statusbar_background</item>
         <item name="android:textAppearance">@style/Text</item>
+        <item name="color_statusbar_background">#113366</item>
+        <item name="color_toolbar_background">#4466aa</item>
+        <item name="color_toolbar_title">@android:color/white</item>
+        <item name="color_toolbar_subtitle">@android:color/white</item>
+        <item name="color_header_background">#4466aa</item>
+        <item name="color_header_title">@android:color/white</item>
+        <item name="color_header_subtitle">@android:color/white</item>
+        <item name="color_drawer_background">@android:color/background_light</item>
+        <item name="color_drawer_divider">@android:color/secondary_text_light</item>
+        <item name="color_drawer_icon">@android:color/secondary_text_light</item>
+        <item name="color_drawer_text">@android:color/secondary_text_light</item>
+        <item name="color_drawer_title">@android:color/primary_text_light</item>
+        <item name="color_drawer_subtitle">@android:color/secondary_text_light</item>
+        <item name="color_floating_background">@android:color/white</item>
+        <item name="color_floating_icon">@android:color/black</item>
+        <item name="color_button_background">@android:color/holo_blue_light</item>
+        <item name="color_button_text">@android:color/primary_text_dark</item>
+        <item name="color_button_light_background">@android:color/transparent</item>
+        <item name="color_button_light_text">@android:color/primary_text_light</item>
+        <item name="color_bottom_buttons_background">@android:color/white</item>
+        <item name="color_bottom_buttons_text">@android:color/tertiary_text_dark</item>
+        <item name="color_bottom_buttons_icon">@android:color/tertiary_text_dark</item>
+        <item name="color_progress_primary">?attr/color_toolbar_background</item>
+        <item name="color_progress_secondary">?attr/color_statusbar_background</item>
+        <item name="color_daily_background">@android:color/background_light</item>
+        <item name="color_daily_text">@android:color/primary_text_dark</item>
+        <item name="color_daily_title">@android:color/primary_text_dark</item>
+        <item name="color_daily_source">@android:color/primary_text_dark</item>
+        <item name="color_about_background">@android:color/background_light</item>
+        <item name="color_about_text">@android:color/primary_text_light</item>
+        <item name="color_about_action">?attr/color_toolbar_background</item>
     </style>
 
     <style name="AppTheme.Readability">
-        <item name="android:textColor">@color/readability_text_dark</item>
-        <item name="android:textColorPrimary">@color/readability_text_dark</item>
-        <item name="android:textColorSecondary">@color/readability_text_dark</item>
-        <item name="android:textColorTertiary">@color/readability_text_dark</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
+        <item name="color_bottom_buttons_text">@android:color/black</item>
+        <item name="color_bottom_buttons_icon">@android:color/black</item>
+        <item name="color_daily_title">@android:color/black</item>
+        <item name="color_daily_text">@android:color/black</item>
+        <item name="color_daily_source">@android:color/black</item>
+        <item name="color_about_text">@android:color/black</item>
+        <item name="color_about_action">@android:color/black</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/toolbar_background</item>
+        <item name="android:background">?attr/color_toolbar_background</item>
         <item name="navigationIcon">@drawable/toolbar_menu</item>
         <item name="subtitleTextAppearance">@style/Text.Toolbar.Subtitle</item>
         <item name="titleTextAppearance">@style/Text.Toolbar.Title</item>
     </style>
 
     <style name="Toolbar.Icon">
-        <item name="android:tint">@color/toolbar_title</item>
+        <item name="android:tint">?attr/color_toolbar_title</item>
         <item name="android:layout_gravity">right|end</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
@@ -48,39 +84,39 @@
 
     <!-- drawer -->
     <style name="Drawer" parent="Widget.Design.NavigationView">
-        <item name="android:background">@color/drawer_background</item>
-        <item name="android:listDivider">@color/drawer_divider</item>
+        <item name="android:background">?attr/color_drawer_background</item>
+        <item name="android:listDivider">?attr/color_drawer_divider</item>
     </style>
 
     <!-- floating action button -->
     <style name="FloatingActionButton" parent="Widget.Design.FloatingActionButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:tint">@color/floating_icon</item>
-        <item name="backgroundTint">@color/floating_background</item>
+        <item name="android:tint">?attr/color_floating_icon</item>
+        <item name="backgroundTint">?attr/color_floating_background</item>
         <item name="fabSize">normal</item>
         <item name="useCompatPadding">true</item>
     </style>
 
     <style name="FloatingActionButton.Mini">
-        <item name="android:tint">@color/floating_icon</item>
-        <item name="backgroundTint">@color/floating_background</item>
+        <item name="android:tint">?attr/color_floating_icon</item>
+        <item name="backgroundTint">?attr/color_floating_background</item>
         <item name="fabSize">mini</item>
     </style>
 
     <style name="Image.BottomMenu" parent="Widget.AppCompat.Light.ActionButton">
-        <item name="android:tint">@color/bottom_buttons_icon</item>
+        <item name="android:tint">?attr/color_bottom_buttons_icon</item>
     </style>
 
     <!-- button -->
     <style name="Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/button_background</item>
-        <item name="android:textColor">@color/button_text</item>
+        <item name="colorButtonNormal">?attr/color_button_background</item>
+        <item name="android:textColor">?attr/color_button_text</item>
     </style>
 
     <style name="Button.Light" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:background">@color/button_light_background</item>
-        <item name="android:textColor">@color/button_light_text</item>
+        <item name="android:background">?attr/color_button_light_background</item>
+        <item name="android:textColor">?attr/color_button_light_text</item>
     </style>
 
     <!-- cardview -->
@@ -151,22 +187,22 @@
     <style name="Text.Toolbar"></style>
 
     <style name="Text.Toolbar.Title">
-        <item name="android:textColor">@color/toolbar_title</item>
+        <item name="android:textColor">?attr/color_toolbar_title</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Text.Toolbar.Subtitle">
-        <item name="android:textColor">@color/toolbar_subtitle</item>
+        <item name="android:textColor">?attr/color_toolbar_subtitle</item>
     </style>
 
     <style name="Text.Header">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">@color/header_title</item>
+        <item name="android:textColor">?attr/color_header_title</item>
     </style>
 
     <style name="Text.Header.Small">
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-        <item name="android:textColor">@color/header_subtitle</item>
+        <item name="android:textColor">?attr/color_header_subtitle</item>
     </style>
 
     <style name="Text.List">
@@ -180,34 +216,34 @@
     <style name="Text.Drawer"></style>
 
     <style name="Text.Drawer.Title">
-        <item name="android:textColor">@color/drawer_title</item>
+        <item name="android:textColor">?attr/color_drawer_title</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Text.Drawer.Subtitle">
-        <item name="android:textColor">@color/drawer_subtitle</item>
+        <item name="android:textColor">?attr/color_drawer_subtitle</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Text.Daily">
-        <item name="android:textColor">@color/daily_text</item>
+        <item name="android:textColor">?attr/color_daily_text</item>
     </style>
 
     <style name="Text.Daily.Empty">
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/daily_text</item>
+        <item name="android:textColor">?attr/color_daily_text</item>
     </style>
 
     <style name="Text.Daily.Title">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">@color/daily_title</item>
+        <item name="android:textColor">?attr/color_daily_title</item>
     </style>
 
     <style name="Text.Daily.Source">
         <item name="android:gravity">right</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-        <item name="android:textColor">@color/daily_source</item>
+        <item name="android:textColor">?attr/color_daily_source</item>
     </style>
 
     <style name="Text.BottomMenu"></style>
@@ -221,7 +257,7 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingTop">8dp</item>
-        <item name="android:textColor">@color/about_text</item>
+        <item name="android:textColor">?attr/color_about_text</item>
     </style>
 
     <style name="Text.About.Title">
@@ -234,7 +270,7 @@
     </style>
 
     <style name="Text.About.Action">
-        <item name="android:textColor">@color/about_action</item>
+        <item name="android:textColor">?attr/color_about_action</item>
     </style>
 
     <style name="Text.About.More">
