@@ -28,7 +28,7 @@
         style="@style/Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/toolbar_back" />
+        app:navigationIcon="@drawable/icon_back" />
 
     <FrameLayout
         android:id="@+id/content"
