@@ -20,7 +20,10 @@ package de.escoand.readdaily;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -80,6 +83,8 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         list.setEmptyView(findViewById(R.id.listLoading));
         listAdapter = new StoreArrayAdapter(this, billing);
         list.setAdapter(listAdapter);
+
+        DownloadHandler.isStoragePermissionGranted(this);
     }
 
     @Override
@@ -137,6 +142,14 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         super.onActivityResult(requestCode, resultCode, data);
         if (!billing.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == DownloadHandler.REQUEST_PERMISSIONS &&
+                (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+            Snackbar.make(findViewById(R.id.content), getString(R.string.message_missing_permission), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override

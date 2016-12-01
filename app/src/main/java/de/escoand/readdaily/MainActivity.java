@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -110,6 +111,14 @@ public class MainActivity extends AppCompatActivity implements
             findViewById(R.id.button_intro).setOnClickListener(new OnIntroClickListener());
         if (findViewById(R.id.button_voty) != null)
             findViewById(R.id.button_voty).setOnClickListener(new OnVotyClickListener());
+
+        // registration
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean("registration_done", false))
+            prefs.edit().putBoolean(
+                    "registration_done",
+                    PushInstanceService.setRegistration(this, prefs.getBoolean("notifications", true))
+            ).apply();
     }
 
     @Override
