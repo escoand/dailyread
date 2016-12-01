@@ -18,9 +18,12 @@
 package de.escoand.readdaily;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -34,8 +37,7 @@ public class SettingsActivity extends PreferenceActivity {
         findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                PushInstanceService.setRegistration(getApplication(), (Boolean) newValue);
-                return true;
+                return PushInstanceService.setRegistration(SettingsActivity.this, (Boolean) newValue);
             }
         });
     }
@@ -43,5 +45,13 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == DownloadHandler.REQUEST_PERMISSIONS &&
+                (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+            Snackbar.make(getListView(), getString(R.string.message_missing_permission), Snackbar.LENGTH_LONG).show();
+        }
     }
 }

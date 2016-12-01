@@ -17,32 +17,43 @@
 
 package de.escoand.readdaily;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.Random;
 
+import static android.content.ContentValues.TAG;
+
 public class DownloadHandler extends BroadcastReceiver {
+    public final static int REQUEST_PERMISSIONS = 9;
+    public final static long MISSING_PERMISSION = -3;
+    public final static long NO_SUBSCRIPTION_DOWNLOAD = -2;
+    public final static long DOWNLOAD_UNKNOWN = -1;
 
     public static long startInvisibleDownload(Context context, String url, String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
+        if (!isStoragePermissionGranted(context))
+            return MISSING_PERMISSION;
+
         Log.w("DownloadHandler", "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
-                .setVisibleInDownloadsUi(false)
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
         ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
@@ -53,6 +64,9 @@ public class DownloadHandler extends BroadcastReceiver {
     public static long startDownload(Context context, String signature, String responseData, String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
+
+        if (!isStoragePermissionGranted(context))
+            return MISSING_PERMISSION;
 
         try {
             name = new JSONObject(responseData).getString("productId");
@@ -86,13 +100,13 @@ public class DownloadHandler extends BroadcastReceiver {
             }
         cursor.close();
         if (id <= 0)
-            return -2;
+            return NO_SUBSCRIPTION_DOWNLOAD;
 
         // get download
         cursor = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE))
                 .query(new DownloadManager.Query().setFilterById(id));
         if (!cursor.moveToFirst())
-            return -1;
+            return DOWNLOAD_UNKNOWN;
 
         // get progress
         progress = cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
@@ -120,6 +134,27 @@ public class DownloadHandler extends BroadcastReceiver {
         // stop download
         ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).remove(id);
         db.removeDownload(id);
+    }
+
+    public static boolean isStoragePermissionGranted(Context context) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Permission is granted");
+                return true;
+
+            } else if (!(context instanceof Activity)) {
+                Log.i(TAG, "Permission is revoked and not requestable");
+                return false;
+
+            } else {
+                Log.i(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                return false;
+            }
+        }
+
+        //permission is automatically granted on sdk<23 upon installation
+        return true;
     }
 
     @Override
@@ -153,14 +188,14 @@ public class DownloadHandler extends BroadcastReceiver {
                     Log.w("DownloadHandler", "import " + name);
 
                     try {
-                        File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
-                        FileInputStream stream = new FileInputStream(file);
+                        Uri uri = Uri.parse(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+                        FileInputStream stream = (FileInputStream) context.getContentResolver().openInputStream(uri);
 
                         switch (manager.getMimeTypeForDownloadedFile(id)) {
 
                             // register feedback
                             case "application/json":
-                                byte[] buf = new byte[1024];
+                                byte[] buf = new byte[256];
                                 stream.read(buf);
                                 Log.w("DownloadHandler", "register feedback " + new String(buf));
                                 break;
@@ -183,7 +218,6 @@ public class DownloadHandler extends BroadcastReceiver {
 
                         // clean
                         stream.close();
-                        file.delete();
                         download.close();
                         manager.remove(id);
                         db.removeDownload(id);
