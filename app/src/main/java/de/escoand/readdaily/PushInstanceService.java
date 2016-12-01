@@ -26,13 +26,15 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class PushInstanceService extends FirebaseInstanceIdService {
-    public static void setRegistration(Context context, boolean activate) {
-        DownloadHandler.startInvisibleDownload(
+
+    public static boolean setRegistration(Context context, boolean activate) {
+        long id = DownloadHandler.startInvisibleDownload(
                 context,
                 String.format(
                         context.getString(activate ? R.string.push_register_url : R.string.push_unregister_url),
                         Uri.encode(FirebaseInstanceId.getInstance().getToken())),
                 context.getString(R.string.message_push_register));
+        return id > 0;
     }
 
     @Override

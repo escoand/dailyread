@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -86,6 +87,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 header.togglePlayer();
             }
         });
+
+        // registration
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean("registration_done", false))
+            prefs.edit().putBoolean(
+                    "registration_done",
+                    PushInstanceService.setRegistration(this, prefs.getBoolean("notifications", true))
+            ).apply();
     }
 
     @Override
