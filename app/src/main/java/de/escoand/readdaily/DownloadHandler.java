@@ -29,11 +29,13 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
+    public final static int REQUEST_PERMISSIONS = 9;
+    public final static long NO_SUBSCRIPTION_DOWNLOAD = -2;
+    public final static long DOWNLOAD_UNKNOWN = -1;
 
     public static long startInvisibleDownload(final Context context, final String url, final String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -42,7 +44,6 @@ public class DownloadHandler extends BroadcastReceiver {
         Log.w(DownloadHandler.class.getName(), "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
-                .setVisibleInDownloadsUi(false)
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
         Database.getInstance(context).addDownload(name, id);
@@ -86,13 +87,13 @@ public class DownloadHandler extends BroadcastReceiver {
             }
         cursor.close();
         if (id <= 0)
-            return -2;
+            return NO_SUBSCRIPTION_DOWNLOAD;
 
         // get download
         cursor = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE))
                 .query(new DownloadManager.Query().setFilterById(id));
         if (!cursor.moveToFirst())
-            return -1;
+            return DOWNLOAD_UNKNOWN;
 
         // get progress
         progress = cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
@@ -153,14 +154,14 @@ public class DownloadHandler extends BroadcastReceiver {
                     Log.w(getClass().getName(), "import " + name);
 
                     try {
-                        File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
-                        FileInputStream stream = new FileInputStream(file);
+                        Uri uri = Uri.parse(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+                        FileInputStream stream = (FileInputStream) context.getContentResolver().openInputStream(uri);
 
                         switch (manager.getMimeTypeForDownloadedFile(id)) {
 
                             // register feedback
                             case "application/json":
-                                byte[] buf = new byte[1024];
+                                byte[] buf = new byte[256];
                                 stream.read(buf);
                                 Log.w(getClass().getName(), "register feedback " + new String(buf));
                                 break;
@@ -187,7 +188,6 @@ public class DownloadHandler extends BroadcastReceiver {
 
                         // clean
                         stream.close();
-                        file.delete();
                         download.close();
                         manager.remove(id);
                         db.removeDownload(id);

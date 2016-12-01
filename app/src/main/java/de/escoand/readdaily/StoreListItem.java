@@ -164,13 +164,14 @@ public class StoreListItem implements Runnable {
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    buttonAction.setEnabled(false);
-                    DownloadHandler.startDownload(
+                    long id = DownloadHandler.startDownload(
                             activity,
                             transaction.purchaseInfo.signature,
                             transaction.purchaseInfo.responseData,
                             (String) title.getText()
                     );
+                    if (id > 0)
+                        buttonAction.setEnabled(false);
                     refreshUI();
                 }
             });

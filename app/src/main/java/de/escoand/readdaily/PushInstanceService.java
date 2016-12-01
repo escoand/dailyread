@@ -26,20 +26,21 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class PushInstanceService extends FirebaseInstanceIdService {
-    public static void setRegistration(final Context context, final boolean activate) {
-        DownloadHandler.startInvisibleDownload(
+    public static boolean setRegistration(final Context context, final boolean activate) {
+        long id = DownloadHandler.startInvisibleDownload(
                 context,
                 String.format(
                         context.getString(activate ? R.string.push_register_url : R.string.push_unregister_url),
                         Uri.encode(FirebaseInstanceId.getInstance().getToken())),
                 context.getString(R.string.message_push_register));
+        return id > 0;
     }
 
     @Override
     public void onTokenRefresh() {
         String token = FirebaseInstanceId.getInstance().getToken();
 
-        Log.w("PushInstanceService", "token refreshed " + token);
+        Log.w(getClass().getName(), "token refreshed " + token);
 
         setRegistration(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications", true));
     }
