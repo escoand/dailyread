@@ -22,7 +22,7 @@ version = "1.0.2"
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '24.0.1'
 
     defaultConfig {
         applicationId "de.escoand.readdaily"
