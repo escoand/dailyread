@@ -56,7 +56,7 @@ public class DownloadHandler extends BroadcastReceiver {
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
-        ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id);
 
         return id;
     }
@@ -82,13 +82,13 @@ public class DownloadHandler extends BroadcastReceiver {
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
-        ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id);
 
         return id;
     }
 
     public static float downloadProgress(Context context, String name) {
-        Cursor cursor = ((ReadDailyApp) context.getApplicationContext()).getDatabase().getDownloads();
+        Cursor cursor = Database.getInstance(context).getDownloads();
         long id = 0;
         float progress;
 
@@ -117,7 +117,7 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     public static void stopDownload(Context context, String name) {
-        Database db = ((ReadDailyApp) context.getApplicationContext()).getDatabase();
+        Database db = Database.getInstance(context);
         Cursor c = db.getDownloads();
         long id = 0;
 
@@ -160,7 +160,7 @@ public class DownloadHandler extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        final Database db = ((ReadDailyApp) context.getApplicationContext()).getDatabase();
+        final Database db = Database.getInstance(context);
         Cursor downloads = db.getDownloads();
 
         Log.w("DownloadHandler", "receiving");
