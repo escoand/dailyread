@@ -63,6 +63,6 @@ public class PushMessageService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
-                .notify(remoteMessage.hashCode(), builder.build());
+                .notify((int) remoteMessage.getSentTime(), builder.build());
     }
 }
