@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -44,7 +45,6 @@ public class DownloadHandler extends BroadcastReceiver {
         Log.w(DownloadHandler.class.getName(), "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
         Database.getInstance(context).addDownload(name, id);
 
@@ -154,8 +154,7 @@ public class DownloadHandler extends BroadcastReceiver {
                     Log.w(getClass().getName(), "import " + name);
 
                     try {
-                        Uri uri = Uri.parse(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-                        FileInputStream stream = (FileInputStream) context.getContentResolver().openInputStream(uri);
+                        FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
 
                         switch (manager.getMimeTypeForDownloadedFile(id)) {
 
