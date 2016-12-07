@@ -83,10 +83,17 @@ public class Database extends SQLiteOpenHelper {
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     private final Context context;
+    private static Database db = null;
 
-    public Database(Context context) {
+    private Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+    }
+
+    public static Database getInstance(Context context) {
+        if (db == null)
+            db = new Database(context);
+        return db;
     }
 
     public static int getIntFromDate(Date date) {
