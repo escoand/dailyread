@@ -135,6 +135,18 @@ public class StoreListItem implements Runnable {
             progress.setVisibility(View.GONE);
         }
 
+        // importing
+        else if (listing != null && transaction != null && downloadProgress == 1) {
+            buttonRemove.setVisibility(View.GONE);
+            buttonAction.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            progress.setIndeterminate(true);
+            if (refrehThread == null || !refrehThread.isAlive()) {
+                refrehThread = new Thread(this);
+                refrehThread.start();
+            }
+        }
+
         // downloading
         else if (listing != null && transaction != null && downloadProgress >= 0 && downloadProgress < 1) {
             buttonRemove.setVisibility(View.VISIBLE);
@@ -148,6 +160,7 @@ public class StoreListItem implements Runnable {
             });
             buttonAction.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
+            progress.setIndeterminate(false);
             progress.setMax(100);
             progress.setProgress((int) (100 * downloadProgress));
             if (refrehThread == null || !refrehThread.isAlive()) {
@@ -198,7 +211,7 @@ public class StoreListItem implements Runnable {
 
     @Override
     public void run() {
-        while (downloadProgress >= 0 && downloadProgress < 1) {
+        while (downloadProgress >= 0 && downloadProgress <= 1) {
 
             // refresh ui
             activity.runOnUiThread(new Runnable() {
