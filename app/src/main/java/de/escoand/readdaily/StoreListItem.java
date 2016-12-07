@@ -116,7 +116,7 @@ public class StoreListItem implements Runnable {
     }
 
     private void refreshUI() {
-        final Database db = ((ReadDailyApp) activity.getApplication()).getDatabase();
+        final Database db = Database.getInstance(activity);
         final boolean isInstalled = db.isInstalled(productId);
         downloadProgress = DownloadHandler.downloadProgress(activity, productId);
 

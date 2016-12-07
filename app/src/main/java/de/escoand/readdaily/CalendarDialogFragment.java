@@ -123,7 +123,7 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         @Override
         protected Integer[] doInBackground(Void... params) {
             int date;
-            Cursor cursor = ((ReadDailyApp) getActivity().getApplication()).getDatabase().getCalendar();
+            Cursor cursor = Database.getInstance(getContext()).getCalendar();
             while (cursor.moveToNext()) {
                 date = cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE));
                 datesAvailable.add(date);

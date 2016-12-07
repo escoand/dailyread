@@ -65,7 +65,7 @@ public class DailyFragment extends Fragment implements SimpleCursorAdapter.ViewB
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         // data
-        db = ((ReadDailyApp) getActivity().getApplication()).getDatabase();
+        db = Database.getInstance(getContext());
         adapter = new SimpleCursorAdapter(getContext(), R.layout.item_daily, null, from, to, 0);
         adapter.setViewBinder(this);
 
