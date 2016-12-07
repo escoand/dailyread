@@ -353,7 +353,7 @@ public class Database extends SQLiteOpenHelper {
                             values_year.put(COLUMN_TYPE, TYPE_YEAR);
                             values_year.put(COLUMN_DATE, date);
                             values_year.put(COLUMN_SOURCE, parser.getAttributeValue(null, "source"));
-                            // source - verse 
+                            // source - verse
                             // sourceVerse - verse content
                             // author
                             values_year.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));

@@ -66,7 +66,6 @@ public class DownloadHandler extends BroadcastReceiver {
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
                 .addRequestHeader("App-ResponseData", responseData)
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
         Database.getInstance(context).addDownload(name, id);
