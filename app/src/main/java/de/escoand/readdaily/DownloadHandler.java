@@ -17,18 +17,13 @@
 
 package de.escoand.readdaily;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -36,8 +31,6 @@ import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.util.Random;
-
-import static android.content.ContentValues.TAG;
 
 public class DownloadHandler extends BroadcastReceiver {
     public final static int REQUEST_PERMISSIONS = 9;
