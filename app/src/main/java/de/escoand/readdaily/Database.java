@@ -453,54 +453,65 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public void importZIP(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
-        SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
+        final String tabname = "___table___";
+        final SQLiteDatabase db = getWritableDatabase();
+        final ArrayList<ContentValues> values = new ArrayList<>();
+        ContentValues row = new ContentValues();
+        final ZipInputStream zip = new ZipInputStream(stream);
+        ZipEntry entry;
+        byte[] buffer = new byte[1024];
+        int len;
 
+        // subscription
+        row.put(tabname, TABLE_SETS);
+        row.put(COLUMN_NAME, subscription);
+        row.put(COLUMN_REVISION, 0);
+        values.add(row);
+
+        final File outdir = new File(context.getFilesDir(), subscription);
+        if (!outdir.exists())
+            outdir.mkdir();
+
+        // read entries
+        while ((entry = zip.getNextEntry()) != null) {
+            final String filename = entry.getName();
+            final File outfile = new File(context.getFilesDir() + File.separator + subscription, filename);
+            final FileOutputStream outstream = new FileOutputStream(outfile);
+            final String date = outfile.getName().substring(0, filename.lastIndexOf("."));
+
+            Log.i("importZIP", "file " + outfile.getAbsolutePath());
+            Log.i("importZIP", "date " + date);
+
+            // save file
+            while ((len = zip.read(buffer)) != -1)
+                outstream.write(buffer, 0, len);
+            outstream.close();
+            zip.closeEntry();
+
+            // save to values
+            row = new ContentValues();
+            row.put(tabname, TABLE_TEXTS);
+            row.put(COLUMN_SUBSCRIPTION, subscription);
+            row.put(COLUMN_TYPE, TYPE_MEDIA);
+            row.put(COLUMN_DATE, date);
+            row.put(COLUMN_SOURCE, outfile.getAbsolutePath());
+            values.add(row);
+        }
+        zip.close();
+
+        // insert values
         try {
-            ContentValues values = new ContentValues();
-            ZipInputStream zip = new ZipInputStream(stream);
-            ZipEntry entry;
-            byte[] buffer = new byte[1024];
-            int len;
-
-            // subscription
-            values.put(COLUMN_NAME, subscription);
-            values.put(COLUMN_REVISION, 0);
-            db.insertOrThrow(TABLE_SETS, null, values);
-
-            File outdir = new File(context.getFilesDir(), subscription);
-            if (!outdir.exists())
-                outdir.mkdir();
-
-            // read entries
-            while ((entry = zip.getNextEntry()) != null) {
-                String filename = entry.getName();
-                File outfile = new File(context.getFilesDir() + File.separator + subscription, filename);
-                FileOutputStream outstream = new FileOutputStream(outfile);
-                String date = outfile.getName().substring(0, filename.lastIndexOf("."));
-
-                Log.i("importZIP", "file " + outfile.getAbsolutePath());
-                Log.i("importZIP", "date " + date);
-
-                // save file
-                while ((len = zip.read(buffer)) != -1)
-                    outstream.write(buffer, 0, len);
-                outstream.close();
-                zip.closeEntry();
-
-                // save in db
-                values.clear();
-                values.put(COLUMN_SUBSCRIPTION, subscription);
-                values.put(COLUMN_TYPE, TYPE_MEDIA);
-                values.put(COLUMN_DATE, date);
-                values.put(COLUMN_SOURCE, outfile.getAbsolutePath());
-                long id = db.insertOrThrow(TABLE_TEXTS, null, values);
-
-                Log.i("importZIP", "insert " + id);
+            db.beginTransaction();
+            for (int i = 0; i < values.size(); i++) {
+                final String table = values.get(i).getAsString(tabname);
+                values.get(i).remove(tabname);
+                final long id = db.insertOrThrow(table, null, values.get(i));
+                Log.i("insert into table " + table, String.valueOf(id));
             }
-            zip.close();
-
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e("importZip", Log.getStackTraceString(e));
+            removeData(subscription);
         } finally {
             db.endTransaction();
             db.close();
