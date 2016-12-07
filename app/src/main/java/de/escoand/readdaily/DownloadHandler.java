@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -48,13 +49,9 @@ public class DownloadHandler extends BroadcastReceiver {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
-        if (!isStoragePermissionGranted(context))
-            return MISSING_PERMISSION;
-
         Log.w("DownloadHandler", "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
         Database.getInstance(context).addDownload(name, id);
 
@@ -64,9 +61,6 @@ public class DownloadHandler extends BroadcastReceiver {
     public static long startDownload(Context context, String signature, String responseData, String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
-
-        if (!isStoragePermissionGranted(context))
-            return MISSING_PERMISSION;
 
         try {
             name = new JSONObject(responseData).getString("productId");
@@ -79,7 +73,6 @@ public class DownloadHandler extends BroadcastReceiver {
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
                 .addRequestHeader("App-ResponseData", responseData)
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
         Database.getInstance(context).addDownload(name, id);
@@ -136,27 +129,6 @@ public class DownloadHandler extends BroadcastReceiver {
         db.removeDownload(id);
     }
 
-    public static boolean isStoragePermissionGranted(Context context) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Permission is granted");
-                return true;
-
-            } else if (!(context instanceof Activity)) {
-                Log.i(TAG, "Permission is revoked and not requestable");
-                return false;
-
-            } else {
-                Log.i(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                return false;
-            }
-        }
-
-        //permission is automatically granted on sdk<23 upon installation
-        return true;
-    }
-
     @Override
     public void onReceive(final Context context, Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -188,8 +160,7 @@ public class DownloadHandler extends BroadcastReceiver {
                     Log.w("DownloadHandler", "import " + name);
 
                     try {
-                        Uri uri = Uri.parse(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-                        FileInputStream stream = (FileInputStream) context.getContentResolver().openInputStream(uri);
+                        FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
 
                         switch (manager.getMimeTypeForDownloadedFile(id)) {
 

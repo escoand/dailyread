@@ -83,8 +83,6 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         list.setEmptyView(findViewById(R.id.listLoading));
         listAdapter = new StoreArrayAdapter(this, billing);
         list.setAdapter(listAdapter);
-
-        DownloadHandler.isStoragePermissionGranted(this);
     }
 
     @Override
