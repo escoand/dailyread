@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 public class YearContentFragment extends AbstractContentFragment {
     public YearContentFragment() {
-        setFilter(Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_YEAR});
+        condition = Database.COLUMN_TYPE + "=?";
+        values = new String[]{Database.TYPE_YEAR};
     }
 }
