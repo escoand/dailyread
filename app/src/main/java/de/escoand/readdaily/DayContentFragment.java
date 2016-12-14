@@ -17,8 +17,30 @@
 
 package de.escoand.readdaily;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
 public class DayContentFragment extends AbstractContentFragment {
+    protected ListView list;
+
     public DayContentFragment() {
-        setFilter(Database.COLUMN_TYPE + " IN (?,?,?)", new String[]{Database.TYPE_MONTH, Database.TYPE_WEEK, Database.TYPE_EXEGESIS});
+        condition = Database.COLUMN_TYPE + " IN (?,?,?)";
+        values = new String[]{Database.TYPE_MONTH, Database.TYPE_WEEK, Database.TYPE_EXEGESIS};
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        View root = inflater.inflate(R.layout.fragment_content, container, false);
+        list = (ListView) root.findViewById(R.id.listView);
+        list.setEmptyView(root.findViewById(R.id.listNoData));
+        list.setAdapter(adapter);
+
+        return root;
     }
 }

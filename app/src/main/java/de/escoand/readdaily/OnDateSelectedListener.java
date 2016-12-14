@@ -20,6 +20,12 @@ package de.escoand.readdaily;
 import java.util.Date;
 
 public interface OnDateSelectedListener {
+    void updateDataListener(DataListener listener);
+
+    void registerDataListener(DataListener listener);
+
+    void unregisterDataListener(DataListener listener);
+
     void onDateSelected(Date date);
 
     void onDateSelected(Date date, String condition, String[] values);

@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 public class IntroContentFragment extends AbstractContentFragment {
     public IntroContentFragment() {
-        setFilter(Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_INTRO});
+        condition = Database.COLUMN_TYPE + "=?";
+        values = new String[]{Database.TYPE_INTRO};
     }
 }

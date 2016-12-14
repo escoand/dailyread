@@ -117,11 +117,31 @@
         android:layout_gravity="right|end"
         android:theme="@style/Drawer">
 
-        <fragment
-            android:id="@+id/content_info"
-            class="de.escoand.readdaily.InformationFragment"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:navigationIcon="@drawable/icon_close" />
+
+            <fragment
+                android:id="@+id/content_voty"
+                class="de.escoand.readdaily.YearContentFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/content_intro"
+                class="de.escoand.readdaily.IntroContentFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </android.support.design.widget.NavigationView>
 

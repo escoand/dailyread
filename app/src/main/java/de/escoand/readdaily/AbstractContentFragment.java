@@ -32,20 +32,21 @@ import android.widget.TextView;
 import java.util.Date;
 
 public abstract class AbstractContentFragment extends Fragment implements DataListener, SimpleCursorAdapter.ViewBinder {
-    private final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
-    private final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
-    private View list;
-    private SimpleCursorAdapter adapter;
-    private String condition = null;
-    private String[] values = null;
+    protected final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
+    protected final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
+    protected SimpleCursorAdapter adapter = null;
+    protected String condition = null;
+    protected String[] values = null;
+    private Cursor cursor = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         adapter = new SimpleCursorAdapter(getContext(), R.layout.item_content, null, from, to, 0);
         adapter.setViewBinder(this);
+        adapter.changeCursor(cursor);
 
-        list = new ListView(getContext());
-        ((ListView) list).setAdapter(adapter);
+        ListView list = new ListView(getContext());
+        list.setAdapter(adapter);
 
         return list;
     }
@@ -93,14 +94,10 @@ public abstract class AbstractContentFragment extends Fragment implements DataLi
         return false;
     }
 
-    public void setFilter(String condition, String[] values) {
-        this.condition = condition;
-        this.values = values;
-    }
-
     @Override
     public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
-        adapter.changeCursor(Database.getInstance(getContext()).getDay(date, condition, values));
+        if (date != null)
+            this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
     }
 
     @Override
