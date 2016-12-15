@@ -24,30 +24,39 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class EndlessDailyPager extends ViewPager {
-    private OnDateSelectedListener handler = null;
+public class EndlessContentPager extends ViewPager {
 
-    public EndlessDailyPager(Context context, AttributeSet attrs) {
+    private OnDateSelectedListener listener = null;
+
+    public EndlessContentPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setAdapter(new EndlessDailyPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
+        setAdapter(new EndlessDayPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
         setCurrentItem(Integer.MAX_VALUE / 2, false);
     }
 
-    public void OnClick(int id) {
-        //((DataHandler) adapter.getItem(getCurrentItem())).onClick(id, null);
+    private Date getDateOfPosition(int position) {
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DATE, position - getAdapter().getCount() / 2);
+        return calendar.getTime();
     }
 
-    public void setHandler(OnDateSelectedListener listener) {
-        handler = listener;
+    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
+        this.listener = listener;
     }
 
-    private class EndlessDailyPagerAdapter extends FragmentPagerAdapter {
-        public EndlessDailyPagerAdapter(FragmentManager fm) {
+    @Override
+    protected void onPageScrolled(int position, float offset, int offsetPixels) {
+        super.onPageScrolled(position, offset, offsetPixels);
+        listener.onDateSelected(getDateOfPosition(position));
+    }
+
+    private class EndlessDayPagerAdapter extends FragmentPagerAdapter {
+        public EndlessDayPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -58,17 +67,8 @@ public class EndlessDailyPager extends ViewPager {
 
         @Override
         public Fragment getItem(int position) {
-            final GregorianCalendar calendar = new GregorianCalendar();
             final DayContentFragment content = new DayContentFragment();
-
-            calendar.add(Calendar.DATE, position - getCount() / 2);
-            Log.e("date", calendar.getTime().toString());
-
-            if (handler != null) {
-                handler.registerDataListener(content);
-                handler.onDateSelected(calendar.getTime());
-            }
-
+            content.onDataUpdated(getDateOfPosition(position), null);
             return content;
         }
     }

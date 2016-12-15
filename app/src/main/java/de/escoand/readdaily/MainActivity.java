@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout layout;
     private Toolbar toolbar;
     private View playerButton;
-    private EndlessDailyPager pager;
+    private EndlessContentPager pager;
 
     /*@Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -94,14 +94,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(this);
 
         // fragments
-        pager = (EndlessDailyPager) findViewById(R.id.content_pager);
+        pager = (EndlessContentPager) findViewById(R.id.content_pager);
         final HeaderFragment header = (HeaderFragment) getSupportFragmentManager().findFragmentById(R.id.header);
         listeners.add(header);
         listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.footer));
         listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
         listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
-        pager.setHandler(this);
+        pager.setOnDateSelectedListener(this);
 
         //daily.setSearchView((SearchView) toolbar.findViewById(R.id.toolbar_search));
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         layout.closeDrawers();
-        pager.OnClick(item.getItemId());
+        //pager.OnClick(item.getItemId());
         return true;
     }
 
