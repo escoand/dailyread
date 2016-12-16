@@ -74,7 +74,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
             }
         });
 
-        getLayoutInflater().inflate(R.layout.fragment_list, (ViewGroup) findViewById(R.id.content), true);
+        getLayoutInflater().inflate(R.layout.fragment_store, (ViewGroup) findViewById(R.id.content), true);
 
         ListView list = (ListView) findViewById(R.id.listView);
         list.setEmptyView(findViewById(R.id.listLoading));
