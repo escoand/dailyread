@@ -37,7 +37,8 @@ public abstract class AbstractContentFragment extends Fragment implements DataLi
     protected SimpleCursorAdapter adapter = null;
     protected String condition = null;
     protected String[] values = null;
-    private Cursor cursor = null;
+    protected Date date = null;
+    protected Cursor cursor = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,8 +97,11 @@ public abstract class AbstractContentFragment extends Fragment implements DataLi
 
     @Override
     public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
-        if (date != null)
-            this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
+        if (date == null)
+            return;
+
+        this.date = date;
+        this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
     }
 
     @Override
