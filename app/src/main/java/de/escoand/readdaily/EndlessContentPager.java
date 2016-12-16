@@ -52,7 +52,8 @@ public class EndlessContentPager extends ViewPager {
     @Override
     protected void onPageScrolled(int position, float offset, int offsetPixels) {
         super.onPageScrolled(position, offset, offsetPixels);
-        listener.onDateSelected(getDateOfPosition(position));
+        if (listener != null)
+            listener.onDateSelected(getDateOfPosition(position));
     }
 
     private class EndlessDayPagerAdapter extends FragmentPagerAdapter {

@@ -95,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // fragments
         pager = (EndlessContentPager) findViewById(R.id.content_pager);
-        final HeaderFragment header = (HeaderFragment) getSupportFragmentManager().findFragmentById(R.id.header);
-        listeners.add(header);
         listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.footer));
         listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
         listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
@@ -109,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         playerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                header.togglePlayer();
+                //header.togglePlayer();
             }
         });
     }
@@ -191,7 +189,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // update listeners
         for (DataListener tmp : listeners)
-            tmp.onDataUpdated(date, cursor);
+            if (tmp != null && date != null && cursor != null)
+                tmp.onDataUpdated(date, cursor);
     }
 
     @Override
