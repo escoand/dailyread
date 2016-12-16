@@ -94,7 +94,6 @@ public class DayContentFragment extends AbstractContentFragment implements Media
         super.onPause();
     }
 
-    @Override
     public void setOnClickListener(View.OnClickListener listener) {
         bible.setOnClickListener(listener);
     }

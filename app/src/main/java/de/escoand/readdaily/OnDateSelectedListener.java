@@ -17,16 +17,14 @@
 
 package de.escoand.readdaily;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.Date;
 
 public interface OnDateSelectedListener {
-    void updateDataListener(DataListener listener);
 
-    void registerDataListener(DataListener listener);
+    void onDateSelected(@NonNull Date date);
 
-    void unregisterDataListener(DataListener listener);
-
-    void onDateSelected(Date date);
-
-    void onDateSelected(Date date, String condition, String[] values);
+    void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values);
 }

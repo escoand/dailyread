@@ -25,18 +25,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class EndlessContentPager extends ViewPager {
-
-    private OnDateSelectedListener listener = null;
+    private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
 
     public EndlessContentPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         setAdapter(new EndlessDayPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
-        setCurrentItem(Integer.MAX_VALUE / 2, false);
+        setCurrentItem(getAdapter().getCount() / 2, false);
     }
 
     private Date getDateOfPosition(int position) {
@@ -45,15 +45,19 @@ public class EndlessContentPager extends ViewPager {
         return calendar.getTime();
     }
 
-    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
-        this.listener = listener;
+    public void addDataListener(OnDateSelectedListener listener) {
+        listeners.add(listener);
     }
 
     @Override
     protected void onPageScrolled(int position, float offset, int offsetPixels) {
+        Date date = getDateOfPosition(position);
+
         super.onPageScrolled(position, offset, offsetPixels);
-        if (listener != null)
-            listener.onDateSelected(getDateOfPosition(position));
+
+        for (OnDateSelectedListener tmp : listeners)
+            if (tmp != null && date != null)
+                tmp.onDateSelected(date);
     }
 
     private class EndlessDayPagerAdapter extends FragmentPagerAdapter {
@@ -69,7 +73,7 @@ public class EndlessContentPager extends ViewPager {
         @Override
         public Fragment getItem(int position) {
             final DayContentFragment content = new DayContentFragment();
-            content.onDataUpdated(getDateOfPosition(position), null);
+            content.onDateSelected(getDateOfPosition(position));
             return content;
         }
     }
