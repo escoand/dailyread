@@ -82,6 +82,8 @@ public class DayContentFragment extends AbstractContentFragment implements Media
         list.setEmptyView(root.findViewById(R.id.listNoData));
         list.setAdapter(adapter);
 
+        bible.setOnClickListener(((MainActivity) getActivity()).getOnBibleClickListener(Database.TYPE_DAY));
+
         refreshUI();
 
         return root;

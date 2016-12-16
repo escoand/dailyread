@@ -79,15 +79,45 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+            <!-- floating action buttons -->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_more"
+                style="@style/FloatingActionButton.Mini"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_plus"
+                android:visibility="gone" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_intro"
+                style="@style/FloatingActionButton.Mini"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/button_more"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_intro"
+                android:tint="@android:color/white"
+                android:visibility="gone"
+                app:backgroundTint="#4a90e2" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_voty"
+                style="@style/FloatingActionButton.Mini"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/button_intro"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_voty"
+                android:tint="@android:color/white"
+                android:visibility="gone"
+                app:backgroundTint="#50e3c2" />
+
         </android.support.design.widget.CoordinatorLayout>
 
         <!-- bottom buttons -->
-        <fragment
-            android:id="@+id/footer"
-            class="de.escoand.readdaily.FooterFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0" />
+        <include layout="@layout/fragment_footer" />
 
     </LinearLayout>
 
