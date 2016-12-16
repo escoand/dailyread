@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -31,7 +32,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-public abstract class AbstractContentFragment extends Fragment implements DataListener, SimpleCursorAdapter.ViewBinder {
+public abstract class AbstractContentFragment extends Fragment implements OnDateSelectedListener, SimpleCursorAdapter.ViewBinder {
     protected final String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     protected final int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     protected SimpleCursorAdapter adapter = null;
@@ -50,6 +51,17 @@ public abstract class AbstractContentFragment extends Fragment implements DataLi
         list.setAdapter(adapter);
 
         return list;
+    }
+
+    @Override
+    public void onDateSelected(@NonNull Date date) {
+        this.date = date;
+        this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
+    }
+
+    @Override
+    public void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values) {
+        onDateSelected(date);
     }
 
     @Override
@@ -93,18 +105,5 @@ public abstract class AbstractContentFragment extends Fragment implements DataLi
         }
 
         return false;
-    }
-
-    @Override
-    public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
-        if (date == null)
-            return;
-
-        this.date = date;
-        this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
-    }
-
-    @Override
-    public void setOnClickListener(View.OnClickListener listener) {
     }
 }

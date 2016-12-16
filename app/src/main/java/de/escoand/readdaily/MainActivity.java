@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Date date = null;
     private Database db = Database.getInstance(this);
     private Cursor cursor;
-    private ArrayList<DataListener> listeners = new ArrayList<>();
 
     private DrawerLayout layout;
     private Toolbar toolbar;
@@ -95,11 +93,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // fragments
         pager = (EndlessContentPager) findViewById(R.id.content_pager);
-        listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.footer));
-        listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
-        listeners.add((DataListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
-
-        pager.setOnDateSelectedListener(this);
+        pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.footer));
+        pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
+        pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
         //daily.setSearchView((SearchView) toolbar.findViewById(R.id.toolbar_search));
 
@@ -186,26 +182,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-
-        // update listeners
-        for (DataListener tmp : listeners)
-            if (tmp != null && date != null && cursor != null)
-                tmp.onDataUpdated(date, cursor);
-    }
-
-    @Override
-    public void updateDataListener(DataListener listener) {
-        listener.onDataUpdated(date, cursor);
-    }
-
-    public void registerDataListener(DataListener listener) {
-        listeners.add(listener);
-        if (date != null && cursor != null)
-            listener.onDataUpdated(date, cursor);
-    }
-
-    @Override
-    public void unregisterDataListener(DataListener listener) {
-        listeners.remove(listener);
     }
 }

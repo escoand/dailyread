@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ import android.view.ViewGroup;
 
 import java.util.Date;
 
-public class FooterFragment extends Fragment implements DataListener {
+public class FooterFragment extends Fragment implements OnDateSelectedListener {
 
     @Nullable
     @Override
@@ -35,7 +36,6 @@ public class FooterFragment extends Fragment implements DataListener {
         return inflater.inflate(R.layout.fragment_footer, container);
     }
 
-    @Override
     public void setOnClickListener(View.OnClickListener listener) {
         getView().findViewById(R.id.button_today).setOnClickListener(listener);
         getView().findViewById(R.id.button_share).setOnClickListener(listener);
@@ -43,10 +43,17 @@ public class FooterFragment extends Fragment implements DataListener {
     }
 
     @Override
-    public void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor) {
+    public void onDateSelected(@NonNull Date date) {
+        Cursor cursor = Database.getInstance(getContext()).getDay(date);
+
         if (cursor != null && cursor.getCount() > 0)
             getView().setVisibility(View.VISIBLE);
         else
             getView().setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values) {
+        onDateSelected(date);
     }
 }
