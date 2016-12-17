@@ -40,7 +40,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class DayContentFragment extends AbstractContentFragment implements MediaPlayer.OnCompletionListener, Runnable {
-    private View root;
+    private Runnable runnable = this;
     private View header;
     private View playerControls;
     private ImageView playerImage;
@@ -67,7 +67,7 @@ public class DayContentFragment extends AbstractContentFragment implements Media
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        root = inflater.inflate(R.layout.fragment_content, container, false);
+        View root = inflater.inflate(R.layout.fragment_content, container, false);
         header = root.findViewById(R.id.header);
         playerControls = root.findViewById(R.id.player_control);
         playerImage = (ImageView) root.findViewById(R.id.player_image);
@@ -82,6 +82,7 @@ public class DayContentFragment extends AbstractContentFragment implements Media
         list.setEmptyView(root.findViewById(R.id.listNoData));
         list.setAdapter(adapter);
 
+        playerContainer.setOnClickListener(new OnPlayClickListener());
         bible.setOnClickListener(((MainActivity) getActivity()).getOnBibleClickListener(Database.TYPE_DAY));
 
         refreshUI();
@@ -94,10 +95,6 @@ public class DayContentFragment extends AbstractContentFragment implements Media
         if (player != null)
             player.release();
         super.onPause();
-    }
-
-    public void setOnClickListener(View.OnClickListener listener) {
-        bible.setOnClickListener(listener);
     }
 
     private void refreshUI() {
@@ -182,7 +179,7 @@ public class DayContentFragment extends AbstractContentFragment implements Media
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        togglePlayer();
+        new OnPlayClickListener().onClick(null);
     }
 
     @Override
@@ -212,42 +209,49 @@ public class DayContentFragment extends AbstractContentFragment implements Media
         }
     }
 
-    public void togglePlayer() {
-        if (player == null)
-            return;
+    public OnPlayClickListener getOnPlayClickListener() {
+        return new OnPlayClickListener();
+    }
 
-        AnimatorSet anims = new AnimatorSet();
-        Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
-        Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
-        Animator anim3;
-        ValueAnimator anim4, anim5;
+    private class OnPlayClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (player == null)
+                return;
 
-        if (smallWidth == 0)
-            smallWidth = root.getMeasuredWidth();
+            AnimatorSet anims = new AnimatorSet();
+            Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
+            Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
+            Animator anim3;
+            ValueAnimator anim4, anim5;
 
-        // animations
-        if (!isLarge) {
-            anim1.setTarget(playerContainer);
-            anim2.setTarget(texts);
-            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
-            anim4 = new WidthResizeAnimator(root, smallWidth, root.getMeasuredWidth() + texts.getMeasuredWidth());
-            anim5 = new SquareResizeAnimator(playerControls, playerControls.getMeasuredWidth(), playerControls.getMeasuredHeight() * 2);
-        } else {
-            anim1.setTarget(texts);
-            anim2.setTarget(playerContainer);
-            anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
-            anim4 = new WidthResizeAnimator(root, root.getMeasuredWidth(), smallWidth);
-            anim5 = new SquareResizeAnimator(playerControls, playerControls.getMeasuredWidth(), playerControls.getMeasuredHeight() / 2);
+            if (smallWidth == 0)
+                smallWidth = header.getMeasuredWidth();
+
+            // animations
+            if (!isLarge) {
+                anim1.setTarget(playerContainer);
+                anim2.setTarget(texts);
+                anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_out);
+                anim4 = new WidthResizeAnimator(header, smallWidth, header.getMeasuredWidth() + texts.getMeasuredWidth());
+                anim5 = new SquareResizeAnimator(playerControls, playerControls.getMeasuredWidth(), playerControls.getMeasuredHeight() * 2);
+            } else {
+                anim1.setTarget(texts);
+                anim2.setTarget(playerContainer);
+                anim3 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_half_in);
+                anim4 = new WidthResizeAnimator(header, header.getMeasuredWidth(), smallWidth);
+                anim5 = new SquareResizeAnimator(playerControls, playerControls.getMeasuredWidth(), playerControls.getMeasuredHeight() / 2);
+            }
+            anim3.setTarget(playerImage);
+
+            // animate
+            anims.playTogether(anim1, anim2, anim3, anim4, anim5);
+            anims.addListener(new AnimListener());
+            anims.setDuration(500);
+            anims.setInterpolator(new DecelerateInterpolator());
+            anims.start();
+            new Thread(runnable).start();
         }
-        anim3.setTarget(playerImage);
-
-        // animate
-        anims.playTogether(anim1, anim2, anim3, anim4, anim5);
-        anims.addListener(new AnimListener());
-        anims.setDuration(500);
-        anims.setInterpolator(new DecelerateInterpolator());
-        anims.start();
-        new Thread(this).start();
     }
 
     private class SquareResizeAnimator extends ValueAnimator {

@@ -24,13 +24,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 public class EndlessContentPager extends ViewPager {
+    private HashMap<Integer, DayContentFragment> fragments = new HashMap<>();
     private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
 
     public EndlessContentPager(Context context, AttributeSet attrs) {
@@ -72,6 +75,10 @@ public class EndlessContentPager extends ViewPager {
         return (int) (new Date().getTime() - date.getTime());
     }
 
+    public DayContentFragment getCurrentFragment() {
+        return fragments.get(getCurrentItem());
+    }
+
     public void addDataListener(OnDateSelectedListener listener) {
         listeners.add(listener);
     }
@@ -101,7 +108,14 @@ public class EndlessContentPager extends ViewPager {
         public Fragment getItem(int position) {
             final DayContentFragment content = new DayContentFragment();
             content.onDateSelected(getDateOfPosition(position));
+            fragments.put(position, content);
             return content;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+            fragments.remove(position);
         }
     }
 }
