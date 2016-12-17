@@ -85,12 +85,6 @@ public class MainActivity extends AppCompatActivity implements
         pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
         // player button
-        playerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //header.togglePlayer();
-            }
-        });
 
         // floating buttons
         if (findViewById(R.id.button_more) != null)
@@ -217,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements
         toolbar.setTitle(getString(R.string.app_title));
         toolbar.setSubtitle(null);
         playerButton.setVisibility(View.GONE);
+        playerButton.setOnClickListener(pager.getCurrentFragment().getOnPlayClickListener());
 
         if (cursor != null) {
 
