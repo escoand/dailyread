@@ -19,6 +19,7 @@
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -31,7 +32,8 @@
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            tools:ignore="InefficientWeight">
 
             <!-- toolbar -->
             <android.support.design.widget.AppBarLayout
@@ -64,6 +66,7 @@
                             style="@style/Toolbar.Icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:contentDescription=""
                             android:src="@drawable/icon_speaker" />
 
                     </android.support.v7.widget.Toolbar>
@@ -81,38 +84,31 @@
 
             <!-- floating action buttons -->
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/button_more"
+                android:id="@+id/button_voty"
                 style="@style/FloatingActionButton.Mini"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/icon_plus"
-                android:visibility="gone" />
+                android:layout_gravity="top"
+                android:src="@drawable/icon_voty"
+                android:tint="@android:color/white"
+                app:backgroundTint="#50e3c2"
+                app:layout_anchor="@+id/button_intro"
+                app:layout_anchorGravity="top|right" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/button_intro"
                 style="@style/FloatingActionButton.Mini"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/button_more"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_gravity="top"
                 android:src="@drawable/icon_intro"
                 android:tint="@android:color/white"
-                android:visibility="gone"
-                app:backgroundTint="#4a90e2" />
+                app:backgroundTint="#4a90e2"
+                app:layout_anchor="@+id/button_more"
+                app:layout_anchorGravity="top|right" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/button_voty"
+                android:id="@+id/button_more"
                 style="@style/FloatingActionButton.Mini"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/button_intro"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/icon_voty"
-                android:tint="@android:color/white"
-                android:visibility="gone"
-                app:backgroundTint="#50e3c2" />
+                android:layout_gravity="bottom|right"
+                android:layout_margin="16dp"
+                android:src="@drawable/icon_plus" />
 
         </android.support.design.widget.CoordinatorLayout>
 
