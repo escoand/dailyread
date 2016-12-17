@@ -209,7 +209,7 @@ public class DayContentFragment extends AbstractContentFragment implements Media
         }
     }
 
-    public OnPlayClickListener getOnPlayClickListener() {
+    public View.OnClickListener getOnPlayClickListener() {
         return new OnPlayClickListener();
     }
 

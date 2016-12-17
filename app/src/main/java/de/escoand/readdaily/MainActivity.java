@@ -115,33 +115,33 @@ public class MainActivity extends AppCompatActivity implements
 
             // today
             case R.id.button_today:
-                pager.setCurrentItem(pager.getPositionOfDate(date));
+                pager.onDateSelected(new Date());
                 break;
 
             // list dialogs
             case R.id.button_list:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(pager);
                 break;
             case R.id.button_list_intro:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_intro));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TITLE + "!=''", new String[]{Database.TYPE_INTRO});
                 ((ListDialogFragment) dialog).setMapping(new String[]{Database.COLUMN_TITLE, Database.COLUMN_READ}, new int[]{R.id.list_title, R.id.list_image});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(pager);
                 break;
             case R.id.button_list_voty:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(this, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_YEAR});
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(pager);
                 break;
 
             // calendar
             case R.id.button_calendar:
                 dialog = new CalendarDialogFragment();
-                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(this);
+                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(pager);
                 break;
 
             // search
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements
         toolbar.setTitle(getString(R.string.app_title));
         toolbar.setSubtitle(null);
         playerButton.setVisibility(View.GONE);
-        playerButton.setOnClickListener(pager.getCurrentFragment().getOnPlayClickListener());
+        playerButton.setOnClickListener(pager.getCurrentOnPlayClickListener());
 
         if (cursor != null) {
 
