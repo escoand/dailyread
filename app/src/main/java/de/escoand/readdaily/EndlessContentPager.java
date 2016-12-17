@@ -18,6 +18,8 @@
 package de.escoand.readdaily;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -32,7 +34,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-public class EndlessContentPager extends ViewPager {
+public class EndlessContentPager extends ViewPager implements OnDateSelectedListener {
     private HashMap<Integer, DayContentFragment> fragments = new HashMap<>();
     private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
 
@@ -65,22 +67,34 @@ public class EndlessContentPager extends ViewPager {
         outState.putInt("date", Database.getIntFromDate(date));
     }*/
 
-    public Date getDateOfPosition(int position) {
+    private Date getDateOfPosition(int position) {
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DATE, position - getAdapter().getCount() / 2);
         return calendar.getTime();
     }
 
-    public int getPositionOfDate(Date date) {
-        return (int) (new Date().getTime() - date.getTime());
+    private int getPositionOfDate(Date date) {
+        return (int) (getAdapter().getCount() / 2 + (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000);
     }
 
-    public DayContentFragment getCurrentFragment() {
-        return fragments.get(getCurrentItem());
+    public OnClickListener getCurrentOnPlayClickListener() {
+        if (fragments.containsKey(getCurrentItem()))
+            return fragments.get(getCurrentItem()).getOnPlayClickListener();
+        return null;
     }
 
     public void addDataListener(OnDateSelectedListener listener) {
         listeners.add(listener);
+    }
+
+    @Override
+    public void onDateSelected(@NonNull Date date) {
+        setCurrentItem(getPositionOfDate(date), false);
+    }
+
+    @Override
+    public void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values) {
+        onDateSelected(date);
     }
 
     @Override
