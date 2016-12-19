@@ -82,8 +82,8 @@ public class Database extends SQLiteOpenHelper {
 
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-    private final Context context;
     private static Database db = null;
+    private final Context context;
 
     private Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -352,6 +352,8 @@ public class Database extends SQLiteOpenHelper {
                             values_year.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
                             break;
 
+                        default: // do nothing
+                            break;
                     }
                 }
 
@@ -384,6 +386,8 @@ public class Database extends SQLiteOpenHelper {
                             values_year.put(COLUMN_TEXT, parser.getText());
                             break;
 
+                        default: // do nothing
+                            break;
                     }
                 }
 
@@ -428,6 +432,8 @@ public class Database extends SQLiteOpenHelper {
                             values_year.clear();
                             break;
 
+                        default: // do nothing
+                            break;
                     }
                 }
             }

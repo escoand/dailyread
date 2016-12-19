@@ -31,9 +31,9 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
     private final static String SETTINGS_HOUR = "reminder_hour";
     private final static String SETTINGS_MINUTE = "reminder_minute";
 
-    SharedPreferences settings;
-    int hour;
-    int minute;
+    private SharedPreferences settings;
+    private int hour;
+    private int minute;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -84,6 +84,9 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
                 ReminderHandler.endReminder(getContext());
                 break;
 
+            // do nothing
+            default:
+                break;
         }
     }
 }

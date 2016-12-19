@@ -178,6 +178,10 @@ public class DownloadHandler extends BroadcastReceiver {
                             case "application/zip":
                                 db.importZIP(name, stream);
                                 break;
+
+                            // do nothing
+                            default:
+                                break;
                         }
 
                         // clean

@@ -42,8 +42,8 @@ import okhttp3.Response;
 
 public class StoreListItem implements Runnable {
     private final String productId;
-    Thread refrehThread = null;
-    float downloadProgress = -1;
+    private Thread refrehThread = null;
+    private float downloadProgress = -1;
     private SkuDetails listing;
     private TransactionDetails transaction;
     private Activity activity;
