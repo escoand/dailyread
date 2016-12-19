@@ -216,78 +216,79 @@ public class MainActivity extends AppCompatActivity implements
         playerButton.setVisibility(View.GONE);
         playerButton.setOnClickListener(pager.getCurrentOnPlayClickListener());
 
-        if (cursor != null) {
+        // no content
+        if (cursor == null)
+            return;
 
-            // app title
-            cursor.moveToPosition(-1);
-            while (cursor.moveToNext()) {
-                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+        // app title
+        cursor.moveToPosition(-1);
+        while (cursor.moveToNext()) {
+            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
-                    // exegesis title
-                    case Database.TYPE_EXEGESIS:
-                        pattern = getString(R.string.toolbar_title);
-                        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
-                        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
-                        frmt.applyPattern(pattern);
-                        toolbar.setTitle(frmt.format(date));
-                        pattern = getString(R.string.toolbar_subtitle);
-                        pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
-                        pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
-                        frmt.applyPattern(pattern);
-                        toolbar.setSubtitle(frmt.format(date));
-                        hasTitle = true;
-                        break;
+                // exegesis title
+                case Database.TYPE_EXEGESIS:
+                    pattern = getString(R.string.toolbar_title);
+                    pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+                    pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+                    frmt.applyPattern(pattern);
+                    toolbar.setTitle(frmt.format(date));
+                    pattern = getString(R.string.toolbar_subtitle);
+                    pattern = pattern.replaceAll("%app_title%", "'" + getString(R.string.app_title) + "'");
+                    pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
+                    frmt.applyPattern(pattern);
+                    toolbar.setSubtitle(frmt.format(date));
+                    hasTitle = true;
+                    break;
 
-                    // voty title
-                    case Database.TYPE_YEAR:
-                        if (!hasTitle)
-                            toolbar.setTitle(getString(R.string.navigation_voty));
-                        break;
+                // voty title
+                case Database.TYPE_YEAR:
+                    if (!hasTitle)
+                        toolbar.setTitle(getString(R.string.navigation_voty));
+                    break;
 
-                    // intro title
-                    case Database.TYPE_INTRO:
-                        if (!hasTitle)
-                            toolbar.setTitle(getString(R.string.navigation_intro));
-                        break;
+                // intro title
+                case Database.TYPE_INTRO:
+                    if (!hasTitle)
+                        toolbar.setTitle(getString(R.string.navigation_intro));
+                    break;
 
-                    // audio player
-                    case Database.TYPE_MEDIA:
-                        playerButton.setVisibility(View.VISIBLE);
-                        break;
+                // audio player
+                case Database.TYPE_MEDIA:
+                    playerButton.setVisibility(View.VISIBLE);
+                    break;
 
-                    // do nothing
-                    default:
-                        break;
-                }
+                // do nothing
+                default:
+                    break;
             }
-
-            ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
-            toggleVisibility(findViewById(R.id.button_more), View.GONE);
-            toggleVisibility(findViewById(R.id.button_intro), View.GONE);
-            toggleVisibility(findViewById(R.id.button_voty), View.GONE);
-
-            // plus button
-            int entries = 0;
-            cursor.moveToPosition(-1);
-            while (cursor.moveToNext()) {
-                switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
-                    case Database.TYPE_EXEGESIS:
-                    case Database.TYPE_YEAR:
-                    case Database.TYPE_INTRO:
-                        entries++;
-                        break;
-                    default: // do nothing
-                        break;
-                }
-            }
-            if (entries > 1)
-                toggleVisibility(findViewById(R.id.button_more), View.VISIBLE);
-
-            if (cursor != null && cursor.getCount() > 0)
-                findViewById(R.id.button_more).setVisibility(View.VISIBLE);
-            else
-                findViewById(R.id.button_more).setVisibility(View.GONE);
         }
+
+        ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
+        toggleVisibility(findViewById(R.id.button_more), View.GONE);
+        toggleVisibility(findViewById(R.id.button_intro), View.GONE);
+        toggleVisibility(findViewById(R.id.button_voty), View.GONE);
+
+        // plus button
+        int entries = 0;
+        cursor.moveToPosition(-1);
+        while (cursor.moveToNext()) {
+            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
+                case Database.TYPE_EXEGESIS:
+                case Database.TYPE_YEAR:
+                case Database.TYPE_INTRO:
+                    entries++;
+                    break;
+                default: // do nothing
+                    break;
+            }
+        }
+        if (entries > 1)
+            toggleVisibility(findViewById(R.id.button_more), View.VISIBLE);
+
+        if (cursor != null && cursor.getCount() > 0)
+            findViewById(R.id.button_more).setVisibility(View.VISIBLE);
+        else
+            findViewById(R.id.button_more).setVisibility(View.GONE);
     }
 
     private boolean toggleVisibility(View v, int force) {
