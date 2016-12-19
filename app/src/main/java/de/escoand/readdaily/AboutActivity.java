@@ -98,6 +98,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 i.setAction(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(getString(R.string.url_tickets)));
                 break;
+            default: // do nothing
+                break;
         }
         if (i.getAction() != null)
             startActivity(i);

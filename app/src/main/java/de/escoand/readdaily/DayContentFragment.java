@@ -126,6 +126,9 @@ public class DayContentFragment extends AbstractContentFragment implements Media
                         player.setOnCompletionListener(this);
                         break;
 
+                    // do nothing
+                    default:
+                        break;
                 }
             }
         }
@@ -168,6 +171,8 @@ public class DayContentFragment extends AbstractContentFragment implements Media
                     break;
                 case 11:
                     playerImage.setImageResource(R.mipmap.img_month_12);
+                    break;
+                default: // do nothing
                     break;
             }
             this.title.setText(Html.fromHtml(title));
@@ -223,7 +228,8 @@ public class DayContentFragment extends AbstractContentFragment implements Media
             Animator anim1 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
             Animator anim2 = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             Animator anim3;
-            ValueAnimator anim4, anim5;
+            ValueAnimator anim4;
+            ValueAnimator anim5;
 
             if (smallWidth == 0)
                 smallWidth = header.getMeasuredWidth();
@@ -312,10 +318,12 @@ public class DayContentFragment extends AbstractContentFragment implements Media
 
         @Override
         public void onAnimationCancel(Animator animation) {
+            // empty, but must be implemented
         }
 
         @Override
         public void onAnimationRepeat(Animator animation) {
+            // empty, but must be implemented
         }
     }
 }

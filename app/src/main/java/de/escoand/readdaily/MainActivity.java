@@ -175,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements
                 intent = new Intent(this, AboutActivity.class);
                 break;
 
+            // do nothing
+            default:
+                break;
         }
 
         // start dialog
@@ -252,6 +255,9 @@ public class MainActivity extends AppCompatActivity implements
                         playerButton.setVisibility(View.VISIBLE);
                         break;
 
+                    // do nothing
+                    default:
+                        break;
                 }
             }
 
@@ -269,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements
                     case Database.TYPE_YEAR:
                     case Database.TYPE_INTRO:
                         entries++;
+                        break;
+                    default: // do nothing
                         break;
                 }
             }
@@ -324,6 +332,8 @@ public class MainActivity extends AppCompatActivity implements
                         toggleVisibility(findViewById(R.id.button_intro));
                         break;
 
+                    default: // do nothing
+                        break;
                 }
             }
 
@@ -331,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private class OnBibleClickListener implements View.OnClickListener {
-        final String type;
+        private final String type;
 
         public OnBibleClickListener(String type) {
             super();

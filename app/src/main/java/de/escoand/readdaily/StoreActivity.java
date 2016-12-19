@@ -118,12 +118,12 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-
+        // ToDo start downloading
     }
 
     @Override
     public void onPurchaseHistoryRestored() {
-
+        // empty, but must be implemented
     }
 
     @Override

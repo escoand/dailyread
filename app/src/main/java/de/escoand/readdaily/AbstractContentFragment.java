@@ -85,6 +85,8 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
                         ((TextView) view).setText(getContext().getString(R.string.type_votd));
                         source.setVisibility(View.GONE);
                         return true;
+                    default: // do nothing
+                        break;
                 }
                 break;
 
@@ -96,6 +98,9 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
                 }
                 break;
 
+            // do nothing
+            default:
+                break;
         }
 
         // text view
