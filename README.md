@@ -1,0 +1,2 @@
+# dailyread
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3d24da53db84a7ebaf65ba90b23b121)](https://www.codacy.com/app/mail-an-papierkorb/dailyread?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=escoand/dailyread&amp;utm_campaign=badger)
