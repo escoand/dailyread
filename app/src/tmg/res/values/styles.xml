@@ -75,6 +75,13 @@
 
     <style name="Text.Daily.Source"></style>
 
+    <style name="Text.Player">
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:textColor">@color/header_title</item>
+        <item name="android:textSize">16dp</item>
+        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
+    </style>
+
     <style name="Text.BottomMenu">
         <item name="android:textColor">@color/bottom_buttons_text</item>
         <item name="android:textSize">14dp</item>
