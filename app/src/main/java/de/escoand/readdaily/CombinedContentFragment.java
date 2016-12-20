@@ -61,11 +61,4 @@ public class CombinedContentFragment extends Fragment implements OnDateSelectedL
         header.onDateSelected(date, condition, values);
         day.onDateSelected(date, condition, values);
     }
-
-    public View.OnClickListener getOnPlayClickListener() {
-        if (header == null)
-            return null;
-
-        return header.getOnPlayClickListener();
-    }
 }

@@ -77,12 +77,6 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
         return (int) (getAdapter().getCount() / 2 + (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000);
     }
 
-    public OnClickListener getCurrentOnPlayClickListener() {
-        if (fragments.containsKey(getCurrentItem()))
-            return fragments.get(getCurrentItem()).getOnPlayClickListener();
-        return null;
-    }
-
     public void addDataListener(final OnDateSelectedListener listener) {
         listeners.add(listener);
     }

@@ -208,7 +208,14 @@ public class MainActivity extends AppCompatActivity implements
         toolbar.setTitle(getString(R.string.app_title));
         toolbar.setSubtitle(null);
         playerButton.setVisibility(View.GONE);
-        playerButton.setOnClickListener(pager.getCurrentOnPlayClickListener());
+        playerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerDialogFragment player = new PlayerDialogFragment();
+                player.setDate(getBaseContext(), date);
+                player.show(getSupportFragmentManager(), player.getClass().getName());
+            }
+        });
 
         // no content
         if (cursor == null)
