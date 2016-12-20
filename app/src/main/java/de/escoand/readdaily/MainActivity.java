@@ -83,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements
         pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
         // floating buttons
+        findViewById(R.id.button_today).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.onDateSelected(new Date());
+            }
+        });
         if (findViewById(R.id.button_more) != null)
             findViewById(R.id.button_more).setOnClickListener(new OnMoreClickListener());
         if (findViewById(R.id.button_share) != null)
