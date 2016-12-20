@@ -35,7 +35,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class EndlessContentPager extends ViewPager implements OnDateSelectedListener {
-    private HashMap<Integer, DayContentFragment> fragments = new HashMap<>();
+    private HashMap<Integer, CombinedContentFragment> fragments = new HashMap<>();
     private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
 
     public EndlessContentPager(Context context, AttributeSet attrs) {
@@ -115,12 +115,12 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
 
         @Override
         public int getCount() {
-            return Integer.MAX_VALUE;
+            return 5000;
         }
 
         @Override
         public Fragment getItem(int position) {
-            final DayContentFragment content = new DayContentFragment();
+            final CombinedContentFragment content = new CombinedContentFragment();
             content.onDateSelected(getDateOfPosition(position));
             fragments.put(position, content);
             return content;
