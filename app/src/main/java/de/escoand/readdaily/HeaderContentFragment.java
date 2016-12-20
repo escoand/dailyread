@@ -57,7 +57,7 @@ public class HeaderContentFragment extends AbstractContentFragment {
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date) {
+    public void onDateSelected(@NonNull final Date date) {
         super.onDateSelected(date);
 
         Cursor c = Database.getInstance(getContext()).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_MEDIA});
@@ -69,7 +69,7 @@ public class HeaderContentFragment extends AbstractContentFragment {
     }
 
     @Override
-    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+    public boolean setViewValue(final View view, final Cursor cursor, final int columnIndex) {
         switch (view.getId()) {
 
             // player
@@ -145,7 +145,7 @@ public class HeaderContentFragment extends AbstractContentFragment {
 
     private class MediaPlayerHandler implements View.OnClickListener, MediaPlayer.OnCompletionListener, Runnable {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             View root = v.getRootView();
             View playerControls = root.findViewById(R.id.player_control);
             ImageView playerImage = (ImageView) root.findViewById(R.id.player_image);

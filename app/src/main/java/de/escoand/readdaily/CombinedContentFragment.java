@@ -34,7 +34,7 @@ public class CombinedContentFragment extends Fragment implements OnDateSelectedL
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_content, container, false);
 
         header = (HeaderContentFragment) getChildFragmentManager().findFragmentById(R.id.content_header);
@@ -47,12 +47,12 @@ public class CombinedContentFragment extends Fragment implements OnDateSelectedL
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date) {
+    public void onDateSelected(@NonNull final Date date) {
         onDateSelected(date, null, null);
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values) {
+    public void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
         this.date = date;
 
         if (header == null || day == null)

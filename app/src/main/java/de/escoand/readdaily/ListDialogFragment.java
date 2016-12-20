@@ -42,23 +42,23 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     private String listenerCondition = null;
     private String[] listenerValues = null;
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
-    public void setFilter(String condition, String[] values) {
+    public void setFilter(final String condition, final String[] values) {
         this.condition = condition;
         this.values = values;
     }
 
-    public void setMapping(String[] from, int[] to) {
+    public void setMapping(final String[] from, final int[] to) {
         this.from = from;
         this.to = to;
     }
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         if (title == null)
             title = getString(R.string.navigation_list);
 
@@ -80,7 +80,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     }
 
     @Override
-    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+    public boolean setViewValue(final View view, final Cursor cursor, final int columnIndex) {
         if (columnIndex == cursor.getColumnIndex(Database.COLUMN_READ)) {
             if (cursor.getInt(cursor.getColumnIndex(Database.COLUMN_READ)) != 0)
                 view.setVisibility(View.VISIBLE);
@@ -100,7 +100,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(final DialogInterface dialog, final int which) {
         Cursor c = (Cursor) adapter.getItem(which);
         if (listener != null)
             listener.onDateSelected(
@@ -110,11 +110,11 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
             );
     }
 
-    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
+    public void setOnDateSelectedListener(final OnDateSelectedListener listener) {
         setOnDateSelectedListener(listener, null, null);
     }
 
-    public void setOnDateSelectedListener(OnDateSelectedListener listener, String condition, String[] values) {
+    public void setOnDateSelectedListener(final OnDateSelectedListener listener, final String condition, final String[] values) {
         this.listener = listener;
         this.listenerCondition = condition;
         this.listenerValues = values;

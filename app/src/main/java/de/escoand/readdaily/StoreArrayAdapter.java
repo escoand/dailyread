@@ -29,7 +29,7 @@ public class StoreArrayAdapter extends ArrayAdapter<StoreListItem> {
     private final Activity activity;
     private final BillingProcessor billing;
 
-    public StoreArrayAdapter(Activity activity, BillingProcessor billing) {
+    public StoreArrayAdapter(final Activity activity, final BillingProcessor billing) {
         super(activity, R.layout.item_store);
         this.activity = activity;
         this.billing = billing;
@@ -37,7 +37,7 @@ public class StoreArrayAdapter extends ArrayAdapter<StoreListItem> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
         return getItem(position).getView(activity, parent, billing);
     }
 }

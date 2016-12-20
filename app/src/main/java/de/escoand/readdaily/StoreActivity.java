@@ -48,12 +48,12 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
     private BillingProcessor billing;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
+    protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nodrawer);
 
@@ -67,7 +67,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 //onBackPressed();
                 setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
@@ -91,7 +91,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
                 final String body = response.body().string();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -110,14 +110,14 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(final Call call, final IOException e) {
                 Log.e("error", Log.getStackTraceString(e));
             }
         });
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
+    public void onProductPurchased(final String productId, final TransactionDetails details) {
         // ToDo start downloading
     }
 
@@ -127,13 +127,13 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
     }
 
     @Override
-    public void onBillingError(int errorCode, Throwable error) {
+    public void onBillingError(final int errorCode, final Throwable error) {
         // TODO non-technical message to user
         Log.e("billing", Log.getStackTraceString(error));
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!billing.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);

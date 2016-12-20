@@ -24,7 +24,7 @@ import java.util.Date;
 
 public interface OnDateSelectedListener {
 
-    void onDateSelected(@NonNull Date date);
+    void onDateSelected(@NonNull final Date date);
 
-    void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values);
+    void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values);
 }

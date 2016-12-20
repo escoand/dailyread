@@ -34,7 +34,7 @@ import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
 
-    public static long startInvisibleDownload(Context context, String url, String title) {
+    public static long startInvisibleDownload(final Context context, final String url, final String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
@@ -49,7 +49,7 @@ public class DownloadHandler extends BroadcastReceiver {
         return id;
     }
 
-    public static long startDownload(Context context, String signature, String responseData, String title) {
+    public static long startDownload(final Context context, final String signature, final String responseData, final String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
 
@@ -72,7 +72,7 @@ public class DownloadHandler extends BroadcastReceiver {
         return id;
     }
 
-    public static float downloadProgress(Context context, String name) {
+    public static float downloadProgress(final Context context, final String name) {
         Cursor cursor = Database.getInstance(context).getDownloads();
         long id = 0;
         float progress;
@@ -101,7 +101,7 @@ public class DownloadHandler extends BroadcastReceiver {
         return progress;
     }
 
-    public static void stopDownload(Context context, String name) {
+    public static void stopDownload(final Context context, final String name) {
         Database db = Database.getInstance(context);
         Cursor c = db.getDownloads();
         long id = 0;
@@ -122,7 +122,7 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(final Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         final Database db = Database.getInstance(context);
         Cursor downloads = db.getDownloads();

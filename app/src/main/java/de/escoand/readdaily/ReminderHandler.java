@@ -34,7 +34,7 @@ import java.util.GregorianCalendar;
 
 public class ReminderHandler extends BroadcastReceiver {
 
-    public static void startReminder(Context context, int hour, int minute) {
+    public static void startReminder(final Context context, final int hour, final int minute) {
         Intent intent = new Intent(context, ReminderHandler.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
@@ -53,7 +53,7 @@ public class ReminderHandler extends BroadcastReceiver {
         Log.w(ReminderHandler.class.getName(), "activated " + hour + ":" + minute);
     }
 
-    public static void endReminder(Context context) {
+    public static void endReminder(final Context context) {
         Intent intent = new Intent(context, ReminderHandler.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
@@ -64,7 +64,7 @@ public class ReminderHandler extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         Intent destIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, destIntent, PendingIntent.FLAG_ONE_SHOT);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
