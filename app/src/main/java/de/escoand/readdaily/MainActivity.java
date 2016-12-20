@@ -19,9 +19,7 @@ package de.escoand.readdaily;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -84,15 +82,11 @@ public class MainActivity extends AppCompatActivity implements
         pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
         pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
-        // player button
-
         // floating buttons
         if (findViewById(R.id.button_more) != null)
             findViewById(R.id.button_more).setOnClickListener(new OnMoreClickListener());
         if (findViewById(R.id.button_share) != null)
             findViewById(R.id.button_share).setOnClickListener(new OnShareClickListener());
-        if (findViewById(R.id.button_bible_exegesis) != null)
-            findViewById(R.id.button_bible_exegesis).setOnClickListener(new OnBibleClickListener(Database.TYPE_EXEGESIS));
         if (findViewById(R.id.button_intro) != null)
             findViewById(R.id.button_intro).setOnClickListener(new OnIntroClickListener());
         if (findViewById(R.id.button_voty) != null)
@@ -263,6 +257,11 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
+        // bible button
+        if (findViewById(R.id.button_bible_exegesis) != null)
+            findViewById(R.id.button_bible_exegesis).setOnClickListener(
+                    new OnBibleClickListener(this, date, Database.TYPE_EXEGESIS));
+
         ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
         toggleVisibility(findViewById(R.id.button_more), View.GONE);
         toggleVisibility(findViewById(R.id.button_intro), View.GONE);
@@ -308,10 +307,6 @@ public class MainActivity extends AppCompatActivity implements
         return toggleVisibility(v, -1);
     }
 
-    public OnBibleClickListener getOnBibleClickListener(String type) {
-        return new OnBibleClickListener(type);
-    }
-
     private class OnMoreClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -338,33 +333,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
-        }
-    }
-
-    private class OnBibleClickListener implements View.OnClickListener {
-        private final String type;
-
-        public OnBibleClickListener(String type) {
-            super();
-            this.type = type;
-        }
-
-        @Override
-        public void onClick(View v) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            Cursor cursor = Database.getInstance(getBaseContext()).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{type});
-
-            if (cursor.moveToFirst()) {
-                String verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
-                String url = getString(R.string.url_bible)
-                        + settings.getString("bible_translation", "LUT") + "/"
-                        + verse.replaceAll(" ", "");
-                Intent intent = new Intent();
-
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivityForResult(intent, 0);
-            }
         }
     }
 
