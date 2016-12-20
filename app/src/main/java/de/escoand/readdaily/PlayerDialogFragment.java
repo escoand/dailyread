@@ -73,14 +73,16 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     @Override
     public void onStart() {
         super.onStart();
-        player.start();
-        new Thread(this).start();
+        if (player != null) {
+            player.start();
+            new Thread(this).start();
+        } else
+            dismiss();
     }
 
     public void setDate(@NonNull final Context context, @NonNull final Date date) {
-        Cursor c;
 
-        // get image
+        // image
         switch (date.getMonth()) {
             case 0:
                 image = R.mipmap.img_month_01;
@@ -122,19 +124,25 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
                 break;
         }
 
-        // get title
-        c = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_EXEGESIS});
-        if (c.moveToFirst()) {
-            title = c.getString(c.getColumnIndex(Database.COLUMN_TITLE));
-        }
-        c.close();
+        Cursor c = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + " IN (?,?)", new String[]{Database.TYPE_EXEGESIS, Database.TYPE_MEDIA});
+        while (c.moveToNext())
+            switch (c.getString(c.getColumnIndex(Database.COLUMN_TYPE))) {
 
-        // get media
-        c = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_MEDIA});
-        if (c.moveToFirst()) {
-            player = MediaPlayer.create(context, Uri.parse(c.getString(c.getColumnIndex(Database.COLUMN_SOURCE))));
-            player.setOnCompletionListener(this);
-        }
+                // title
+                case Database.TYPE_EXEGESIS:
+                    title = c.getString(c.getColumnIndex(Database.COLUMN_TITLE));
+                    break;
+
+                // media
+                case Database.TYPE_MEDIA:
+                    player = MediaPlayer.create(context, Uri.parse(c.getString(c.getColumnIndex(Database.COLUMN_SOURCE))));
+                    player.setOnCompletionListener(this);
+                    break;
+
+                // do nothing
+                default:
+                    break;
+            }
         c.close();
     }
 
