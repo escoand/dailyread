@@ -29,9 +29,9 @@ import android.view.View;
 import java.util.Date;
 
 public class OnBibleClickListener implements View.OnClickListener {
-    Activity context;
-    Date date;
-    String type;
+    private Activity context;
+    private Date date;
+    private String type;
 
     public OnBibleClickListener(@NonNull Activity context, @NonNull Date date, @NonNull String type) {
         super();
