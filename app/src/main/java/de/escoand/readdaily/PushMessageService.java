@@ -31,7 +31,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class PushMessageService extends FirebaseMessagingService {
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(final RemoteMessage remoteMessage) {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         String title = getString(R.string.app_title);
         String message = "";

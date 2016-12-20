@@ -36,7 +36,7 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
     private int minute;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         TimePicker v = new TimePicker(getContext());
 
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -56,13 +56,13 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
     }
 
     @Override
-    public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+    public void onTimeChanged(final TimePicker view, final int hourOfDay, final int minute) {
         this.hour = hourOfDay;
         this.minute = minute;
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(final DialogInterface dialog, final int which) {
         switch (which) {
 
             // activate

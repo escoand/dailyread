@@ -18,13 +18,12 @@
 package de.escoand.readdaily;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import java.util.Date;
@@ -34,7 +33,7 @@ public class OnBibleClickListener implements View.OnClickListener {
     Date date;
     String type;
 
-    public OnBibleClickListener(Activity context, Date date, String type) {
+    public OnBibleClickListener(@NonNull Activity context, @NonNull Date date, @NonNull String type) {
         super();
         this.context = context;
         this.date = date;

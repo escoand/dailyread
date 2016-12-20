@@ -67,13 +67,13 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
         outState.putInt("date", Database.getIntFromDate(date));
     }*/
 
-    private Date getDateOfPosition(int position) {
+    private Date getDateOfPosition(final int position) {
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DATE, position - getAdapter().getCount() / 2);
         return calendar.getTime();
     }
 
-    private int getPositionOfDate(Date date) {
+    private int getPositionOfDate(final Date date) {
         return (int) (getAdapter().getCount() / 2 + (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000);
     }
 
@@ -83,22 +83,22 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
         return null;
     }
 
-    public void addDataListener(OnDateSelectedListener listener) {
+    public void addDataListener(final OnDateSelectedListener listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date) {
+    public void onDateSelected(@NonNull final Date date) {
         setCurrentItem(getPositionOfDate(date), false);
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values) {
+    public void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
         onDateSelected(date);
     }
 
     @Override
-    protected void onPageScrolled(int position, float offset, int offsetPixels) {
+    protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
         Date date = getDateOfPosition(position);
 
         super.onPageScrolled(position, offset, offsetPixels);
@@ -119,7 +119,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             final CombinedContentFragment content = new CombinedContentFragment();
             content.onDateSelected(getDateOfPosition(position));
             fragments.put(position, content);
@@ -127,7 +127,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(final ViewGroup container, final int position, final Object object) {
             super.destroyItem(container, position, object);
             fragments.remove(position);
         }

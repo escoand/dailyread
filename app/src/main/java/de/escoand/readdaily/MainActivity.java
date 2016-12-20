@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements
     private EndlessContentPager pager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         setContentView(R.layout.activity_drawer);
@@ -94,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
+    protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         DialogFragment dialog = null;
         Intent intent = null;
 
@@ -188,12 +188,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDateSelected(Date date) {
+    public void onDateSelected(final Date date) {
         onDateSelected(date, null, null);
     }
 
     @Override
-    public void onDateSelected(Date date, String condition, String[] values) {
+    public void onDateSelected(final Date date, final String condition, final String[] values) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
         boolean hasTitle = false;
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements
             findViewById(R.id.button_more).setVisibility(View.GONE);
     }
 
-    private boolean toggleVisibility(View v, int force) {
+    private boolean toggleVisibility(final View v, final int force) {
         if (v == null)
             return false;
         if (force >= 0)
@@ -303,13 +303,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    private boolean toggleVisibility(View v) {
+    private boolean toggleVisibility(final View v) {
         return toggleVisibility(v, -1);
     }
 
     private class OnMoreClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             // toggle action buttons
             toggleVisibility(findViewById(R.id.button_intro));
             toggleVisibility(findViewById(R.id.button_voty));
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private class OnIntroClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             findViewById(R.id.content_intro).setVisibility(View.VISIBLE);
             findViewById(R.id.content_voty).setVisibility(View.GONE);
             layout.openDrawer(Gravity.RIGHT);
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private class OnVotyClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             findViewById(R.id.content_intro).setVisibility(View.GONE);
             findViewById(R.id.content_voty).setVisibility(View.VISIBLE);
             layout.openDrawer(Gravity.RIGHT);
@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private class OnShareClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             String title = null;
             String verse = null;
             String text = null;
@@ -382,13 +382,13 @@ public class MainActivity extends AppCompatActivity implements
 
     private class OnSearchListener implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
         @Override
-        public boolean onQueryTextChange(String newText) {
+        public boolean onQueryTextChange(final String newText) {
             //adapter.changeCursor(db.getSearch(newText));
             return true;
         }
 
         @Override
-        public boolean onQueryTextSubmit(String query) {
+        public boolean onQueryTextSubmit(final String query) {
             //adapter.changeCursor(db.getSearch(query));
             //search.setVisibility(View.GONE);
             return true;

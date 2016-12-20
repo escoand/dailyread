@@ -27,7 +27,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class SettingsActivity extends PreferenceActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
@@ -41,7 +41,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
+    protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

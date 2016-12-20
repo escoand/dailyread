@@ -43,7 +43,7 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
     private Cursor cursor = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         adapter = new SimpleCursorAdapter(getContext(), layout, null, from, to, 0);
         adapter.setViewBinder(this);
         adapter.changeCursor(cursor);
@@ -56,19 +56,19 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date) {
+    public void onDateSelected(@NonNull final Date date) {
         this.date = date;
         this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
         adapter.changeCursor(cursor);
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date, @Nullable String condition, @Nullable String[] values) {
+    public void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
         onDateSelected(date);
     }
 
     @Override
-    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+    public boolean setViewValue(final View view, final Cursor cursor, final int columnIndex) {
         View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
         switch (cursor.getColumnName(columnIndex)) {
 

@@ -32,7 +32,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nodrawer);
 
@@ -80,12 +80,12 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
+    protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         Intent i = new Intent();
         switch (v.getId()) {
             case R.id.about_recommend:

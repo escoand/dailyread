@@ -56,11 +56,11 @@ public class StoreListItem implements Runnable {
     private ProgressBar progress;
     private BillingProcessor billing;
 
-    public StoreListItem(String productId) {
+    public StoreListItem(final String productId) {
         this.productId = productId;
     }
 
-    public View getView(final Activity activity, ViewGroup parent, final BillingProcessor billing) {
+    public View getView(final Activity activity, final ViewGroup parent, final BillingProcessor billing) {
         this.activity = activity;
         this.billing = billing;
 
@@ -89,7 +89,7 @@ public class StoreListItem implements Runnable {
                 .build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
                 try {
                     final int len = Integer.valueOf(response.header("Content-Length"));
                     final byte[] data = response.body().bytes();
