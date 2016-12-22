@@ -48,6 +48,9 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
         adapter.setViewBinder(this);
         adapter.changeCursor(cursor);
 
+        if (savedInstanceState != null)
+            onDateSelected(Database.getDateFromInt(savedInstanceState.getInt(Database.COLUMN_DATE)));
+
         ListView list = new ListView(getContext());
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         list.setAdapter(adapter);
@@ -56,7 +59,16 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(Database.COLUMN_DATE, Database.getIntFromDate(date));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDateSelected(@NonNull final Date date) {
+        if (date == null)
+            return;
+
         this.date = date;
         this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
         adapter.changeCursor(cursor);

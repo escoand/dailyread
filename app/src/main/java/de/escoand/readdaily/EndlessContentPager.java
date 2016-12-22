@@ -44,28 +44,6 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
         setCurrentItem(getAdapter().getCount() / 2, false);
     }
 
-    /*@Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // set initial date
-        if (savedInstanceState != null) {
-            date = Database.getDateFromInt(savedInstanceState.getInt("date"));
-        } else if (date == null)
-            date = new Date();
-    }
-
-    @Override
-    public void onResume() {
-        onDateSelected(date);
-        super.onResume();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("date", Database.getIntFromDate(date));
-    }*/
 
     private Date getDateOfPosition(final int position) {
         final GregorianCalendar calendar = new GregorianCalendar();
