@@ -39,8 +39,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class PlayerDialogFragment extends DialogFragment implements Runnable, MediaPlayer.OnCompletionListener {
-    private final String STATE_DATE = "date";
-    private final String STATE_POSITION = "position";
+    private static final String STATE_DATE = "date";
+    private static final String STATE_POSITION = "position";
 
     private ProgressBar progressBar;
     private TextView progressText;
