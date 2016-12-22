@@ -98,7 +98,12 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public static int getIntFromDate(@NonNull final Date date) {
-        return Integer.valueOf(dateFormat.format(date));
+        try {
+            return Integer.valueOf(dateFormat.format(date));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return Integer.parseInt(null);
     }
 
     @Nullable

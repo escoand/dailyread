@@ -40,8 +40,10 @@ public class CombinedContentFragment extends Fragment implements OnDateSelectedL
         header = (HeaderContentFragment) getChildFragmentManager().findFragmentById(R.id.content_header);
         day = (DayContentFragment) getChildFragmentManager().findFragmentById(R.id.content_day);
 
-        header.onDateSelected(date);
-        day.onDateSelected(date);
+        if (date != null) {
+            header.onDateSelected(date);
+            day.onDateSelected(date);
+        }
 
         return v;
     }
