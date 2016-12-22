@@ -35,24 +35,27 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class EndlessContentPager extends ViewPager implements OnDateSelectedListener {
+    private static final int POSITIONS_MAX = 5000;
+    private static final int POSITIONS_INTIAL = POSITIONS_MAX / 2;
+
     private HashMap<Integer, CombinedContentFragment> fragments = new HashMap<>();
     private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
 
     public EndlessContentPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         setAdapter(new EndlessDayPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
-        setCurrentItem(getAdapter().getCount() / 2, false);
+        setCurrentItem(POSITIONS_INTIAL, false);
     }
-
 
     private Date getDateOfPosition(final int position) {
         final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.add(Calendar.DATE, position - getAdapter().getCount() / 2);
+        calendar.add(Calendar.DATE, position - POSITIONS_INTIAL);
         return calendar.getTime();
     }
 
     private int getPositionOfDate(final Date date) {
-        return (int) (getAdapter().getCount() / 2 + (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000);
+        return (int) Math.ceil(POSITIONS_INTIAL +
+                (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000.0);
     }
 
     public void addDataListener(final OnDateSelectedListener listener) {
@@ -87,7 +90,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
 
         @Override
         public int getCount() {
-            return 5000;
+            return POSITIONS_MAX;
         }
 
         @Override
