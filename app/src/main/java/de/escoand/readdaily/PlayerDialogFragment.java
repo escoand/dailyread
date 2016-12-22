@@ -39,9 +39,13 @@ import java.util.Date;
 import java.util.Locale;
 
 public class PlayerDialogFragment extends DialogFragment implements Runnable, MediaPlayer.OnCompletionListener {
+    private final String STATE_DATE = "date";
+    private final String STATE_POSITION = "position";
+
     private ProgressBar progressBar;
     private TextView progressText;
 
+    private Date date;
     @DrawableRes
     private int image = -1;
     private String title;
@@ -56,6 +60,11 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
         progressBar = (ProgressBar) root.findViewById(R.id.player_progress);
         progressText = (TextView) root.findViewById(R.id.player_text);
 
+        if (savedInstanceState != null) {
+            setDate(getContext(), Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
+            player.seekTo(savedInstanceState.getInt(STATE_POSITION));
+        }
+
         if (image > 0) {
             Bitmap tmp = BitmapFactory.decodeResource(getResources(), image);
             int width = Math.round(tmp.getWidth() / 100);
@@ -69,6 +78,13 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
         return new AlertDialog.Builder(getContext())
                 .setView(root)
                 .create();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_DATE, Database.getIntFromDate(date));
+        outState.putInt(STATE_POSITION, player.getCurrentPosition());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -89,6 +105,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     }
 
     public void setDate(@NonNull final Context context, @NonNull final Date date) {
+        this.date = date;
 
         // image
         switch (date.getMonth()) {
