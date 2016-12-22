@@ -33,7 +33,7 @@ import android.widget.TextView;
 import java.util.Date;
 
 public abstract class AbstractContentFragment extends Fragment implements OnDateSelectedListener, SimpleCursorAdapter.ViewBinder {
-    private final String STATE_DATE = "date";
+    private static final String STATE_DATE = "date";
 
     protected int layout = R.layout.item_content;
     protected String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
