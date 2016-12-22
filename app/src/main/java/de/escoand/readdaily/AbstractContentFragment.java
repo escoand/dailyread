@@ -33,12 +33,15 @@ import android.widget.TextView;
 import java.util.Date;
 
 public abstract class AbstractContentFragment extends Fragment implements OnDateSelectedListener, SimpleCursorAdapter.ViewBinder {
+    private final String STATE_DATE = "date";
+
     protected int layout = R.layout.item_content;
     protected String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     protected int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     protected String condition = null;
     protected String[] values = null;
     protected Date date = null;
+
     private SimpleCursorAdapter adapter = null;
     private Cursor cursor = null;
 
@@ -49,7 +52,7 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
         adapter.changeCursor(cursor);
 
         if (savedInstanceState != null)
-            onDateSelected(Database.getDateFromInt(savedInstanceState.getInt(Database.COLUMN_DATE)));
+            onDateSelected(Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
 
         ListView list = new ListView(getContext());
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -60,15 +63,12 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(Database.COLUMN_DATE, Database.getIntFromDate(date));
+        outState.putInt(STATE_DATE, Database.getIntFromDate(date));
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDateSelected(@NonNull final Date date) {
-        if (date == null)
-            return;
-
         this.date = date;
         this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
         adapter.changeCursor(cursor);
