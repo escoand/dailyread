@@ -27,9 +27,9 @@
     <TextView
         android:id="@+id/player_title"
         style="@style/Text.Player"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:gravity="center" />
 
     <FrameLayout
         android:layout_width="200dp"
