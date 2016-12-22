@@ -48,6 +48,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     private MediaPlayer player;
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         View root = getActivity().getLayoutInflater().inflate(R.layout.fragment_player, null);
         TextView playerTitle = (TextView) root.findViewById(R.id.player_title);
@@ -57,8 +58,8 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
         if (image > 0) {
             Bitmap tmp = BitmapFactory.decodeResource(getResources(), image);
-            int width = Math.round(tmp.getWidth() / 20);
-            int height = Math.round(tmp.getHeight() / 20);
+            int width = Math.round(tmp.getWidth() / 100);
+            int height = Math.round(tmp.getHeight() / 100);
             root.setBackgroundDrawable(new BitmapDrawable(Bitmap.createScaledBitmap(tmp, width, height, false)));
             playerImage.setImageResource(image);
         }
@@ -78,6 +79,13 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
             new Thread(this).start();
         } else
             dismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (player != null)
+            player.release();
+        super.onDestroyView();
     }
 
     public void setDate(@NonNull final Context context, @NonNull final Date date) {
@@ -144,13 +152,6 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
                     break;
             }
         c.close();
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (player != null)
-            player.release();
-        super.onDestroyView();
     }
 
     @Override
