@@ -19,7 +19,6 @@ package de.escoand.readdaily;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -65,11 +64,6 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
     @Override
     public void onDateSelected(@NonNull final Date date) {
         setCurrentItem(getPositionOfDate(date), false);
-    }
-
-    @Override
-    public void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
-        onDateSelected(date);
     }
 
     @Override

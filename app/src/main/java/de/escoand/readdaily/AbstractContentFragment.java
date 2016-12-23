@@ -21,7 +21,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-public abstract class AbstractContentFragment extends Fragment implements OnDateSelectedListener, SimpleCursorAdapter.ViewBinder {
+public abstract class AbstractContentFragment extends DialogFragment implements OnDateSelectedListener, SimpleCursorAdapter.ViewBinder {
     private static final String STATE_DATE = "date";
 
     protected int layout = R.layout.item_content;
@@ -71,12 +71,9 @@ public abstract class AbstractContentFragment extends Fragment implements OnDate
     public void onDateSelected(@NonNull final Date date) {
         this.date = date;
         this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
-        adapter.changeCursor(cursor);
-    }
 
-    @Override
-    public void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
-        onDateSelected(date);
+        if (adapter != null)
+            adapter.changeCursor(cursor);
     }
 
     @Override

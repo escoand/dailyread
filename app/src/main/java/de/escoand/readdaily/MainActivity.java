@@ -129,13 +129,13 @@ public class MainActivity extends AppCompatActivity implements
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_intro));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TITLE + "!=''", new String[]{Database.TYPE_INTRO});
                 ((ListDialogFragment) dialog).setMapping(new String[]{Database.COLUMN_TITLE, Database.COLUMN_READ}, new int[]{R.id.list_title, R.id.list_image});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(pager);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnIntroSelectedListener());
                 break;
             case R.id.button_list_voty:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(pager);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnVotySelectedListener());
                 break;
 
             // calendar
@@ -195,11 +195,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDateSelected(final Date date) {
-        onDateSelected(date, null, null);
-    }
-
-    @Override
-    public void onDateSelected(final Date date, final String condition, final String[] values) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
         boolean hasTitle = false;
@@ -208,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements
             return;
 
         this.date = date;
-        this.cursor = db.getDay(date, condition, values);
+        this.cursor = db.getDay(date);
 
         // default title
         toolbar.setTitle(getString(R.string.app_title));
@@ -346,6 +341,25 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
+        }
+    }
+
+    private class OnIntroSelectedListener implements OnDateSelectedListener {
+        @Override
+        public void onDateSelected(@NonNull final Date date) {
+
+            IntroContentFragment dialog = new IntroContentFragment();
+            dialog.onDateSelected(date);
+            dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
+        }
+    }
+
+    private class OnVotySelectedListener implements OnDateSelectedListener {
+        @Override
+        public void onDateSelected(@NonNull final Date date) {
+            YearContentFragment dialog = new YearContentFragment();
+            dialog.onDateSelected(date);
+            dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
         }
     }
 
