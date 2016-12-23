@@ -18,13 +18,9 @@
 package de.escoand.readdaily;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.Date;
 
 public interface OnDateSelectedListener {
-
     void onDateSelected(@NonNull final Date date);
-
-    void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values);
 }

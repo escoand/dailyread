@@ -50,17 +50,12 @@ public class CombinedContentFragment extends Fragment implements OnDateSelectedL
 
     @Override
     public void onDateSelected(@NonNull final Date date) {
-        onDateSelected(date, null, null);
-    }
-
-    @Override
-    public void onDateSelected(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
         this.date = date;
 
         if (header == null || day == null)
             return;
 
-        header.onDateSelected(date, condition, values);
-        day.onDateSelected(date, condition, values);
+        header.onDateSelected(date);
+        day.onDateSelected(date);
     }
 }
