@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private DrawerLayout layout;
     private Toolbar toolbar;
+    private Toolbar toolbarRight;
     private View playerButton;
     private EndlessContentPager pager;
 
@@ -64,13 +65,20 @@ public class MainActivity extends AppCompatActivity implements
         ((NavigationView) findViewById(R.id.drawer)).setNavigationItemSelectedListener(this);
         layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
 
-        // toolbar
+        // toolbars
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarRight = (Toolbar) findViewById(R.id.toolbar_right);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 layout.openDrawer(Gravity.LEFT);
+            }
+        });
+        toolbarRight.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout.closeDrawer(Gravity.RIGHT);
             }
         });
         playerButton = toolbar.findViewById(R.id.toolbar_player);
@@ -318,14 +326,8 @@ public class MainActivity extends AppCompatActivity implements
     private class OnMoreClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-            // toggle action buttons
-            toggleVisibility(R.id.button_intro);
-            toggleVisibility(R.id.button_voty);
-
-            // toggle linked buttons
             cursor.moveToPosition(-1);
             while (cursor.moveToNext()) {
-
                 switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
                     case Database.TYPE_YEAR:
@@ -340,14 +342,12 @@ public class MainActivity extends AppCompatActivity implements
                         break;
                 }
             }
-
         }
     }
 
     private class OnIntroSelectedListener implements OnDateSelectedListener {
         @Override
         public void onDateSelected(@NonNull final Date date) {
-
             IntroContentFragment dialog = new IntroContentFragment();
             dialog.onDateSelected(date);
             dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
@@ -366,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements
     private class OnIntroClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
+            new OnMoreClickListener().onClick(findViewById(R.id.button_more));
             findViewById(R.id.content_intro).setVisibility(View.VISIBLE);
             findViewById(R.id.content_voty).setVisibility(View.GONE);
             layout.openDrawer(Gravity.RIGHT);
@@ -375,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements
     private class OnVotyClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
+            new OnMoreClickListener().onClick(findViewById(R.id.button_more));
             findViewById(R.id.content_intro).setVisibility(View.GONE);
             findViewById(R.id.content_voty).setVisibility(View.VISIBLE);
             layout.openDrawer(Gravity.RIGHT);

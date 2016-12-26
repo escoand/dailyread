@@ -90,7 +90,7 @@
                 android:src="@drawable/icon_voty"
                 android:tint="@android:color/white"
                 app:backgroundTint="#50e3c2"
-                app:layout_anchor="@+id/button_intro"
+                app:layout_anchor="@+id/button_more"
                 app:layout_anchorGravity="top|right" />
 
             <android.support.design.widget.FloatingActionButton
@@ -144,6 +144,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_right"
                 style="@style/Toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
