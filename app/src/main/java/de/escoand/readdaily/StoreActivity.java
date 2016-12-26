@@ -103,7 +103,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
                             listAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             // TODO non-technical message to user
-                            Log.e("error", Log.getStackTraceString(e));
+                            Log.e(getClass().getName(), Log.getStackTraceString(e));
                         }
                     }
                 });
@@ -111,7 +111,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
             @Override
             public void onFailure(final Call call, final IOException e) {
-                Log.e("error", Log.getStackTraceString(e));
+                Log.e(getClass().getName(), Log.getStackTraceString(e));
             }
         });
     }
