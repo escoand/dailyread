@@ -208,13 +208,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onDateSelected(final Date date) {
         SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
-        boolean hasTitle = false;
-
-        if (date == null)
-            return;
-
-        this.date = date;
-        this.cursor = db.getDay(date);
 
         // default title
         toolbar.setTitle(getString(R.string.app_title));
@@ -229,11 +222,24 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        // no content
-        if (cursor == null)
+        // init buttons
+        if (findViewById(R.id.button_bible_exegesis) != null)
+            findViewById(R.id.button_bible_exegesis).setOnClickListener(
+                    new OnBibleClickListener(this, date, Database.TYPE_EXEGESIS));
+        ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
+        toggleVisibility(R.id.button_more, View.GONE);
+        toggleVisibility(R.id.button_intro, View.GONE);
+        toggleVisibility(R.id.button_voty, View.GONE);
+
+        if (date == null)
             return;
 
-        // app title
+        this.date = date;
+        this.cursor = db.getDay(date);
+
+        // content
+        if (!cursor.moveToFirst())
+            return;
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
@@ -250,19 +256,12 @@ public class MainActivity extends AppCompatActivity implements
                     pattern = pattern.replaceAll("%app_subtitle%", "'" + getString(R.string.app_subtitle) + "'");
                     frmt.applyPattern(pattern);
                     toolbar.setSubtitle(frmt.format(date));
-                    hasTitle = true;
                     break;
 
-                // voty title
+                // more button
                 case Database.TYPE_YEAR:
-                    if (!hasTitle)
-                        toolbar.setTitle(getString(R.string.navigation_voty));
-                    break;
-
-                // intro title
                 case Database.TYPE_INTRO:
-                    if (!hasTitle)
-                        toolbar.setTitle(getString(R.string.navigation_intro));
+                    toggleVisibility(R.id.button_more, View.VISIBLE);
                     break;
 
                 // audio player
@@ -272,29 +271,6 @@ public class MainActivity extends AppCompatActivity implements
 
                 // do nothing
                 default:
-                    break;
-            }
-        }
-
-        // bible button
-        if (findViewById(R.id.button_bible_exegesis) != null)
-            findViewById(R.id.button_bible_exegesis).setOnClickListener(
-                    new OnBibleClickListener(this, date, Database.TYPE_EXEGESIS));
-
-        ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
-        toggleVisibility(R.id.button_more, View.GONE);
-        toggleVisibility(R.id.button_intro, View.GONE);
-        toggleVisibility(R.id.button_voty, View.GONE);
-
-        // plus button
-        cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
-            switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
-                case Database.TYPE_YEAR:
-                case Database.TYPE_INTRO:
-                    toggleVisibility(R.id.button_more, View.VISIBLE);
-                    break;
-                default: // do nothing
                     break;
             }
         }
@@ -327,6 +303,15 @@ public class MainActivity extends AppCompatActivity implements
     private class OnMoreClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
+
+            // image
+            if (findViewById(R.id.button_voty).getVisibility() == View.VISIBLE ||
+                    findViewById(R.id.button_intro).getVisibility() == View.VISIBLE)
+                ((FloatingActionButton) v).setImageResource(R.drawable.icon_plus);
+            else
+                ((FloatingActionButton) v).setImageResource(R.drawable.icon_close);
+
+            // buttons
             cursor.moveToPosition(-1);
             while (cursor.moveToNext()) {
                 switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
