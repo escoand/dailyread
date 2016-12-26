@@ -67,10 +67,9 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
-
         return new AlertDialog.Builder(getContext())
-                .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
+                .setView(onCreateView(getActivity().getLayoutInflater(), null, null))
+                .setPositiveButton(getString(R.string.button_close), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         dismiss();

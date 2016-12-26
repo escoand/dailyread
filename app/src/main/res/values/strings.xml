@@ -37,6 +37,7 @@
     <string name="about_libraries">Lizenzen</string>
 
     <string name="button_ok">OK</string>
+    <string name="button_close">Schließen</string>
     <string name="button_cancel">Abbrechen</string>
     <string name="button_error">Fehler</string>
     <string name="button_download">Laden</string>
