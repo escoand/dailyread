@@ -38,7 +38,7 @@ public class DownloadHandler extends BroadcastReceiver {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
-        Log.w("DownloadHandler", "load invisible " + url);
+        Log.w(DownloadHandler.class.getName(), "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setVisibleInDownloadsUi(false)
@@ -59,7 +59,7 @@ public class DownloadHandler extends BroadcastReceiver {
             return -1;
         }
 
-        Log.w("DownloadHandler", "load " + name);
+        Log.w(DownloadHandler.class.getName(), "load " + name);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
@@ -127,7 +127,7 @@ public class DownloadHandler extends BroadcastReceiver {
         final Database db = Database.getInstance(context);
         Cursor downloads = db.getDownloads();
 
-        Log.w("DownloadHandler", "receiving");
+        Log.w(getClass().getName(), "receiving");
 
         downloads.moveToPosition(-1);
         while (downloads.moveToNext()) {
@@ -149,7 +149,7 @@ public class DownloadHandler extends BroadcastReceiver {
                 @SuppressWarnings("ResultOfMethodCallIgnored")
                 @Override
                 public void run() {
-                    Log.w("DownloadHandler", "import " + name);
+                    Log.w(getClass().getName(), "import " + name);
 
                     try {
                         File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
@@ -161,7 +161,7 @@ public class DownloadHandler extends BroadcastReceiver {
                             case "application/json":
                                 byte[] buf = new byte[1024];
                                 stream.read(buf);
-                                Log.w("DownloadHandler", "register feedback " + new String(buf));
+                                Log.w(getClass().getName(), "register feedback " + new String(buf));
                                 break;
 
                             // csv data
@@ -192,16 +192,16 @@ public class DownloadHandler extends BroadcastReceiver {
                         db.removeDownload(id);
 
                     } catch (Exception e) {
-                        Log.e("DownloadHandler", Log.getStackTraceString(e));
+                        Log.e(getClass().getName(), Log.getStackTraceString(e));
                     }
 
-                    Log.w("DownloadHandler", "finished " + name);
+                    Log.w(getClass().getName(), "finished " + name);
                 }
             }).start();
 
         }
         downloads.close();
 
-        Log.w("DownloadHandler", "receiving done");
+        Log.w(getClass().getName(), "receiving done");
     }
 }
