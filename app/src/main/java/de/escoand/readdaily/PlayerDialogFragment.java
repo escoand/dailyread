@@ -81,7 +81,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         outState.putInt(STATE_DATE, Database.getIntFromDate(date));
         outState.putInt(STATE_POSITION, player.getCurrentPosition());
         super.onSaveInstanceState(outState);

@@ -38,7 +38,7 @@ public class HeaderContentFragment extends AbstractContentFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ListView list = (ListView) super.onCreateView(inflater, container, savedInstanceState);
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return list;
@@ -92,7 +92,7 @@ public class HeaderContentFragment extends AbstractContentFragment {
                 }
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
                         PlayerDialogFragment player = new PlayerDialogFragment();
                         player.setDate(getContext(), date);
                         player.show(getFragmentManager(), player.getClass().getName());

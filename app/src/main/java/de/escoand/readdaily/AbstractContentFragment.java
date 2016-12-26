@@ -72,7 +72,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
         return new AlertDialog.Builder(getContext())
                 .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(final DialogInterface dialog, final int which) {
                         dismiss();
                     }
                 })
@@ -80,7 +80,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         outState.putInt(STATE_DATE, Database.getIntFromDate(date));
         super.onSaveInstanceState(outState);
     }

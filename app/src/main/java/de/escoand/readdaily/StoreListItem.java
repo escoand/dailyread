@@ -105,7 +105,7 @@ public class StoreListItem implements Runnable {
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(final Call call, final IOException e) {
                 errorHandling(e);
             }
         });
@@ -126,7 +126,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setText(activity.getString(R.string.button_remove));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     db.removeData(productId);
                     refreshUI();
                 }

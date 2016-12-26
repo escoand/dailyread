@@ -33,7 +33,7 @@ public class OnBibleClickListener implements View.OnClickListener {
     private Date date;
     private String type;
 
-    public OnBibleClickListener(@NonNull Activity context, @NonNull Date date, @NonNull String type) {
+    public OnBibleClickListener(@NonNull final Activity context, @NonNull final Date date, @NonNull final String type) {
         super();
         this.context = context;
         this.date = date;
@@ -41,7 +41,7 @@ public class OnBibleClickListener implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         Cursor cursor = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{type});
 

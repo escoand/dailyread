@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 layout.openDrawer(Gravity.LEFT);
             }
         });
         toolbarRight.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 layout.closeDrawer(Gravity.RIGHT);
             }
         });
