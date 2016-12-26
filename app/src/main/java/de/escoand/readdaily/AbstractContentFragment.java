@@ -17,11 +17,14 @@
 
 package de.escoand.readdaily;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +62,21 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
         list.setAdapter(adapter);
 
         return list;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        super.onCreateDialog(savedInstanceState);
+
+        return new AlertDialog.Builder(getContext())
+                .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dismiss();
+                    }
+                })
+                .create();
     }
 
     @Override
