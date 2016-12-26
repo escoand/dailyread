@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -534,7 +535,7 @@ public class Database extends SQLiteOpenHelper {
     private Cursor getDay(@NonNull final String condition, @NonNull final String[] values) {
         return getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
-                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
+                new String[]{TABLE_TEXTS + ".rowid " + BaseColumns._ID, COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
                 condition, values,
                 null, null,
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
@@ -565,7 +566,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getCalendar() {
         return getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id", COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
+                new String[]{"rowid " + BaseColumns._ID, COLUMN_SOURCE, COLUMN_DATE, COLUMN_READ},
                 COLUMN_DATE + ">='20000000' AND " + COLUMN_DATE + "<'21000000'",
                 null, null, null, null);
     }
@@ -573,7 +574,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getList(@Nullable final String condition, @Nullable final String[] values, @NonNull final String orderBy) {
         return getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id", COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
+                new String[]{"rowid " + BaseColumns._ID, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
                 condition, values,
                 null, null,
                 orderBy);
