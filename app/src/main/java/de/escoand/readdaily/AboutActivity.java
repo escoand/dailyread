@@ -33,7 +33,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
@@ -44,7 +44,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onBackPressed();
             }
         });
@@ -84,12 +84,12 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
+    protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         Intent i = new Intent();
         switch (v.getId()) {
             case R.id.about_recommend:
@@ -101,6 +101,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             case R.id.about_tickets:
                 i.setAction(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(getString(R.string.url_tickets)));
+                break;
+            default: // do nothing
                 break;
         }
         if (i.getAction() != null)

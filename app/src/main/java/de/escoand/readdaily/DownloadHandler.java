@@ -35,22 +35,22 @@ import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
 
-    public static long startInvisibleDownload(Context context, String url, String title) {
+    public static long startInvisibleDownload(final Context context, final String url, final String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
-        Log.w("DownloadHandler", "load invisible " + url);
+        Log.w(DownloadHandler.class.getName(), "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setVisibleInDownloadsUi(false)
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title));
-        ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id);
 
         return id;
     }
 
-    public static long startDownload(Context context, String signature, String responseData, String title) {
+    public static long startDownload(final Context context, final String signature, final String responseData, final String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
 
@@ -60,7 +60,7 @@ public class DownloadHandler extends BroadcastReceiver {
             return -1;
         }
 
-        Log.w("DownloadHandler", "load " + name);
+        Log.w(DownloadHandler.class.getName(), "load " + name);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
@@ -68,13 +68,13 @@ public class DownloadHandler extends BroadcastReceiver {
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
-        ((ReadDailyApp) context.getApplicationContext()).getDatabase().addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id);
 
         return id;
     }
 
-    public static float downloadProgress(Context context, String name) {
-        Cursor cursor = ((ReadDailyApp) context.getApplicationContext()).getDatabase().getDownloads();
+    public static float downloadProgress(final Context context, final String name) {
+        Cursor cursor = Database.getInstance(context).getDownloads();
         long id = 0;
         float progress;
 
@@ -102,8 +102,8 @@ public class DownloadHandler extends BroadcastReceiver {
         return progress;
     }
 
-    public static void stopDownload(Context context, String name) {
-        Database db = ((ReadDailyApp) context.getApplicationContext()).getDatabase();
+    public static void stopDownload(final Context context, final String name) {
+        Database db = Database.getInstance(context);
         Cursor c = db.getDownloads();
         long id = 0;
 
@@ -123,12 +123,12 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(final Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        final Database db = ((ReadDailyApp) context.getApplicationContext()).getDatabase();
+        final Database db = Database.getInstance(context);
         Cursor downloads = db.getDownloads();
 
-        Log.w("DownloadHandler", "receiving");
+        Log.w(getClass().getName(), "receiving");
 
         downloads.moveToPosition(-1);
         while (downloads.moveToNext()) {
@@ -150,7 +150,7 @@ public class DownloadHandler extends BroadcastReceiver {
                 @SuppressWarnings("ResultOfMethodCallIgnored")
                 @Override
                 public void run() {
-                    Log.w("DownloadHandler", "import " + name);
+                    Log.w(getClass().getName(), "import " + name);
 
                     try {
                         File file = new File(download.getString(download.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).replace("file:/", "/"));
@@ -162,7 +162,7 @@ public class DownloadHandler extends BroadcastReceiver {
                             case "application/json":
                                 byte[] buf = new byte[1024];
                                 stream.read(buf);
-                                Log.w("DownloadHandler", "register feedback " + new String(buf));
+                                Log.w(getClass().getName(), "register feedback " + new String(buf));
                                 break;
 
                             // csv data
@@ -179,6 +179,10 @@ public class DownloadHandler extends BroadcastReceiver {
                             case "application/zip":
                                 db.importZIP(name, stream);
                                 break;
+
+                            // do nothing
+                            default:
+                                break;
                         }
 
                         // clean
@@ -189,16 +193,16 @@ public class DownloadHandler extends BroadcastReceiver {
                         db.removeDownload(id);
 
                     } catch (Exception e) {
-                        Log.e("DownloadHandler", Log.getStackTraceString(e));
+                        Log.e(getClass().getName(), Log.getStackTraceString(e));
                     }
 
-                    Log.w("DownloadHandler", "finished " + name);
+                    Log.w(getClass().getName(), "finished " + name);
                 }
             }).start();
 
         }
         downloads.close();
 
-        Log.w("DownloadHandler", "receiving done");
+        Log.w(getClass().getName(), "receiving done");
     }
 }

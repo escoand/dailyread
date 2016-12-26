@@ -42,8 +42,8 @@ import okhttp3.Response;
 
 public class StoreListItem implements Runnable {
     private final String productId;
-    Thread refrehThread = null;
-    float downloadProgress = -1;
+    private Thread refrehThread = null;
+    private float downloadProgress = -1;
     private SkuDetails listing;
     private TransactionDetails transaction;
     private Activity activity;
@@ -56,11 +56,11 @@ public class StoreListItem implements Runnable {
     private ProgressBar progress;
     private BillingProcessor billing;
 
-    public StoreListItem(String productId) {
+    public StoreListItem(final String productId) {
         this.productId = productId;
     }
 
-    public View getView(final Activity activity, ViewGroup parent, final BillingProcessor billing) {
+    public View getView(final Activity activity, final ViewGroup parent, final BillingProcessor billing) {
         this.activity = activity;
         this.billing = billing;
 
@@ -89,7 +89,7 @@ public class StoreListItem implements Runnable {
                 .build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
                 try {
                     final int len = Integer.valueOf(response.header("Content-Length"));
                     final byte[] data = response.body().bytes();
@@ -105,7 +105,7 @@ public class StoreListItem implements Runnable {
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(final Call call, final IOException e) {
                 errorHandling(e);
             }
         });
@@ -116,7 +116,7 @@ public class StoreListItem implements Runnable {
     }
 
     private void refreshUI() {
-        final Database db = ((ReadDailyApp) activity.getApplication()).getDatabase();
+        final Database db = Database.getInstance(activity);
         final boolean isInstalled = db.isInstalled(productId);
         downloadProgress = DownloadHandler.downloadProgress(activity, productId);
 
@@ -126,7 +126,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setText(activity.getString(R.string.button_remove));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     db.removeData(productId);
                     refreshUI();
                 }
@@ -141,7 +141,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setText(activity.getString(R.string.button_cancel));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     DownloadHandler.stopDownload(activity, productId);
                     refreshUI();
                 }

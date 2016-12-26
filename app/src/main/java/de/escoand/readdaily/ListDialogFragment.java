@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
@@ -33,40 +34,43 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     private String title = null;
     private String condition = null;
     private String[] values = null;
+    private String order = Database.COLUMN_GROUP;
 
     private SimpleCursorAdapter adapter;
     private String[] from = new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE};
     private int[] to = new int[]{R.id.list_image, R.id.list_title, R.id.list_date};
 
     private OnDateSelectedListener listener;
-    private String listenerCondition = null;
-    private String[] listenerValues = null;
 
-    public void setTitle(String title) {
+    public void setTitle(@Nullable final String title) {
         this.title = title;
     }
 
-    public void setFilter(String condition, String[] values) {
+    public void setFilter(@NonNull final String condition, @NonNull final String[] values) {
         this.condition = condition;
         this.values = values;
     }
 
-    public void setMapping(String[] from, int[] to) {
+    public void setOrder(@NonNull final String order) {
+        this.order = order;
+    }
+
+    public void setMapping(final String[] from, final int[] to) {
         this.from = from;
         this.to = to;
     }
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         if (title == null)
             title = getString(R.string.navigation_list);
 
         // adapter
         adapter = new SimpleCursorAdapter(
                 getContext(),
-                R.layout.item_list,
-                ((ReadDailyApp) getActivity().getApplication()).getDatabase().getList(condition, values),
+                R.layout.item_dialog,
+                Database.getInstance(getContext()).getList(condition, values, order),
                 from, to,
                 0);
         adapter.setViewBinder(this);
@@ -80,7 +84,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     }
 
     @Override
-    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+    public boolean setViewValue(final View view, final Cursor cursor, final int columnIndex) {
         if (columnIndex == cursor.getColumnIndex(Database.COLUMN_READ)) {
             if (cursor.getInt(cursor.getColumnIndex(Database.COLUMN_READ)) != 0)
                 view.setVisibility(View.VISIBLE);
@@ -100,23 +104,14 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(final DialogInterface dialog, final int which) {
         Cursor c = (Cursor) adapter.getItem(which);
         if (listener != null)
             listener.onDateSelected(
-                    Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE))),
-                    listenerCondition,
-                    listenerValues
-            );
+                    Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE))));
     }
 
-    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
-        setOnDateSelectedListener(listener, null, null);
-    }
-
-    public void setOnDateSelectedListener(OnDateSelectedListener listener, String condition, String[] values) {
+    public void setOnDateSelectedListener(@Nullable final OnDateSelectedListener listener) {
         this.listener = listener;
-        this.listenerCondition = condition;
-        this.listenerValues = values;
     }
 }

@@ -26,7 +26,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class PushInstanceService extends FirebaseInstanceIdService {
-    public static void setRegistration(Context context, boolean activate) {
+    public static void setRegistration(final Context context, final boolean activate) {
         DownloadHandler.startInvisibleDownload(
                 context,
                 String.format(
