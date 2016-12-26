@@ -33,7 +33,7 @@ public class SettingsActivity extends PreferenceActivity {
 
         findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
                 PushInstanceService.setRegistration(getApplication(), (Boolean) newValue);
                 return true;
             }

@@ -40,7 +40,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
     private HashMap<Integer, CombinedContentFragment> fragments = new HashMap<>();
     private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
 
-    public EndlessContentPager(Context context, AttributeSet attrs) {
+    public EndlessContentPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         setAdapter(new EndlessDayPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
         setCurrentItem(POSITIONS_INTIAL, false);
@@ -78,7 +78,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
     }
 
     private class EndlessDayPagerAdapter extends FragmentStatePagerAdapter {
-        public EndlessDayPagerAdapter(FragmentManager fm) {
+        public EndlessDayPagerAdapter(final FragmentManager fm) {
             super(fm);
         }
 

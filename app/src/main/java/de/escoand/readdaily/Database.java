@@ -118,7 +118,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(@NonNull SQLiteDatabase db) {
+    public void onCreate(@NonNull final SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                 COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                 COLUMN_ID + " INTEGER NOT NULL)");
