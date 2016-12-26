@@ -141,7 +141,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setText(activity.getString(R.string.button_cancel));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     DownloadHandler.stopDownload(activity, productId);
                     refreshUI();
                 }
