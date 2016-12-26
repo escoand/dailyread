@@ -570,13 +570,17 @@ public class Database extends SQLiteOpenHelper {
                 null, null, null, null);
     }
 
-    public Cursor getList(@Nullable final String condition, @Nullable final String[] values) {
+    public Cursor getList(@Nullable final String condition, @Nullable final String[] values, @NonNull final String orderBy) {
         return getReadableDatabase().query(
                 TABLE_TEXTS,
                 new String[]{"rowid _id", COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
                 condition, values,
                 null, null,
-                COLUMN_GROUP);
+                orderBy);
+    }
+
+    public Cursor getList(@Nullable final String condition, @Nullable final String[] values) {
+        return getList(condition, values, COLUMN_GROUP);
     }
 
     public Cursor getList() {

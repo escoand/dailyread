@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
+                ((ListDialogFragment) dialog).setOrder(Database.COLUMN_DATE);
                 ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnVotySelectedListener());
                 break;
 

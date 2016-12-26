@@ -33,6 +33,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     private String title = null;
     private String condition = null;
     private String[] values = null;
+    private String order = Database.COLUMN_GROUP;
 
     private SimpleCursorAdapter adapter;
     private String[] from = new String[]{Database.COLUMN_READ, Database.COLUMN_SOURCE, Database.COLUMN_DATE};
@@ -47,6 +48,10 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
     public void setFilter(final String condition, final String[] values) {
         this.condition = condition;
         this.values = values;
+    }
+
+    public void setOrder(@NonNull final String order) {
+        this.order = order;
     }
 
     public void setMapping(final String[] from, final int[] to) {
@@ -64,7 +69,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
         adapter = new SimpleCursorAdapter(
                 getContext(),
                 R.layout.item_dialog,
-                Database.getInstance(getContext()).getList(condition, values),
+                Database.getInstance(getContext()).getList(condition, values, order),
                 from, to,
                 0);
         adapter.setViewBinder(this);
