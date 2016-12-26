@@ -46,7 +46,7 @@ public class DatabaseUnitTest {
     public DatabaseUnitTest() {
         super();
         context = InstrumentationRegistry.getTargetContext();
-        db = new Database(context);
+        db = Database.getInstance(context);
     }
 
     @Before
