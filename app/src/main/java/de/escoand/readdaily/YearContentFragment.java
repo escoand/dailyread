@@ -17,17 +17,9 @@
 
 package de.escoand.readdaily;
 
-import android.app.Application;
-
-public class ReadDailyApp extends Application {
-    private final Database db;
-
-    public ReadDailyApp() {
-        super();
-        db = new Database(this);
-    }
-
-    public Database getDatabase() {
-        return db;
+public class YearContentFragment extends AbstractContentFragment {
+    public YearContentFragment() {
+        condition = Database.COLUMN_TYPE + "=?";
+        values = new String[]{Database.TYPE_YEAR};
     }
 }

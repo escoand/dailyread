@@ -17,10 +17,9 @@
 
 package de.escoand.readdaily;
 
-import android.support.annotation.NonNull;
-
-import java.util.Date;
-
-public interface OnDateSelectedListener {
-    void onDateSelected(@NonNull final Date date);
+public class IntroContentFragment extends AbstractContentFragment {
+    public IntroContentFragment() {
+        condition = Database.COLUMN_TYPE + "=?";
+        values = new String[]{Database.TYPE_INTRO};
+    }
 }

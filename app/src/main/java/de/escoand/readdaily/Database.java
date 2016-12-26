@@ -23,6 +23,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
@@ -82,19 +84,31 @@ public class Database extends SQLiteOpenHelper {
 
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    private static Database db = null;
     private final Context context;
 
-    public Database(Context context) {
+    private Database(@NonNull final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
 
-    public static int getIntFromDate(Date date) {
-        return Integer.valueOf(dateFormat.format(date));
+    public static Database getInstance(@NonNull final Context context) {
+        if (db == null)
+            db = new Database(context);
+        return db;
+    }
+
+    public static int getIntFromDate(@NonNull final Date date) {
+        try {
+            return Integer.valueOf(dateFormat.format(date));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return Integer.parseInt(null);
     }
 
     @Nullable
-    public static Date getDateFromInt(int date) {
+    public static Date getDateFromInt(@NonNull final int date) {
         try {
             return dateFormat.parse(String.valueOf(date));
         } catch (ParseException e) {
@@ -104,7 +118,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(@NonNull final SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                 COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                 COLUMN_ID + " INTEGER NOT NULL)");
@@ -150,7 +164,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(@NonNull final SQLiteDatabase db, @NonNull final int oldVersion, @NonNull final int newVersion) {
         if (oldVersion < 2) {
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_DOWNLOADS + " (" +
                     COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
@@ -171,7 +185,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importCSV(final String subscription, final InputStream stream) throws Exception {
+    public void importCSV(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -243,7 +257,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importXML(final String subscription, final InputStream stream) throws Exception {
+    public void importXML(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
         Random rand = new Random();
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -345,6 +359,8 @@ public class Database extends SQLiteOpenHelper {
                             values_year.put(COLUMN_TITLE, parser.getAttributeValue(null, "title"));
                             break;
 
+                        default: // do nothing
+                            break;
                     }
                 }
 
@@ -377,6 +393,8 @@ public class Database extends SQLiteOpenHelper {
                             values_year.put(COLUMN_TEXT, parser.getText());
                             break;
 
+                        default: // do nothing
+                            break;
                     }
                 }
 
@@ -421,6 +439,8 @@ public class Database extends SQLiteOpenHelper {
                             values_year.clear();
                             break;
 
+                        default: // do nothing
+                            break;
                     }
                 }
             }
@@ -432,7 +452,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importZIP(final String subscription, final InputStream stream) throws Exception {
+    public void importZIP(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -487,7 +507,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void addDownload(String set, long downloadId) {
+    public void addDownload(@NonNull final String set, @NonNull final long downloadId) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUBSCRIPTION, set);
         values.put(COLUMN_ID, downloadId);
@@ -498,11 +518,11 @@ public class Database extends SQLiteOpenHelper {
         return getReadableDatabase().query(TABLE_DOWNLOADS, new String[]{COLUMN_SUBSCRIPTION, COLUMN_ID}, null, null, null, null, null);
     }
 
-    public void removeDownload(long downloadId) {
+    public void removeDownload(@NonNull final long downloadId) {
         getWritableDatabase().delete(TABLE_DOWNLOADS, COLUMN_ID + "=?", new String[]{String.valueOf(downloadId)});
     }
 
-    public boolean isInstalled(String set) {
+    public boolean isInstalled(@NonNull final String set) {
         return getReadableDatabase().query(
                 TABLE_SETS,
                 new String[]{COLUMN_NAME},
@@ -512,16 +532,16 @@ public class Database extends SQLiteOpenHelper {
         ).moveToFirst();
     }
 
-    private Cursor getDay(String condition, String[] values) {
+    private Cursor getDay(@NonNull final String condition, @NonNull final String[] values) {
         return getReadableDatabase().query(
                 TABLE_TEXTS + " JOIN " + TABLE_TYPES + " ON " + TABLE_TEXTS + "." + COLUMN_TYPE + "=" + TABLE_TYPES + "." + COLUMN_NAME,
-                new String[]{TABLE_TEXTS + ".rowid _id", COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
+                new String[]{TABLE_TEXTS + ".rowid " + BaseColumns._ID, COLUMN_TYPE, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_READ, COLUMN_DATE},
                 condition, values,
                 null, null,
                 TABLE_TYPES + "." + COLUMN_PRIORITY + " DESC");
     }
 
-    public Cursor getDay(Date date, String condition, String[] values) {
+    public Cursor getDay(@NonNull final Date date, @Nullable final String condition, @Nullable final String[] values) {
         String w = "(" + COLUMN_DATE + "=? OR " + COLUMN_TYPE + "=? AND " + COLUMN_GROUP + " IN (SELECT CAST(" + COLUMN_GROUP + " AS INT) FROM " + TABLE_TEXTS + " WHERE " + COLUMN_DATE + "=?))";
         String[] v = new String[]{String.valueOf(getIntFromDate(date)), TYPE_INTRO, String.valueOf(getIntFromDate(date))};
 
@@ -535,42 +555,46 @@ public class Database extends SQLiteOpenHelper {
         return getDay(w, v);
     }
 
-    public Cursor getDay(Date date) {
+    public Cursor getDay(@NonNull final Date date) {
         return getDay(date, null, null);
     }
 
-    public Cursor getSearch(String pattern) {
+    public Cursor getSearch(@NonNull final String pattern) {
         return getDay(COLUMN_TEXT + " MATCH ?", new String[]{pattern});
     }
 
     public Cursor getCalendar() {
         return getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"MAX(rowid) _id", COLUMN_DATE, "MAX(" + COLUMN_READ + ") " + COLUMN_READ},
+                new String[]{"MAX(rowid) " + BaseColumns._ID, COLUMN_DATE, "MAX(" + COLUMN_READ + ") " + COLUMN_READ},
                 COLUMN_DATE + ">='20000000' AND " + COLUMN_DATE + "<'21000000'",
                 null, COLUMN_DATE, null, null, null);
     }
 
-    public Cursor getList(String condition, String[] values) {
+    public Cursor getList(@Nullable final String condition, @Nullable final String[] values, @NonNull final String orderBy) {
         return getReadableDatabase().query(
                 TABLE_TEXTS,
-                new String[]{"rowid _id", COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
+                new String[]{"rowid " + BaseColumns._ID, COLUMN_TITLE, COLUMN_TEXT, COLUMN_SOURCE, COLUMN_DATE, COLUMN_GROUP, COLUMN_READ},
                 condition, values,
                 null, null,
-                COLUMN_GROUP);
+                orderBy);
+    }
+
+    public Cursor getList(@Nullable final String condition, @Nullable final String[] values) {
+        return getList(condition, values, COLUMN_GROUP);
     }
 
     public Cursor getList() {
         return getList(null, null);
     }
 
-    public int markAsRead(Date date) {
+    public int markAsRead(@NonNull final Date date) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_READ, true);
         return getWritableDatabase().update(TABLE_TEXTS, values, COLUMN_DATE + "=?", new String[]{String.valueOf(getIntFromDate(date))});
     }
 
-    public void removeData(String subscription) {
+    public void removeData(@NonNull final String subscription) {
         SQLiteDatabase db = getWritableDatabase();
         int result = 0;
 

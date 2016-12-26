@@ -49,7 +49,7 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         FrameLayout v = new FrameLayout(getContext());
         progress = new ProgressBar(new ContextThemeWrapper(getContext(), R.style.Progress_Circular));
         cal = new MaterialCalendarView(getContext());
@@ -79,36 +79,36 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
     }
 
     @Override
-    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+    public void onDateSelected(@NonNull final MaterialCalendarView widget, @NonNull final CalendarDay date, final boolean selected) {
         if (listener != null)
             listener.onDateSelected(date.getDate());
         dismiss();
     }
 
-    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
+    public void setOnDateSelectedListener(final OnDateSelectedListener listener) {
         this.listener = listener;
     }
 
     private class AvailableDecorator implements DayViewDecorator {
         @Override
-        public boolean shouldDecorate(CalendarDay day) {
+        public boolean shouldDecorate(final CalendarDay day) {
             return !datesAvailable.contains(Database.getIntFromDate(day.getDate()));
         }
 
         @Override
-        public void decorate(DayViewFacade view) {
+        public void decorate(final DayViewFacade view) {
             view.setDaysDisabled(true);
         }
     }
 
     private class ReadDecorator implements DayViewDecorator {
         @Override
-        public boolean shouldDecorate(CalendarDay day) {
+        public boolean shouldDecorate(final CalendarDay day) {
             return datesRead.contains(Database.getIntFromDate(day.getDate()));
         }
 
         @Override
-        public void decorate(DayViewFacade view) {
+        public void decorate(final DayViewFacade view) {
             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.calendar_read));
         }
     }
@@ -121,9 +121,9 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         }
 
         @Override
-        protected Integer[] doInBackground(Void... params) {
+        protected Integer[] doInBackground(final Void... params) {
             int date;
-            Cursor cursor = ((ReadDailyApp) getActivity().getApplication()).getDatabase().getCalendar();
+            Cursor cursor = Database.getInstance(getContext()).getCalendar();
             while (cursor.moveToNext()) {
                 date = cursor.getInt(cursor.getColumnIndex(Database.COLUMN_DATE));
                 datesAvailable.add(date);
@@ -139,7 +139,7 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
         }
 
         @Override
-        protected void onPostExecute(Integer[] integers) {
+        protected void onPostExecute(final Integer[] integers) {
             if (integers.length >= 2) {
                 cal.state().edit()
                         .setMinimumDate(Database.getDateFromInt(integers[0]))

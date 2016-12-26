@@ -17,14 +17,9 @@
 
 package de.escoand.readdaily;
 
-import android.database.Cursor;
-import android.support.annotation.Nullable;
-import android.view.View;
-
-import java.util.Date;
-
-public interface DataListener {
-    void setOnClickListener(View.OnClickListener listener);
-
-    void onDataUpdated(@Nullable Date date, @Nullable Cursor cursor);
+public class DayContentFragment extends AbstractContentFragment {
+    public DayContentFragment() {
+        condition = Database.COLUMN_TYPE + "=?";
+        values = new String[]{Database.TYPE_EXEGESIS};
+    }
 }

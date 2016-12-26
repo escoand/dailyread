@@ -28,7 +28,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class SettingsActivity extends PreferenceActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
             setTheme(R.style.AppTheme_Readability);
 
@@ -37,7 +37,7 @@ public class SettingsActivity extends PreferenceActivity {
 
         findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
                 PushInstanceService.setRegistration(getApplication(), (Boolean) newValue);
                 return true;
             }
@@ -45,7 +45,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
+    protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

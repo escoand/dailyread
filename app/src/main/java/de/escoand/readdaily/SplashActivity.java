@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 
 public class SplashActivity extends Activity {
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // skip splash at debug
