@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ public class HeaderContentFragment extends AbstractContentFragment {
 
     public HeaderContentFragment() {
         layout = R.layout.item_header;
-        from = new String[]{Database.COLUMN_TEXT, Database.COLUMN_SOURCE, "_id", "_id"};
+        from = new String[]{Database.COLUMN_TEXT, Database.COLUMN_SOURCE, BaseColumns._ID, BaseColumns._ID};
         to = new int[]{R.id.header_title, R.id.header_source, R.id.player_image, R.id.button_bible_day};
         condition = Database.COLUMN_TYPE + "=?";
         values = new String[]{Database.TYPE_DAY};
