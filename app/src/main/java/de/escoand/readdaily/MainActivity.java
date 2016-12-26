@@ -22,7 +22,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -271,34 +273,25 @@ public class MainActivity extends AppCompatActivity implements
                     new OnBibleClickListener(this, date, Database.TYPE_EXEGESIS));
 
         ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
-        toggleVisibility(findViewById(R.id.button_more), View.GONE);
-        toggleVisibility(findViewById(R.id.button_intro), View.GONE);
-        toggleVisibility(findViewById(R.id.button_voty), View.GONE);
+        toggleVisibility(R.id.button_more, View.GONE);
+        toggleVisibility(R.id.button_intro, View.GONE);
+        toggleVisibility(R.id.button_voty, View.GONE);
 
         // plus button
-        int entries = 0;
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
-                case Database.TYPE_EXEGESIS:
                 case Database.TYPE_YEAR:
                 case Database.TYPE_INTRO:
-                    entries++;
+                    toggleVisibility(R.id.button_more, View.VISIBLE);
                     break;
                 default: // do nothing
                     break;
             }
         }
-        if (entries > 1)
-            toggleVisibility(findViewById(R.id.button_more), View.VISIBLE);
-
-        if (cursor != null && cursor.getCount() > 0)
-            findViewById(R.id.button_more).setVisibility(View.VISIBLE);
-        else
-            findViewById(R.id.button_more).setVisibility(View.GONE);
     }
 
-    private boolean toggleVisibility(final View v, final int force) {
+    private boolean toggleVisibility(@Nullable final View v, final int force) {
         if (v == null)
             return false;
         if (force >= 0)
@@ -310,17 +303,24 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    private boolean toggleVisibility(final View v) {
+    private boolean toggleVisibility(@IdRes final int id, final int force) {
+        return toggleVisibility(findViewById(id), force);
+    }
+
+    private boolean toggleVisibility(@Nullable final View v) {
         return toggleVisibility(v, -1);
+    }
+
+    private boolean toggleVisibility(@IdRes final int id) {
+        return toggleVisibility(findViewById(id));
     }
 
     private class OnMoreClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
             // toggle action buttons
-            toggleVisibility(findViewById(R.id.button_intro));
-            toggleVisibility(findViewById(R.id.button_voty));
+            toggleVisibility(R.id.button_intro);
+            toggleVisibility(R.id.button_voty);
 
             // toggle linked buttons
             cursor.moveToPosition(-1);
@@ -329,11 +329,11 @@ public class MainActivity extends AppCompatActivity implements
                 switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
                     case Database.TYPE_YEAR:
-                        toggleVisibility(findViewById(R.id.button_voty));
+                        toggleVisibility(R.id.button_voty);
                         break;
 
                     case Database.TYPE_INTRO:
-                        toggleVisibility(findViewById(R.id.button_intro));
+                        toggleVisibility(R.id.button_intro);
                         break;
 
                     default: // do nothing
