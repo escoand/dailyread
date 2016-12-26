@@ -120,6 +120,14 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
                 }
                 break;
 
+            // text
+            case Database.COLUMN_TEXT:
+                if (view instanceof TextView) {
+                    ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
+                    return true;
+                }
+                break;
+
             // source
             case Database.COLUMN_SOURCE:
                 if (cursor.isNull(columnIndex)) {
@@ -131,12 +139,6 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
             // do nothing
             default:
                 break;
-        }
-
-        // text view
-        if (view instanceof TextView) {
-            ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
-            return true;
         }
 
         return false;

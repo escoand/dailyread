@@ -109,6 +109,6 @@ public class HeaderContentFragment extends AbstractContentFragment {
                 break;
         }
 
-        return false;
+        return super.setViewValue(view, cursor, columnIndex);
     }
 }
