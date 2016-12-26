@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
@@ -41,11 +42,11 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
 
     private OnDateSelectedListener listener;
 
-    public void setTitle(final String title) {
+    public void setTitle(@Nullable final String title) {
         this.title = title;
     }
 
-    public void setFilter(final String condition, final String[] values) {
+    public void setFilter(@NonNull final String condition, @NonNull final String[] values) {
         this.condition = condition;
         this.values = values;
     }
@@ -110,7 +111,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
                     Database.getDateFromInt(c.getInt(c.getColumnIndex(Database.COLUMN_DATE))));
     }
 
-    public void setOnDateSelectedListener(final OnDateSelectedListener listener) {
+    public void setOnDateSelectedListener(@Nullable final OnDateSelectedListener listener) {
         this.listener = listener;
     }
 }
