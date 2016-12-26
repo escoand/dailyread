@@ -116,7 +116,7 @@
 
     <style name="Text.Player">
         <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:textColor">@color/header_title</item>
+        <item name="android:textColor">?attr/color_header_title</item>
         <item name="android:textSize">16dp</item>
         <item name="fontPath">fonts/Nunito-Bold.ttf</item>
     </style>
