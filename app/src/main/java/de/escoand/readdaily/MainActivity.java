@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // fragments
         handler.addDateListener(this);
-        handler.addDateListener((EndlessContentPager) findViewById(R.id.content_pager));
+        handler.addDateListener((OnDateSelectedListener) findViewById(R.id.content_pager));
         handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
         handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
