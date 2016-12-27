@@ -30,6 +30,9 @@
     <string name="navigation_settings">Einstellungen</string>
     <string name="navigation_about">Über</string>
 
+    <string name="navigation_share">Teilen</string>
+    <string name="navigation_bible">Onlinebibel</string>
+
     <string name="about_version">Version %s</string>
     <string name="about_copyright">Copyright © 2016 escoand</string>
     <string name="about_recommend">Weiterempfehlen</string>
@@ -57,11 +60,16 @@
     <string name="message_push_register">Registrierung</string>
     <string name="message_missing_permission">Notwendige Berechtigungen wurden verweigert. Bitte korrigieren.</string>
 
+    <string name="license_key"></string>
+    <string name="merchant_id"></string>
+    <string name="product_list_url"></string>
+    <string name="product_img_url"></string>
+    <string name="product_data_url"></string>
+    <string name="push_register_url"></string>
+    <string name="push_unregister_url"></string>
+
     <string name="url_bible">http://www.bibleserver.com/text/</string>
     <string name="url_tickets">https://github.com/escoand/dailyread/issues</string>
-    <string name="title_activity_settings">Settings</string>
-
-    <!-- Strings related to Settings -->
 
     <!--  settings -->
     <string name="pref_group_display">Anzeige</string>

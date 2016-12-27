@@ -27,7 +27,7 @@
 
                 <stroke
                     android:width="2dp"
-                    android:color="@color/progress_primary" />
+                    android:color="?attr/color_progress_primary" />
 
             </shape>
 

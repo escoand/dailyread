@@ -30,7 +30,7 @@
                 android:shape="ring"
                 android:thickness="2dp">
 
-                <solid android:color="@color/progress_secondary" />
+                <solid android:color="?attr/color_progress_secondary" />
 
             </shape>
 
@@ -49,7 +49,7 @@
                 android:shape="ring"
                 android:thickness="2dp">
 
-                <solid android:color="@color/progress_primary" />
+                <solid android:color="?attr/color_progress_primary" />
 
             </shape>
 

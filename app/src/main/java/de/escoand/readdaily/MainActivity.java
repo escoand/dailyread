@@ -45,15 +45,14 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements
         OnDateSelectedListener, NavigationView.OnNavigationItemSelectedListener {
-    private Date date = null;
-    private Database db = Database.getInstance(this);
+    private DateListenerHandler handler = DateListenerHandler.getInstance();
+    private Date date;
     private Cursor cursor;
 
     private DrawerLayout layout;
     private Toolbar toolbar;
     private Toolbar toolbarRight;
     private View playerButton;
-    private EndlessContentPager pager;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -91,16 +90,16 @@ public class MainActivity extends AppCompatActivity implements
         ((SearchView) toolbar.findViewById(R.id.toolbar_search)).setOnQueryTextListener(new OnSearchListener());
 
         // fragments
-        pager = (EndlessContentPager) findViewById(R.id.content_pager);
-        pager.addDataListener(this);
-        pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
-        pager.addDataListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
+        handler.addDateListener(this);
+        handler.addDateListener((EndlessContentPager) findViewById(R.id.content_pager));
+        handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
+        handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
 
         // floating buttons
         findViewById(R.id.button_today).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.onDateSelected(new Date());
+                handler.onDateSelected(new Date());
             }
         });
         if (findViewById(R.id.button_more) != null)
@@ -137,14 +136,14 @@ public class MainActivity extends AppCompatActivity implements
 
             // today
             case R.id.button_today:
-                pager.onDateSelected(new Date());
+                handler.onDateSelected(new Date());
                 break;
 
             // list dialogs
             case R.id.button_list:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(pager);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(handler);
                 break;
             case R.id.button_list_intro:
                 dialog = new ListDialogFragment();
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements
             // calendar
             case R.id.button_calendar:
                 dialog = new CalendarDialogFragment();
-                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(pager);
+                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(handler);
                 break;
 
             // search
@@ -247,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements
             return;
 
         this.date = date;
-        this.cursor = db.getDay(date);
+        this.cursor = Database.getInstance(this).getDay(date);
 
         // content
         if (!cursor.moveToFirst())
