@@ -27,18 +27,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class EndlessContentPager extends ViewPager implements OnDateSelectedListener {
-    private static final int POSITIONS_MAX = 5000;
+    private static final int POSITIONS_MAX = 1000;
     private static final int POSITIONS_INTIAL = POSITIONS_MAX / 2;
 
-    private HashMap<Integer, CombinedContentFragment> fragments = new HashMap<>();
-    private ArrayList<OnDateSelectedListener> listeners = new ArrayList<>();
+    private final HashMap<Integer, CombinedContentFragment> fragments = new HashMap<>();
 
     public EndlessContentPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -57,10 +55,6 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
                 (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000.0);
     }
 
-    public void addDataListener(final OnDateSelectedListener listener) {
-        listeners.add(listener);
-    }
-
     @Override
     public void onDateSelected(@NonNull final Date date) {
         setCurrentItem(getPositionOfDate(date), false);
@@ -68,13 +62,8 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
 
     @Override
     protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
-        Date date = getDateOfPosition(position);
-
         super.onPageScrolled(position, offset, offsetPixels);
-
-        for (OnDateSelectedListener tmp : listeners)
-            if (tmp != null && date != null)
-                tmp.onDateSelected(date);
+        DateListenerHandler.getInstance().onDateSelected(getDateOfPosition(position), this);
     }
 
     private class EndlessDayPagerAdapter extends FragmentStatePagerAdapter {

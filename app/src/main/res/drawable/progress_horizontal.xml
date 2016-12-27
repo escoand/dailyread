@@ -29,7 +29,7 @@
 
                 <stroke
                     android:width="2dp"
-                    android:color="@color/progress_secondary" />
+                    android:color="?attr/color_progress_secondary" />
 
             </shape>
 
@@ -47,7 +47,7 @@
 
                 <stroke
                     android:width="2dp"
-                    android:color="@color/progress_primary" />
+                    android:color="?attr/color_progress_primary" />
 
             </shape>
 

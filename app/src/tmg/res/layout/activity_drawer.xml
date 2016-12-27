@@ -61,6 +61,13 @@
                             android:iconifiedByDefault="false"
                             android:visibility="gone" />
 
+                        <ImageView
+                            android:id="@+id/toolbar_player"
+                            style="@style/Toolbar.Icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_speaker" />
+
                     </android.support.v7.widget.Toolbar>
 
                 </LinearLayout>
@@ -68,11 +75,39 @@
             </android.support.design.widget.AppBarLayout>
 
             <!-- content -->
-            <de.escoand.readdaily.DayContentFragment
+            <de.escoand.readdaily.EndlessContentPager
                 android:id="@+id/content_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            <!-- floating action buttons -->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_voty"
+                style="@style/FloatingActionButton.Mini"
+                android:layout_gravity="top"
+                android:src="@drawable/icon_voty"
+                android:tint="@android:color/white"
+                app:backgroundTint="#50e3c2"
+                app:layout_anchor="@+id/button_more"
+                app:layout_anchorGravity="top|right" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_intro"
+                style="@style/FloatingActionButton.Mini"
+                android:layout_gravity="top"
+                android:src="@drawable/icon_intro"
+                android:tint="@android:color/white"
+                app:backgroundTint="#4a90e2"
+                app:layout_anchor="@+id/button_more"
+                app:layout_anchorGravity="top|right" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_more"
+                style="@style/FloatingActionButton.Mini"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="16dp"
+                android:src="@drawable/icon_plus" />
 
         </android.support.design.widget.CoordinatorLayout>
 
@@ -91,5 +126,43 @@
         android:theme="@style/Drawer"
         app:headerLayout="@layout/drawer_head"
         app:menu="@menu/drawer" />
+
+    <!-- right drawer -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/drawer_right"
+        style="@style/Text.Drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|end"
+        android:theme="@style/Drawer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_right"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:navigationIcon="@drawable/icon_close" />
+
+            <fragment
+                android:id="@+id/content_voty"
+                class="de.escoand.readdaily.YearContentFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/content_intro"
+                class="de.escoand.readdaily.IntroContentFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
