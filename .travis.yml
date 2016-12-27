@@ -7,13 +7,11 @@ android:
     - tools # needs to be first to get new package versions
     - build-tools-24.0.1
     - platform-tools
-    - android-25
 
 env:
   matrix:
     - ANDROID_TARGET=android-15
     - ANDROID_TARGET=android-21
-    - ANDROID_TARGET=android-25
 
 before_script:
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi armeabi-v7a
