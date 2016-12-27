@@ -19,10 +19,23 @@
 
 <resources>
 
-    <item name="button_note" type="id" />
-    <item name="button_share" type="id" />
-    <item name="button_read" type="id" />
     <item name="button_bible" type="id" />
+    <item name="button_intro" type="id" />
+    <item name="button_list_intro" type="id" />
+    <item name="button_list_voty" type="id" />
+    <item name="button_more" type="id" />
+    <item name="button_note" type="id" />
+    <item name="button_read" type="id" />
     <item name="button_readall" type="id" />
+    <item name="button_reminder" type="id" />
+    <item name="button_search" type="id" />
+    <item name="button_share" type="id" />
+    <item name="button_voty" type="id" />
+
+    <item name="content_intro" type="id" />
+    <item name="content_voty" type="id" />
+
+    <item name="toolbar_player" type="id" />
+    <item name="toolbar_right" type="id" />
 
 </resources>
