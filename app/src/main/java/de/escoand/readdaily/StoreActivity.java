@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -117,8 +118,16 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
     }
 
     @Override
-    public void onProductPurchased(final String productId, final TransactionDetails details) {
-        // ToDo start downloading
+    public void onProductPurchased(@NonNull final String productId, @NonNull final TransactionDetails details) {
+        DownloadHandler.startDownload(
+                this,
+                details.purchaseInfo.signature,
+                details.purchaseInfo.responseData,
+                billing.getPurchaseListingDetails(productId).title
+        );
+        for (int i = 0; i < listAdapter.getCount(); i++)
+            if (listAdapter.getItem(i).getProductId().equals(productId))
+                listAdapter.getItem(i).refreshUI();
     }
 
     @Override

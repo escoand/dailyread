@@ -60,6 +60,10 @@ public class StoreListItem implements Runnable {
         this.productId = productId;
     }
 
+    public String getProductId() {
+        return productId;
+    }
+
     public View getView(final Activity activity, final ViewGroup parent, final BillingProcessor billing) {
         this.activity = activity;
         this.billing = billing;
@@ -115,7 +119,7 @@ public class StoreListItem implements Runnable {
         return this.parent;
     }
 
-    private void refreshUI() {
+    public void refreshUI() {
         final Database db = Database.getInstance(activity);
         final boolean isInstalled = db.isInstalled(productId);
         downloadProgress = DownloadHandler.downloadProgress(activity, productId);
