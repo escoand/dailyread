@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public class SettingsActivity extends PreferenceActivity {
         findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                return PushInstanceService.setRegistration(SettingsActivity.this, (Boolean) newValue);
+                return PushInstanceService.doRegistration(SettingsActivity.this, (Boolean) newValue, true);
             }
         });
     }

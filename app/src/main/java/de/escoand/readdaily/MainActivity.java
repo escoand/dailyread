@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package de.escoand.readdaily;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -89,12 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         // registration
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean("registration_done", false))
-            prefs.edit().putBoolean(
-                    "registration_done",
-                    PushInstanceService.setRegistration(this, prefs.getBoolean("notifications", true))
-            ).apply();
+        PushInstanceService.doRegistration(this, true);
     }
 
     @Override
