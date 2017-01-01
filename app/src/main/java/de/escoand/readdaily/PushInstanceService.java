@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,21 +18,38 @@
 package de.escoand.readdaily;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class PushInstanceService extends FirebaseInstanceIdService {
-    public static boolean setRegistration(final Context context, final boolean activate) {
+    private static final String REGISTRATION_DONE = "registration_done";
+
+    public static boolean doRegistration(@NonNull final Context context, final boolean activate) {
+        return doRegistration(context, activate, false);
+    }
+
+    public static boolean doRegistration(@NonNull final Context context, final boolean activate, final boolean force) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if (!force && prefs.getBoolean(REGISTRATION_DONE, false))
+            return true;
+
         long id = DownloadHandler.startInvisibleDownload(
                 context,
                 String.format(
                         context.getString(activate ? R.string.push_register_url : R.string.push_unregister_url),
-                        Uri.encode(FirebaseInstanceId.getInstance().getToken())),
+                        Uri.encode(FirebaseInstanceId.getInstance().getToken())
+                ),
                 context.getString(R.string.message_push_register));
+
+        prefs.edit().putBoolean(REGISTRATION_DONE, id > 0).apply();
+
         return id > 0;
     }
 
@@ -42,6 +59,6 @@ public class PushInstanceService extends FirebaseInstanceIdService {
 
         Log.w(getClass().getName(), "token refreshed " + token);
 
-        setRegistration(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications", true));
+        doRegistration(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications", true), false);
     }
 }

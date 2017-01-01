@@ -104,12 +104,7 @@ public class MainActivity extends AppCompatActivity implements
             findViewById(R.id.button_voty).setOnClickListener(new OnVotyClickListener());
 
         // registration
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean("registration_done", false))
-            prefs.edit().putBoolean(
-                    "registration_done",
-                    PushInstanceService.setRegistration(this, prefs.getBoolean("notifications", true))
-            ).apply();
+        PushInstanceService.doRegistration(this, true);
     }
 
     @Override
