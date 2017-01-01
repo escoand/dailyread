@@ -105,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements
 
         // registration
         PushInstanceService.doRegistration(this, true);
+
+        // start store if no data
+        if (!Database.getInstance(this).isAnyInstalled())
+            startActivity(new Intent(getApplication(), StoreActivity.class));
     }
 
     @Override
