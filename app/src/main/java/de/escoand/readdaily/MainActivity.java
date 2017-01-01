@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -89,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // registration
         PushInstanceService.doRegistration(this, true);
+
+        // start store if no data
+        if (!Database.getInstance(this).isAnyInstalled())
+            startActivity(new Intent(getApplication(), StoreActivity.class));
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -518,6 +518,13 @@ public class Database extends SQLiteOpenHelper {
 
     public void removeDownload(long downloadId) {
         getWritableDatabase().delete(TABLE_DOWNLOADS, COLUMN_ID + "=?", new String[]{String.valueOf(downloadId)});
+    }
+
+    public boolean isAnyInstalled() {
+        return getReadableDatabase().query(
+                TABLE_SETS, new String[]{COLUMN_NAME},
+                null, null, null, null, null
+        ).moveToFirst();
     }
 
     public boolean isInstalled(String set) {
