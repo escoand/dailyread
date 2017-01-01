@@ -533,6 +533,13 @@ public class Database extends SQLiteOpenHelper {
         getWritableDatabase().delete(TABLE_DOWNLOADS, COLUMN_ID + "=?", new String[]{String.valueOf(downloadId)});
     }
 
+    public boolean isAnyInstalled() {
+        return getReadableDatabase().query(
+                TABLE_SETS, new String[]{COLUMN_NAME},
+                null, null, null, null, null
+        ).moveToFirst();
+    }
+
     public boolean isInstalled(@NonNull final String set) {
         return getReadableDatabase().query(
                 TABLE_SETS,
