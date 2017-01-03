@@ -32,6 +32,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 public class FooterContentFragment extends AbstractContentFragment implements OnDateSelectedListener {
+    private String appTitle = "";
     private String shareText;
 
     public FooterContentFragment() {
@@ -46,6 +47,9 @@ public class FooterContentFragment extends AbstractContentFragment implements On
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         ListView list = (ListView) super.onCreateView(inflater, container, savedInstanceState);
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        appTitle = getString(R.string.app_title);
+
         return list;
     }
 
@@ -102,7 +106,7 @@ public class FooterContentFragment extends AbstractContentFragment implements On
 
         if (title != null && text != null && verse != null)
             shareText = DateFormat.getDateInstance().format(date) + "\n" +
-                    title + " (" + verse + ")\n" + text + "\n" + getString(R.string.app_title);
+                    title + " (" + verse + ")\n" + text + "\n" + appTitle;
         else
             shareText = null;
 
