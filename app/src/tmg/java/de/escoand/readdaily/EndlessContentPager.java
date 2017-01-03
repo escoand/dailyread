@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
     private static final int POSITIONS_MAX = 1000;
     private static final int POSITIONS_INTIAL = POSITIONS_MAX / 2;
 
-    private final HashMap<Integer, CombinedContentFragment> fragments = new HashMap<>();
+    private final HashMap<Integer, AbstractContentFragment> fragments = new HashMap<>();
 
     public EndlessContentPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -78,7 +78,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
 
         @Override
         public Fragment getItem(final int position) {
-            final CombinedContentFragment content = new CombinedContentFragment();
+            final AbstractContentFragment content = new DayContentFragment();
             content.onDateSelected(getDateOfPosition(position));
             fragments.put(position, content);
             return content;
