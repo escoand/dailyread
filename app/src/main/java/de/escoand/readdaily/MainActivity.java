@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // ToDo re-set theme after changing it
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
             setTheme(R.style.AppTheme_Readability);
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements
         playerButton = toolbar.findViewById(R.id.toolbar_player);
 
         // search
+        // ToDo make search work again
         ((SearchView) toolbar.findViewById(R.id.toolbar_search)).setOnQueryTextListener(new OnSearchListener());
 
         // fragments
