@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -298,6 +299,9 @@ public class MainActivity extends AppCompatActivity implements
     private class OnMoreClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
+            final CoordinatorLayout.LayoutParams lp =
+                    (CoordinatorLayout.LayoutParams) findViewById(R.id.button_voty).getLayoutParams();
+            lp.setAnchorId(R.id.button_more);
 
             // image
             if (findViewById(R.id.button_voty).getVisibility() == View.VISIBLE ||
@@ -316,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements
                         break;
 
                     case Database.TYPE_INTRO:
+                        lp.setAnchorId(R.id.button_intro);
                         toggleVisibility(R.id.button_intro);
                         break;
 
