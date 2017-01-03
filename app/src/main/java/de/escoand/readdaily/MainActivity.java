@@ -19,7 +19,6 @@ package de.escoand.readdaily;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -45,7 +44,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity implements
         OnDateSelectedListener, NavigationView.OnNavigationItemSelectedListener {
     private DateListenerHandler handler = DateListenerHandler.getInstance();
-    private Date date;
     private Cursor cursor;
 
     private DrawerLayout layout;
@@ -236,13 +234,8 @@ public class MainActivity extends AppCompatActivity implements
         if (date == null)
             return;
 
-        this.date = date;
-        this.cursor = Database.getInstance(this).getDay(date);
-
         // content
-        if (!cursor.moveToFirst())
-            return;
-        cursor.moveToPosition(-1);
+        cursor = Database.getInstance(this).getDay(date);
         while (cursor.moveToNext()) {
             switch (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE))) {
 
