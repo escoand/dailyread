@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -94,18 +93,11 @@ public class MainActivity extends AppCompatActivity implements
         handler.addDateListener((OnDateSelectedListener) findViewById(R.id.content_pager));
         handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
         handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
+        handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_footer));
 
         // floating buttons
-        findViewById(R.id.button_today).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handler.onDateSelected(new Date());
-            }
-        });
         if (findViewById(R.id.button_more) != null)
             findViewById(R.id.button_more).setOnClickListener(new OnMoreClickListener());
-        if (findViewById(R.id.button_share) != null)
-            findViewById(R.id.button_share).setOnClickListener(new OnShareClickListener());
         if (findViewById(R.id.button_intro) != null)
             findViewById(R.id.button_intro).setOnClickListener(new OnIntroClickListener());
         if (findViewById(R.id.button_voty) != null)
@@ -377,32 +369,6 @@ public class MainActivity extends AppCompatActivity implements
             findViewById(R.id.content_intro).setVisibility(View.GONE);
             findViewById(R.id.content_voty).setVisibility(View.VISIBLE);
             layout.openDrawer(Gravity.RIGHT);
-        }
-    }
-
-    private class OnShareClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(final View v) {
-            String title = null;
-            String verse = null;
-            String text = null;
-
-            cursor.moveToPosition(-1);
-            while (cursor.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_EXEGESIS)) {
-                    title = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TITLE));
-                    text = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
-                } else if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_TYPE)).equals(Database.TYPE_DAY))
-                    verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_TEXT));
-            }
-
-            if (title != null && text != null && verse != null) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, DateFormat.getDateInstance().format(date) + "\n" +
-                        title + " (" + verse + ")\n" + text + "\n" + getString(R.string.app_title));
-                startActivityForResult(intent, 0);
-            }
         }
     }
 
