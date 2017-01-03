@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2016 escoand.
+  ~ Copyright (c) 2017 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -112,7 +112,11 @@
         </android.support.design.widget.CoordinatorLayout>
 
         <!-- bottom buttons -->
-        <include layout="@layout/fragment_footer" />
+        <fragment
+            android:id="@+id/content_footer"
+            class="de.escoand.readdaily.FooterContentFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
