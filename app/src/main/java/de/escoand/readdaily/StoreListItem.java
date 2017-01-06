@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.IOException;
 
@@ -236,6 +237,8 @@ public class StoreListItem implements Runnable {
 
     private void errorHandling(final Throwable e) {
         Log.e("StoreListItem", Log.getStackTraceString(e));
+        if (!BuildConfig.DEBUG)
+            FirebaseCrash.report(e);
         // TODO non-technical message to user
         activity.runOnUiThread(new Runnable() {
             @Override

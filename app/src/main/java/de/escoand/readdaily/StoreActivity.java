@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import android.widget.ListView;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONArray;
 
@@ -105,6 +106,8 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
                         } catch (Exception e) {
                             // TODO non-technical message to user
                             Log.e("error", Log.getStackTraceString(e));
+                            if (!BuildConfig.DEBUG)
+                                FirebaseCrash.report(e);
                         }
                     }
                 });

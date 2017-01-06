@@ -16,9 +16,10 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-crash'
 apply from: 'versioning.gradle'
 
-version = "1.0.6"
+version = "1.0.7"
 
 android {
     compileSdkVersion 24
@@ -62,6 +63,7 @@ dependencies {
     compile 'com.anjlab.android.iab.v3:library:1.0.33'
     compile 'com.google.android.gms:play-services-gcm:9.8.0'
     compile 'com.google.firebase:firebase-core:9.8.0'
+    compile 'com.google.firebase:firebase-crash:9.8.0'
     compile 'com.google.firebase:firebase-messaging:9.8.0'
     compile 'com.prolificinteractive:material-calendarview:1.4.2'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'

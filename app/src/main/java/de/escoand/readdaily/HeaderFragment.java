@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.Date;
 import java.util.Locale;
@@ -198,6 +200,8 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
                 // sleep 1 second
                 Thread.sleep(1000);
             } catch (Exception e) {
+                if (!BuildConfig.DEBUG)
+                    FirebaseCrash.report(e);
                 return;
             }
         }
