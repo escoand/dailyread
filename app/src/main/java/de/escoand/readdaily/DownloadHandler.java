@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +59,8 @@ public class DownloadHandler extends BroadcastReceiver {
         try {
             name = new JSONObject(responseData).getString("productId");
         } catch (JSONException e) {
+            if (!BuildConfig.DEBUG)
+                FirebaseCrash.report(e);
             return -1;
         }
 
@@ -191,6 +195,8 @@ public class DownloadHandler extends BroadcastReceiver {
 
                     } catch (Exception e) {
                         Log.e(getClass().getName(), Log.getStackTraceString(e));
+                        if (!BuildConfig.DEBUG)
+                            FirebaseCrash.report(e);
                     }
 
                     Log.w(getClass().getName(), "finished " + name);
