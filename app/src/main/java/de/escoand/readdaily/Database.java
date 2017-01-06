@@ -29,6 +29,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.BufferedReader;
@@ -511,6 +513,8 @@ public class Database extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e("importZip", Log.getStackTraceString(e));
+            if (!BuildConfig.DEBUG)
+                FirebaseCrash.report(e);
             removeData(subscription);
         } finally {
             db.endTransaction();
