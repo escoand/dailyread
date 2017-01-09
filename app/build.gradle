@@ -19,11 +19,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply from: 'versioning.gradle'
 
-version = "1.0.7"
+version = "1.0.8"
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "de.escoand.readdaily"
@@ -56,19 +56,22 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
 
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.33'
-    compile 'com.google.android.gms:play-services-gcm:9.8.0'
-    compile 'com.google.firebase:firebase-core:9.8.0'
-    compile 'com.google.firebase:firebase-crash:9.8.0'
-    compile 'com.google.firebase:firebase-messaging:9.8.0'
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.prolificinteractive:material-calendarview:1.4.2'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+
+    tmgCompile 'de.hdodenhof:circleimageview:2.1.0'
+    tmgCompile 'uk.co.chrisjenx:calligraphy:2.2.0'
+
+    androidTestCompile 'com.android.support:support-annotations:24.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -30,10 +30,12 @@ import android.util.Xml;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -68,8 +70,8 @@ public class Database extends SQLiteOpenHelper {
     public static final String TYPE_EXEGESIS = "exeg";
     public static final String TYPE_INTRO = "intr";
     public static final String TYPE_MEDIA = "media";
+    public static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "data";
-    private static final int DATABASE_VERSION = 4;
     private static final String TABLE_TEXTS = "texts";
     private static final String TABLE_SETS = "sets";
     private static final String TABLE_TYPES = "types";
@@ -180,7 +182,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importCSV(final String subscription, final InputStream stream) throws Exception {
+    public void importCSV(final String subscription, final InputStream stream) throws IOException {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -252,7 +254,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importXML(final String subscription, final InputStream stream) throws Exception {
+    public void importXML(final String subscription, final InputStream stream) throws IOException, XmlPullParserException {
         Random rand = new Random();
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -441,7 +443,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importZIP(final String subscription, final InputStream stream) throws Exception {
+    public void importZIP(final String subscription, final InputStream stream) throws IOException {
         final String tabname = "___table___";
         final SQLiteDatabase db = getWritableDatabase();
         final ArrayList<ContentValues> values = new ArrayList<>();
