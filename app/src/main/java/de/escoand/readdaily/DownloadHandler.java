@@ -25,18 +25,20 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
-    public final static int REQUEST_PERMISSIONS = 9;
-    public final static long MISSING_PERMISSION = -3;
     public final static long NO_SUBSCRIPTION_DOWNLOAD = -2;
     public final static long DOWNLOAD_UNKNOWN = -1;
 
@@ -44,7 +46,7 @@ public class DownloadHandler extends BroadcastReceiver {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
-        Log.w("DownloadHandler", "load invisible " + url);
+        FirebaseCrash.logcat(Log.WARN, DownloadHandler.class.getName(), "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setTitle(title));
@@ -65,7 +67,7 @@ public class DownloadHandler extends BroadcastReceiver {
             return -1;
         }
 
-        Log.w("DownloadHandler", "load " + name);
+        FirebaseCrash.logcat(Log.WARN, DownloadHandler.class.getName(), "load " + name);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
@@ -132,7 +134,7 @@ public class DownloadHandler extends BroadcastReceiver {
         final Database db = Database.getInstance(context);
         Cursor downloads = db.getDownloads();
 
-        Log.w("DownloadHandler", "receiving");
+        FirebaseCrash.logcat(Log.WARN, getClass().getName(), "receiving");
 
         downloads.moveToPosition(-1);
         while (downloads.moveToNext()) {
@@ -151,21 +153,25 @@ public class DownloadHandler extends BroadcastReceiver {
 
             // import file in background
             new Thread(new Runnable() {
-                @SuppressWarnings("ResultOfMethodCallIgnored")
                 @Override
                 public void run() {
-                    Log.w("DownloadHandler", "import " + name);
+                    FirebaseCrash.logcat(Log.WARN, getClass().getName(), "import " + name);
 
                     try {
                         FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
+
+                        FirebaseCrash.logcat(Log.INFO, "id", String.valueOf(id));
+                        FirebaseCrash.logcat(Log.INFO, "manager", manager.toString());
+                        FirebaseCrash.logcat(Log.INFO, "stream", stream.toString());
+                        FirebaseCrash.logcat(Log.INFO, "mime", manager.getMimeTypeForDownloadedFile(id));
 
                         switch (manager.getMimeTypeForDownloadedFile(id)) {
 
                             // register feedback
                             case "application/json":
                                 byte[] buf = new byte[256];
-                                stream.read(buf);
-                                Log.w("DownloadHandler", "register feedback " + new String(buf));
+                                int len = stream.read(buf);
+                                FirebaseCrash.logcat(Log.WARN, "register feedback", new String(buf, 0, len));
                                 break;
 
                             // csv data
@@ -184,25 +190,48 @@ public class DownloadHandler extends BroadcastReceiver {
                                 break;
                         }
 
-                        // clean
-                        stream.close();
-                        download.close();
-                        manager.remove(id);
-                        db.removeDownload(id);
+                        FirebaseCrash.logcat(Log.WARN, getClass().getName(), "import finished");
 
-                    } catch (Exception e) {
-                        Log.e("DownloadHandler", Log.getStackTraceString(e));
-                        if (!BuildConfig.DEBUG)
-                            FirebaseCrash.report(e);
+                        FirebaseCrash.logcat(Log.WARN, getClass().getName(), "clean finished");
+
+                        stream.close();
                     }
 
-                    Log.w("DownloadHandler", "finished " + name);
+
+                    // file error
+                    catch (FileNotFoundException e) {
+                        Log.println(Log.ERROR, getClass().getName(), Log.getStackTraceString(e));
+                        if (!BuildConfig.DEBUG) FirebaseCrash.report(e);
+                        Toast.makeText(context, "Fehler beim Öffnen des Downloads.", Toast.LENGTH_LONG).show();
+                    }
+
+                    // stream error
+                    catch (IOException e) {
+                        Log.println(Log.ERROR, getClass().getName(), Log.getStackTraceString(e));
+                        if (!BuildConfig.DEBUG) FirebaseCrash.report(e);
+                        Toast.makeText(context, "Fehler beim Verarbeiten des Downloads.", Toast.LENGTH_LONG).show();
+                    }
+
+                    // xml error
+                    catch (XmlPullParserException e) {
+                        Log.println(Log.ERROR, getClass().getName(), Log.getStackTraceString(e));
+                        if (!BuildConfig.DEBUG) FirebaseCrash.report(e);
+                        Toast.makeText(context, "Fehler beim Verarbeiten des XML-Downloads.", Toast.LENGTH_LONG).show();
+                    }
+
+                    // clean
+                    download.close();
+                    manager.remove(id);
+                    db.removeDownload(id);
+
+                    FirebaseCrash.logcat(Log.WARN, getClass().getName(), "finished " + name);
                 }
             }).start();
 
         }
+
         downloads.close();
 
-        Log.w("DownloadHandler", "receiving done");
+        FirebaseCrash.logcat(Log.WARN, getClass().getName(), "receiving done");
     }
 }
