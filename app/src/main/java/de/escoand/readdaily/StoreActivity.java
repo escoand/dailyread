@@ -34,6 +34,7 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -103,7 +104,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
                             for (int i = 0; i < products.length(); i++)
                                 listAdapter.add(new StoreListItem(products.getString(i)));
                             listAdapter.notifyDataSetChanged();
-                        } catch (Exception e) {
+                        } catch (JSONException e) {
                             // TODO non-technical message to user
                             Log.e(getClass().getName(), Log.getStackTraceString(e));
                             if (!BuildConfig.DEBUG)

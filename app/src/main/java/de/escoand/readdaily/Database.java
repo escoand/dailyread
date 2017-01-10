@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -516,11 +514,6 @@ public class Database extends SQLiteOpenHelper {
                 Log.i("insert into table " + table, String.valueOf(id));
             }
             db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.e("importZip", Log.getStackTraceString(e));
-            if (!BuildConfig.DEBUG)
-                FirebaseCrash.report(e);
-            removeData(subscription);
         } finally {
             db.endTransaction();
             db.close();
