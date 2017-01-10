@@ -32,10 +32,12 @@ import android.util.Xml;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -187,7 +189,8 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importCSV(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
+    public void importCSV(@NonNull final String subscription, @NonNull final InputStream stream)
+            throws IOException {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
@@ -259,7 +262,8 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importXML(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
+    public void importXML(@NonNull final String subscription, @NonNull final InputStream stream)
+            throws IOException, XmlPullParserException {
         Random rand = new Random();
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -454,7 +458,8 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void importZIP(@NonNull final String subscription, @NonNull final InputStream stream) throws Exception {
+    public void importZIP(@NonNull final String subscription, @NonNull final InputStream stream)
+            throws IOException {
         final String tabname = "___table___";
         final SQLiteDatabase db = getWritableDatabase();
         final ArrayList<ContentValues> values = new ArrayList<>();
