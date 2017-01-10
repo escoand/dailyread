@@ -38,6 +38,21 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        // archive apk and mapping
+        applicationVariants.all { variant ->
+            if (variant.getBuildType().isMinifyEnabled()) {
+                variant.assemble.doLast {
+                    copy {
+                        def archiveName = "${flavorName}-${variant.buildType.name}-${variant.versionCode}"
+                        from variant.outputs[0].outputFile, variant.mappingFile
+                        into "${rootDir}/archive"
+                        rename "app-${flavorName}-${variant.buildType.name}.apk", "app-${archiveName}.apk"
+                        rename "mapping.txt", "map-${archiveName}.txt"
+                    }
+                }
+            }
+        }
     }
     productFlavors {
         tmg {
