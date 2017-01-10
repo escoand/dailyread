@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
             try {
                 ((TextView) view).setText(DateFormat.getMediumDateFormat(
                         getContext()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
-            } catch (Exception e) {
+            } catch (NullPointerException e) {
                 return false;
             }
             return true;

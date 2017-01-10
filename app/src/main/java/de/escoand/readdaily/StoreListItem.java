@@ -104,7 +104,7 @@ public class StoreListItem implements Runnable {
                             image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
                         }
                     });
-                } catch (Exception e) {
+                } catch (IOException e) {
                     errorHandling(e);
                 }
             }
@@ -229,14 +229,14 @@ public class StoreListItem implements Runnable {
             // sleep 5 second
             try {
                 Thread.sleep(5000);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 return;
             }
         }
     }
 
     private void errorHandling(final Throwable e) {
-        Log.e("StoreListItem", Log.getStackTraceString(e));
+        Log.e(getClass().getName(), Log.getStackTraceString(e));
         if (!BuildConfig.DEBUG)
             FirebaseCrash.report(e);
         // TODO non-technical message to user
