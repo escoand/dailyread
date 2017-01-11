@@ -69,7 +69,7 @@ public class DownloadHandlerTest {
     public void test_13_Stop() {
         DownloadHandler.stopDownload(context, DOWNLOAD_ID);
         float end = DownloadHandler.downloadProgress(context, DOWNLOAD_ID);
-        Assert.assertEquals(end, (float) DownloadHandler.NO_SUBSCRIPTION_DOWNLOAD);
+        Assert.assertEquals(end, (float) DownloadHandler.SUBSCRIPTION_DOWNLOAD_UNKNOWN);
     }
 
     @Test
