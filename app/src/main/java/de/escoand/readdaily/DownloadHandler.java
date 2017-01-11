@@ -158,7 +158,8 @@ public class DownloadHandler extends BroadcastReceiver {
                     FirebaseCrash.logcat(Log.WARN, getClass().getName(), "import starting of " + name);
 
                     try {
-                        FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
+                        final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
+                        final String mime = manager.getMimeTypeForDownloadedFile(id);
 
                         FirebaseCrash.logcat(Log.INFO, getClass().getName(),
                                 "id: " + String.valueOf(id));
@@ -167,9 +168,9 @@ public class DownloadHandler extends BroadcastReceiver {
                         FirebaseCrash.logcat(Log.INFO, getClass().getName(),
                                 "stream: " + stream.toString());
                         FirebaseCrash.logcat(Log.INFO, getClass().getName(),
-                                "mime: " + manager.getMimeTypeForDownloadedFile(id));
+                                "mime: " + mime);
 
-                        switch (manager.getMimeTypeForDownloadedFile(id)) {
+                        switch (mime == null ? "" : mime) {
 
                             // register feedback
                             case "application/json":
@@ -223,8 +224,10 @@ public class DownloadHandler extends BroadcastReceiver {
                     }
 
                     // clean
-                    manager.remove(id);
-                    db.removeDownload(id);
+                    finally {
+                        manager.remove(id);
+                        db.removeDownload(id);
+                    }
 
                     FirebaseCrash.logcat(Log.WARN, getClass().getName(), "clean finished");
 
