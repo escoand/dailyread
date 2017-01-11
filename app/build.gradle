@@ -19,7 +19,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply from: 'versioning.gradle'
 
-version = "1.0.12"
+version = "1.0.13"
 
 android {
     compileSdkVersion 24
