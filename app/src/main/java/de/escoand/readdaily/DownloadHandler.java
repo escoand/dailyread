@@ -21,6 +21,7 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
@@ -34,6 +35,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.EmptyStackException;
 import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
@@ -131,7 +133,7 @@ public class DownloadHandler extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         final Database db = Database.getInstance(context);
-        Cursor downloads = db.getDownloads();
+        final Cursor downloads = db.getDownloads();
 
         LogHandler.log(Log.WARN, "receive starting");
 
@@ -147,22 +149,25 @@ public class DownloadHandler extends BroadcastReceiver {
             // download finished
             if (download.getInt(download.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
                 continue;
-
+            
             // import file in background
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
-                        final String mime = manager.getMimeTypeForDownloadedFile(id);
                         LogHandler.log(Log.WARN, "import starting of " + name);
 
+                        final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
+                        final String mimeGet = manager.getMimeTypeForDownloadedFile(id);
+                        final String mimeCur = download.getString(download.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
 
                         LogHandler.log(Log.INFO, "id: " + String.valueOf(id));
                         LogHandler.log(Log.INFO, "manager: " + manager.toString());
                         LogHandler.log(Log.INFO, "stream: " + stream.toString());
+                        LogHandler.log(Log.INFO, "mime-getter: " + mimeGet);
+                        LogHandler.log(Log.INFO, "mime-cursor: " + mimeCur);
 
-                        switch (mime == null ? "" : mime) {
+                        switch (mimeGet != null ? mimeGet : (mimeCur != null ? mimeCur : "")) {
 
                             // register feedback
                             case "application/json":
@@ -185,6 +190,11 @@ public class DownloadHandler extends BroadcastReceiver {
                             // zipped data
                             case "application/zip":
                                 db.importZIP(name, stream);
+                                break;
+
+                            // do nothing
+                            default:
+                                LogHandler.log(new IntentFilter.MalformedMimeTypeException());
                                 break;
                         }
 

@@ -47,7 +47,6 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
     public static final String COLUMN_TYPE = "type";
@@ -459,6 +458,7 @@ public class Database extends SQLiteOpenHelper {
 
         final File outdir = new File(context.getFilesDir(), subscription);
         if (!outdir.exists())
+            //noinspection ResultOfMethodCallIgnored
             outdir.mkdir();
 
         // read entries
@@ -613,9 +613,11 @@ public class Database extends SQLiteOpenHelper {
             File[] files = outdir.listFiles();
             for (File file : files) {
                 LogHandler.log(Log.INFO, "file " + file.getAbsolutePath());
+                //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
         }
+        //noinspection ResultOfMethodCallIgnored
         outdir.delete();
 
         LogHandler.log(Log.WARN, subscription + " removed " + result);
