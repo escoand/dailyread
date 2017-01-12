@@ -43,9 +43,9 @@ import okhttp3.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class StoreActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
-    private final OkHttpClient client = new OkHttpClient();
     private StoreArrayAdapter listAdapter;
     private BillingProcessor billing;
+    private ListView list;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -76,7 +76,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
         getLayoutInflater().inflate(R.layout.fragment_list, (ViewGroup) findViewById(R.id.content), true);
 
-        ListView list = (ListView) findViewById(R.id.listView);
+        list = (ListView) findViewById(R.id.listView);
         list.setEmptyView(findViewById(R.id.listLoading));
         listAdapter = new StoreArrayAdapter(this, billing);
         list.setAdapter(listAdapter);
@@ -85,35 +85,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
     @Override
     public void onBillingInitialized() {
         billing.loadOwnedPurchasesFromGoogle();
-
-        Request request = new Request.Builder()
-                .url(getString(R.string.product_list_url))
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String body = response.body().string();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONArray products = new JSONArray(body);
-                            for (int i = 0; i < products.length(); i++)
-                                listAdapter.add(new StoreListItem(products.getString(i)));
-                            listAdapter.notifyDataSetChanged();
-                        } catch (Exception e) {
-                            // TODO non-technical message to user
-                            LogHandler.log(e);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                LogHandler.log(e);
-            }
-        });
+        new OnReloadClickListener().onClick(null);
     }
 
     @Override
@@ -152,5 +124,47 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         if (billing != null)
             billing.release();
         super.onDestroy();
+    }
+
+    private class OnReloadClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            new OkHttpClient()
+                    .newCall(new Request.Builder().url(getString(R.string.product_list_url)).build())
+                    .enqueue(new RequestCallback());
+        }
+    }
+
+    private class RequestCallback implements Callback {
+        @Override
+        public void onResponse(final Call call, final Response response) {
+            try {
+                final String body = response.body().string();
+                final JSONArray products = new JSONArray(body);
+
+                for (int i = 0; i < products.length(); i++) {
+                    final StoreListItem item = new StoreListItem(products.getString(i));
+
+                    // append to list
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listAdapter.add(item);
+                            listAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+
+            } catch (final Exception e) {
+                LogHandler.logAndShow(e, list, getString(R.string.message_download_list),
+                        getString(R.string.button_reload), new OnReloadClickListener());
+            }
+        }
+
+        @Override
+        public void onFailure(final Call call, final IOException e) {
+            LogHandler.logAndShow(e, list, getString(R.string.message_download_list),
+                    getString(R.string.button_reload), new OnReloadClickListener());
+        }
     }
 }

@@ -38,6 +38,7 @@
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
+    <string name="button_reload">Wiederholen</string>
     <string name="button_error">Fehler</string>
     <string name="button_download">Laden</string>
     <string name="button_purchase">Kaufen</string>
@@ -54,13 +55,13 @@
     <string name="message_recommend">Ich möchte dir die folgende App empfehlen.\nProbier sie doch mal aus.\nhttps://play.google.com/store/apps/details?id=</string>
     <string name="message_reminder">Tägliche Bibellese nicht vergessen!</string>
     <string name="message_push_register">Registrierung</string>
+    <string name="message_download_list">Fehler beim Laden der Liste.\nInternetverbindung prüfen.</string>
     <string name="message_download_open">Fehler beim Öffnen des Downloads.</string>
     <string name="message_download_read">Fehler beim Verarbeiten des Downloads.</string>
     <string name="message_download_xml">Fehler beim Verarbeiten des XML-Downloads.</string>
 
     <string name="url_bible">http://www.bibleserver.com/text/</string>
     <string name="url_tickets">https://github.com/escoand/dailyread/issues</string>
-    <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
 
