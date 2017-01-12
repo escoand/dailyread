@@ -17,7 +17,11 @@
 
 package de.escoand.readdaily;
 
+import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -39,8 +43,24 @@ public class LogHandler {
         FirebaseCrash.log(caller + ": " + message);
     }
 
-    public static void log(final Throwable exception) {
-        Log.e(getTag(), Log.getStackTraceString(exception));
-        FirebaseCrash.report(exception);
+    public static void log(final Throwable error) {
+        Log.e(getTag(), Log.getStackTraceString(error));
+        FirebaseCrash.report(error);
+    }
+
+    public static void logAndShow(final Throwable error, final View view, final String message,
+                                  final String button, final View.OnClickListener listener) {
+        log(error);
+        Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE).setAction(button, listener).show();
+    }
+
+    public static void logAndShow(final Throwable error, final Activity activity, final String message) {
+        log(error);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
