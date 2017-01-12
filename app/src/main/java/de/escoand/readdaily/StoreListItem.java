@@ -31,7 +31,6 @@ import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.IOException;
 
@@ -84,7 +83,7 @@ public class StoreListItem implements Runnable {
             title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
             description.setText(listing.description);
         } else {
-            Log.e("product not found", productId);
+            LogHandler.log(Log.ERROR, "product not found: " + productId);
             this.parent.setVisibility(View.GONE);
         }
 
@@ -236,9 +235,7 @@ public class StoreListItem implements Runnable {
     }
 
     private void errorHandling(final Throwable e) {
-        Log.e("StoreListItem", Log.getStackTraceString(e));
-        if (!BuildConfig.DEBUG)
-            FirebaseCrash.report(e);
+        LogHandler.log(e);
         // TODO non-technical message to user
         activity.runOnUiThread(new Runnable() {
             @Override

@@ -24,14 +24,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONArray;
 
@@ -105,9 +103,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
                             listAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             // TODO non-technical message to user
-                            Log.e("error", Log.getStackTraceString(e));
-                            if (!BuildConfig.DEBUG)
-                                FirebaseCrash.report(e);
+                            LogHandler.log(e);
                         }
                     }
                 });
@@ -115,7 +111,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("error", Log.getStackTraceString(e));
+                LogHandler.log(e);
             }
         });
     }
@@ -141,7 +137,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
     @Override
     public void onBillingError(int errorCode, Throwable error) {
         // TODO non-technical message to user
-        Log.e("billing", Log.getStackTraceString(error));
+        LogHandler.log(error);
     }
 
     @Override

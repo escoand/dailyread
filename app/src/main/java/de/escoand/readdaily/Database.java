@@ -27,8 +27,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -470,8 +468,8 @@ public class Database extends SQLiteOpenHelper {
             final FileOutputStream outstream = new FileOutputStream(outfile);
             final String date = outfile.getName().substring(0, filename.lastIndexOf("."));
 
-            Log.i("importZIP", "file " + outfile.getAbsolutePath());
-            Log.i("importZIP", "date " + date);
+            LogHandler.log(Log.INFO, "file " + outfile.getAbsolutePath());
+            LogHandler.log(Log.INFO, "date " + date);
 
             // save file
             while ((len = zip.read(buffer)) != -1)
@@ -497,13 +495,11 @@ public class Database extends SQLiteOpenHelper {
                 final String table = values.get(i).getAsString(tabname);
                 values.get(i).remove(tabname);
                 final long id = db.insertOrThrow(table, null, values.get(i));
-                Log.i("insert into table " + table, String.valueOf(id));
+                LogHandler.log(Log.INFO, "insert into table " + table + "(" + id + ")");
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("importZip", Log.getStackTraceString(e));
-            if (!BuildConfig.DEBUG)
-                FirebaseCrash.report(e);
+            LogHandler.log(e);
             removeData(subscription);
         } finally {
             db.endTransaction();
@@ -613,15 +609,15 @@ public class Database extends SQLiteOpenHelper {
         // remove from disk
         File outdir = new File(context.getFilesDir(), subscription);
         if (outdir.exists() && outdir.isDirectory()) {
-            Log.i("removeData", "directory " + outdir.getAbsolutePath());
+            LogHandler.log(Log.INFO, "directory " + outdir.getAbsolutePath());
             File[] files = outdir.listFiles();
             for (File file : files) {
-                Log.i("removeData", "file " + file.getAbsolutePath());
+                LogHandler.log(Log.INFO, "file " + file.getAbsolutePath());
                 file.delete();
             }
         }
         outdir.delete();
 
-        Log.w("removeData", subscription + " removed " + result);
+        LogHandler.log(Log.WARN, subscription + " removed " + result);
     }
 }

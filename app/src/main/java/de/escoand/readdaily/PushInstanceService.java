@@ -55,10 +55,7 @@ public class PushInstanceService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-        String token = FirebaseInstanceId.getInstance().getToken();
-
-        Log.w(getClass().getName(), "token refreshed " + token);
-
+        LogHandler.log(Log.WARN, "token refreshed " + FirebaseInstanceId.getInstance().getToken());
         doRegistration(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications", true), false);
     }
 }
