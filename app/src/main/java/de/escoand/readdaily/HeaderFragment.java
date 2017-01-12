@@ -197,10 +197,17 @@ public class HeaderFragment extends Fragment implements DataListener, View.OnCli
 
                 // sleep 1 second
                 Thread.sleep(1000);
-            } catch (Exception e) {
-                if (!BuildConfig.DEBUG)
-                    LogHandler.log(e);
-                return;
+            }
+
+            // player ended
+            catch (IllegalStateException e) {
+                break;
+            }
+
+            // unexpected
+            catch (Exception e) {
+                LogHandler.log(e);
+                break;
             }
         }
     }
