@@ -19,7 +19,6 @@ package de.escoand.readdaily;
 
 import android.app.Activity;
 import android.graphics.BitmapFactory;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +30,9 @@ import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -83,37 +82,18 @@ public class StoreListItem implements Runnable {
         if (listing != null) {
             title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
             description.setText(listing.description);
+            LogHandler.log(Log.INFO, "product: " + productId);
         } else {
-            Log.e("product not found", productId);
+            LogHandler.log(Log.ERROR, "product not found: " + productId);
             this.parent.setVisibility(View.GONE);
         }
 
         // image
-        Request request = new Request.Builder()
-                .url(String.format(activity.getString(R.string.product_img_url), productId))
-                .build();
-        new OkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onResponse(final Call call, final Response response) throws IOException {
-                try {
-                    final int len = Integer.valueOf(response.header("Content-Length"));
-                    final byte[] data = response.body().bytes();
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
-                        }
-                    });
-                } catch (IOException e) {
-                    errorHandling(e);
-                }
-            }
-
-            @Override
-            public void onFailure(final Call call, final IOException e) {
-                errorHandling(e);
-            }
-        });
+        new OkHttpClient().newCall(
+                new Request.Builder()
+                        .url(String.format(activity.getString(R.string.product_img_url), productId))
+                        .build()
+        ).enqueue(new RequestCallback());
 
         refreshUI();
 
@@ -235,16 +215,49 @@ public class StoreListItem implements Runnable {
         }
     }
 
-    private void errorHandling(final Throwable e) {
-        Log.e(getClass().getName(), Log.getStackTraceString(e));
-        if (!BuildConfig.DEBUG)
-            FirebaseCrash.report(e);
-        // TODO non-technical message to user
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Snackbar.make(parent, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+    private class RequestCallback implements Callback {
+        @Override
+        public void onResponse(Call call, Response response) {
+            try {
+                final int len = Integer.valueOf(response.header("Content-Length"));
+                final byte[] data = response.body().bytes();
+
+                LogHandler.log(Log.INFO, "image size: " + len);
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (len < 1024 * 1024)
+                            image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
+                        else
+                            image.setImageResource(R.drawable.icon_close);
+                    }
+                });
             }
-        });
+
+            // unexpected
+            catch (Exception e) {
+                onFailue(e);
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            onFailue(e);
+        }
+
+        private void onFailue(final Throwable e) {
+
+            // ignore timeout
+            if (!(e instanceof TimeoutException))
+                LogHandler.log(e);
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    image.setImageResource(R.drawable.icon_close);
+                }
+            });
+        }
     }
 }

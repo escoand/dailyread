@@ -17,17 +17,16 @@
 
 package de.escoand.readdaily;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +45,7 @@ public class DownloadHandler extends BroadcastReceiver {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
-        Log.w(DownloadHandler.class.getName(), "load invisible " + url);
+        LogHandler.log(Log.WARN, "load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setTitle(title));
@@ -62,12 +61,11 @@ public class DownloadHandler extends BroadcastReceiver {
         try {
             name = new JSONObject(responseData).getString("productId");
         } catch (JSONException e) {
-            if (!BuildConfig.DEBUG)
-                FirebaseCrash.report(e);
+            LogHandler.log(e);
             return -1;
         }
 
-        Log.w(DownloadHandler.class.getName(), "load " + name);
+        LogHandler.log(Log.WARN, "load " + name);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
@@ -134,9 +132,9 @@ public class DownloadHandler extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         final Database db = Database.getInstance(context);
-        Cursor downloads = db.getDownloads();
+        final Cursor downloads = db.getDownloads();
 
-        FirebaseCrash.logcat(Log.WARN, getClass().getName(), "receive starting");
+        LogHandler.log(Log.WARN, "receive starting");
 
         while (downloads.moveToNext()) {
             final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
@@ -153,31 +151,28 @@ public class DownloadHandler extends BroadcastReceiver {
 
             // import file in background
             new Thread(new Runnable() {
-                @SuppressWarnings("ResultOfMethodCallIgnored")
                 @Override
                 public void run() {
-                    FirebaseCrash.logcat(Log.WARN, getClass().getName(), "import starting of " + name);
-
                     try {
+                        LogHandler.log(Log.WARN, "import starting of " + name);
+
                         final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
-                        final String mime = manager.getMimeTypeForDownloadedFile(id);
+                        final String mimeGet = manager.getMimeTypeForDownloadedFile(id);
+                        final String mimeCur = download.getString(download.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
 
-                        FirebaseCrash.logcat(Log.INFO, getClass().getName(),
-                                "id: " + String.valueOf(id));
-                        FirebaseCrash.logcat(Log.INFO, getClass().getName(),
-                                "manager: " + manager.toString());
-                        FirebaseCrash.logcat(Log.INFO, getClass().getName(),
-                                "stream: " + stream.toString());
-                        FirebaseCrash.logcat(Log.INFO, getClass().getName(),
-                                "mime: " + mime);
+                        LogHandler.log(Log.INFO, "id: " + String.valueOf(id));
+                        LogHandler.log(Log.INFO, "manager: " + manager.toString());
+                        LogHandler.log(Log.INFO, "stream: " + stream.toString());
+                        LogHandler.log(Log.INFO, "mime-getter: " + mimeGet);
+                        LogHandler.log(Log.INFO, "mime-cursor: " + mimeCur);
 
-                        switch (mime == null ? "" : mime) {
+                        switch (mimeGet != null ? mimeGet : (mimeCur != null ? mimeCur : "")) {
 
                             // register feedback
                             case "application/json":
                                 final byte[] buf = new byte[256];
                                 final int len = stream.read(buf);
-                                FirebaseCrash.logcat(Log.WARN, getClass().getName(),
+                                LogHandler.log(Log.WARN,
                                         "register feedback: " + new String(buf, 0, len));
                                 break;
 
@@ -198,48 +193,41 @@ public class DownloadHandler extends BroadcastReceiver {
 
                             // do nothing
                             default:
+                                LogHandler.log(new IntentFilter.MalformedMimeTypeException());
                                 break;
                         }
 
                         stream.close();
-
-                        FirebaseCrash.logcat(Log.WARN, getClass().getName(), "import finished of " + name);
+                        LogHandler.log(Log.WARN, "import finished (" + name + ")");
                     }
+
 
                     // file error
                     catch (FileNotFoundException e) {
-                        Log.println(Log.ERROR, getClass().getName(), Log.getStackTraceString(e));
-                        if (!BuildConfig.DEBUG) FirebaseCrash.report(e);
-                        Toast.makeText(context, R.string.message_download_open, Toast.LENGTH_LONG).show();
+                        LogHandler.logAndShow(e, context, R.string.message_download_open);
                     }
 
                     // stream error
                     catch (IOException e) {
-                        Log.println(Log.ERROR, getClass().getName(), Log.getStackTraceString(e));
-                        if (!BuildConfig.DEBUG) FirebaseCrash.report(e);
-                        Toast.makeText(context, R.string.message_download_read, Toast.LENGTH_LONG).show();
+                        LogHandler.logAndShow(e, context, R.string.message_download_read);
                     }
 
                     // xml error
                     catch (XmlPullParserException e) {
-                        Log.println(Log.ERROR, getClass().getName(), Log.getStackTraceString(e));
-                        if (!BuildConfig.DEBUG) FirebaseCrash.report(e);
-                        Toast.makeText(context, R.string.message_download_xml, Toast.LENGTH_LONG).show();
+                        LogHandler.logAndShow(e, context, R.string.message_download_xml);
                     }
 
                     // clean
                     finally {
                         manager.remove(id);
                         db.removeDownload(id);
+                        LogHandler.log(Log.WARN, "clean finished");
                     }
-
-                    FirebaseCrash.logcat(Log.WARN, getClass().getName(), "clean finished");
-
                 }
             }).start();
         }
-        downloads.close();
 
-        Log.w(getClass().getName(), "receiving done");
+        downloads.close();
+        LogHandler.log(Log.WARN, "receiving done");
     }
 }

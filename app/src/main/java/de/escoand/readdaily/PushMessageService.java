@@ -40,7 +40,7 @@ public class PushMessageService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        Log.w("PushMessageService", "received message");
+        LogHandler.log(Log.WARN, "received message");
 
         // get title
         if (notification != null && notification.getTitle() != null && !notification.getTitle().isEmpty())
