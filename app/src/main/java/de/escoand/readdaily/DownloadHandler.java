@@ -17,7 +17,6 @@
 
 package de.escoand.readdaily;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
