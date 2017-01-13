@@ -1,8 +1,14 @@
+# files
+*.apk
 *.iml
-.gradle
 /local.properties
 /.idea/workspace.xml
+/app/google-services.json
+
+# directories
+/.idea/inspectionProfiles
 /.idea/libraries
-.DS_Store
+/.gradle
+/archive
 /build
 /captures

@@ -50,7 +50,7 @@ public class ReminderHandler extends BroadcastReceiver {
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
 
-        Log.w(ReminderHandler.class.getName(), "activated " + hour + ":" + minute);
+        LogHandler.log(Log.WARN, "activated " + hour + ":" + minute);
     }
 
     public static void endReminder(final Context context) {
@@ -60,7 +60,7 @@ public class ReminderHandler extends BroadcastReceiver {
 
         am.cancel(pendingIntent);
 
-        Log.w(ReminderHandler.class.getName(), "deactivated");
+        LogHandler.log(Log.WARN, "deactivated");
     }
 
     @Override
