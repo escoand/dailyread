@@ -35,6 +35,7 @@ public class DownloadHandlerTest {
     private final String INVISIBLE_ID = "google.com";
 
     private final String DOWNLOAD_ID = "android.test.purchased";
+    private final String DOWNLOAD_MIME = "application/json";
     private final String DOWNLOAD_JSON = "{" +
             "\"packageName\":\"" + BuildConfig.APPLICATION_ID + "\"," +
             "\"orderId\":\"transactionId." + DOWNLOAD_ID + "\"," +
@@ -55,7 +56,7 @@ public class DownloadHandlerTest {
 
     @Test
     public void test_11_Start() {
-        long id = DownloadHandler.startDownload(context, "", DOWNLOAD_JSON, DOWNLOAD_ID);
+        long id = DownloadHandler.startDownload(context, "", DOWNLOAD_JSON, DOWNLOAD_ID, DOWNLOAD_MIME);
         Assert.assertTrue(id + " > 0", id > 0);
     }
 
@@ -74,7 +75,7 @@ public class DownloadHandlerTest {
 
     @Test
     public void test_21_Start() {
-        long id = DownloadHandler.startDownload(context, "", DOWNLOAD_JSON, DOWNLOAD_ID);
+        long id = DownloadHandler.startDownload(context, "", DOWNLOAD_JSON, DOWNLOAD_ID, DOWNLOAD_MIME);
         Assert.assertTrue(id + " > 0", id > 0);
     }
 

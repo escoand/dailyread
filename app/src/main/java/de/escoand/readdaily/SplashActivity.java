@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public class SplashActivity extends Activity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         // skip splash at debug
         if (BuildConfig.DEBUG) {
             startActivity(new Intent(getApplication(), MainActivity.class));
             finish();
             return;
+        }
+
+        // remove test data
+        else {
+            LogHandler.log(Log.INFO, "start clean");
+
+            // android
+            Database.getInstance(this).removeData("android.test.canceled");
+            Database.getInstance(this).removeData("android.test.item_unavailable");
+            Database.getInstance(this).removeData("android.test.purchased");
+            Database.getInstance(this).removeData("android.test.refunded");
+
+            // app
+            Database.getInstance(this).removeData("android.test.json");
+            Database.getInstance(this).removeData("android.test.xml");
+            Database.getInstance(this).removeData("android.test.zip");
+
+            LogHandler.log(Log.INFO, "end clean");
         }
 
         setContentView(R.layout.activity_splash);
