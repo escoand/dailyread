@@ -25,6 +25,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -48,13 +50,15 @@ public class DownloadHandler extends BroadcastReceiver {
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setTitle(title));
-        Database.getInstance(context).addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id, null);
 
         return id;
     }
 
-    public static long startDownload(final Context context, final String signature, final String responseData, final String title) {
-        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    public static long startDownload(@NonNull final Context context, @NonNull final String signature,
+                                     @NonNull final String responseData, @NonNull final String title,
+                                     @Nullable final String mimeType) {
+        final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
 
         try {
@@ -71,7 +75,7 @@ public class DownloadHandler extends BroadcastReceiver {
                 .addRequestHeader("App-ResponseData", responseData)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
-        Database.getInstance(context).addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id, mimeType);
 
         return id;
     }
@@ -136,8 +140,9 @@ public class DownloadHandler extends BroadcastReceiver {
         LogHandler.log(Log.WARN, "receive starting");
 
         while (downloads.moveToNext()) {
-            final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
             final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
+            final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
+            final String mime = downloads.getString(downloads.getColumnIndex(Database.COLUMN_TYPE));
             final Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
 
             // download exists
@@ -156,16 +161,15 @@ public class DownloadHandler extends BroadcastReceiver {
                         LogHandler.log(Log.WARN, "import starting of " + name);
 
                         final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
-                        final String mimeGet = manager.getMimeTypeForDownloadedFile(id);
-                        final String mimeCur = download.getString(download.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                        final String mimeServer = manager.getMimeTypeForDownloadedFile(id);
 
                         LogHandler.log(Log.INFO, "id: " + String.valueOf(id));
                         LogHandler.log(Log.INFO, "manager: " + manager.toString());
                         LogHandler.log(Log.INFO, "stream: " + stream.toString());
-                        LogHandler.log(Log.INFO, "mime-getter: " + mimeGet);
-                        LogHandler.log(Log.INFO, "mime-cursor: " + mimeCur);
+                        LogHandler.log(Log.INFO, "mime: " + mime);
+                        LogHandler.log(Log.INFO, "mimeServer: " + mimeServer);
 
-                        switch (mimeGet != null ? mimeGet : (mimeCur != null ? mimeCur : "")) {
+                        switch (mime != null ? mime : (mimeServer != null ? mimeServer : "")) {
 
                             // register feedback
                             case "application/json":
@@ -182,6 +186,7 @@ public class DownloadHandler extends BroadcastReceiver {
 
                             // xml data
                             case "application/xml":
+                            case "text/xml":
                                 db.importXML(name, stream);
                                 break;
 

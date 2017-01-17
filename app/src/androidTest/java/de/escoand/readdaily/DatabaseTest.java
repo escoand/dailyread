@@ -74,7 +74,7 @@ public class DatabaseTest {
     public void test_02_Downloads() {
         Assert.assertEquals(0, db.getDownloads().getCount());
 
-        db.addDownload(TEST_DOWNLAOD, 123456789);
+        db.addDownload(TEST_DOWNLAOD, 123456789, null);
 
         Assert.assertEquals(1, db.getDownloads().getCount());
 

@@ -90,15 +90,9 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     public void onProductPurchased(@NonNull final String productId, @NonNull final TransactionDetails details) {
-        DownloadHandler.startDownload(
-                this,
-                details.purchaseInfo.signature,
-                details.purchaseInfo.responseData,
-                billing.getPurchaseListingDetails(productId).title
-        );
         for (int i = 0; i < listAdapter.getCount(); i++)
             if (listAdapter.getItem(i).getProductId().equals(productId))
-                listAdapter.getItem(i).refreshUI();
+                listAdapter.getItem(i).download();
     }
 
     @Override
@@ -128,7 +122,7 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     private class OnReloadClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             new OkHttpClient()
                     .newCall(new Request.Builder().url(getString(R.string.product_list_url)).build())
                     .enqueue(new RequestCallback());
@@ -143,7 +137,9 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
                 final JSONArray products = new JSONArray(body);
 
                 for (int i = 0; i < products.length(); i++) {
-                    final StoreListItem item = new StoreListItem(products.getString(i));
+                    final String name = products.getJSONObject(i).getString("name");
+                    final String mime = products.getJSONObject(i).getString("mime");
+                    final StoreListItem item = new StoreListItem(name, mime);
 
                     // append to list
                     runOnUiThread(new Runnable() {
