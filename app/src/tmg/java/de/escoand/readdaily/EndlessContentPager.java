@@ -70,6 +70,7 @@ public class EndlessContentPager extends ViewPager implements OnDateSelectedList
     private class EndlessDayPagerAdapter extends FragmentStatePagerAdapter {
         public EndlessDayPagerAdapter(final FragmentManager fm) {
             super(fm);
+            setOffscreenPageLimit(0);
         }
 
         @Override
