@@ -25,8 +25,9 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,14 +36,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.EmptyStackException;
 import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
     public final static long SUBSCRIPTION_DOWNLOAD_UNKNOWN = -2;
     public final static long DOWNLOAD_ID_UNKNOWN = -1;
 
-    public static long startInvisibleDownload(Context context, String url, String title) {
+    public static long startInvisibleDownload(final Context context, final String url, final String title) {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
@@ -50,13 +50,15 @@ public class DownloadHandler extends BroadcastReceiver {
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setTitle(title));
-        Database.getInstance(context).addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id, null);
 
         return id;
     }
 
-    public static long startDownload(Context context, String signature, String responseData, String title) {
-        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    public static long startDownload(@NonNull final Context context, @NonNull final String signature,
+                                     @NonNull final String responseData, @NonNull final String title,
+                                     @Nullable final String mimeType) {
+        final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
 
         try {
@@ -73,12 +75,12 @@ public class DownloadHandler extends BroadcastReceiver {
                 .addRequestHeader("App-ResponseData", responseData)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
-        Database.getInstance(context).addDownload(name, id);
+        Database.getInstance(context).addDownload(name, id, mimeType);
 
         return id;
     }
 
-    public static float downloadProgress(Context context, String name) {
+    public static float downloadProgress(final Context context, final String name) {
         Cursor cursor = Database.getInstance(context).getDownloads();
         long id = 0;
         float progress;
@@ -109,7 +111,7 @@ public class DownloadHandler extends BroadcastReceiver {
         return progress;
     }
 
-    public static void stopDownload(Context context, String name) {
+    public static void stopDownload(final Context context, final String name) {
         Database db = Database.getInstance(context);
         Cursor c = db.getDownloads();
         long id = 0;
@@ -130,7 +132,7 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(final Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         final Database db = Database.getInstance(context);
         final Cursor downloads = db.getDownloads();
@@ -138,8 +140,9 @@ public class DownloadHandler extends BroadcastReceiver {
         LogHandler.log(Log.WARN, "receive starting");
 
         while (downloads.moveToNext()) {
-            final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
             final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
+            final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
+            final String mime = downloads.getString(downloads.getColumnIndex(Database.COLUMN_TYPE));
             final Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
 
             // download exists
@@ -149,7 +152,7 @@ public class DownloadHandler extends BroadcastReceiver {
             // download finished
             if (download.getInt(download.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
                 continue;
-            
+
             // import file in background
             new Thread(new Runnable() {
                 @Override
@@ -158,16 +161,15 @@ public class DownloadHandler extends BroadcastReceiver {
                         LogHandler.log(Log.WARN, "import starting of " + name);
 
                         final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
-                        final String mimeGet = manager.getMimeTypeForDownloadedFile(id);
-                        final String mimeCur = download.getString(download.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                        final String mimeServer = manager.getMimeTypeForDownloadedFile(id);
 
                         LogHandler.log(Log.INFO, "id: " + String.valueOf(id));
                         LogHandler.log(Log.INFO, "manager: " + manager.toString());
                         LogHandler.log(Log.INFO, "stream: " + stream.toString());
-                        LogHandler.log(Log.INFO, "mime-getter: " + mimeGet);
-                        LogHandler.log(Log.INFO, "mime-cursor: " + mimeCur);
+                        LogHandler.log(Log.INFO, "mime: " + mime);
+                        LogHandler.log(Log.INFO, "mimeServer: " + mimeServer);
 
-                        switch (mimeGet != null ? mimeGet : (mimeCur != null ? mimeCur : "")) {
+                        switch (mime != null ? mime : (mimeServer != null ? mimeServer : "")) {
 
                             // register feedback
                             case "application/json":
@@ -184,6 +186,7 @@ public class DownloadHandler extends BroadcastReceiver {
 
                             // xml data
                             case "application/xml":
+                            case "text/xml":
                                 db.importXML(name, stream);
                                 break;
 
@@ -205,20 +208,17 @@ public class DownloadHandler extends BroadcastReceiver {
 
                     // file error
                     catch (FileNotFoundException e) {
-                        LogHandler.log(e);
-                        Toast.makeText(context, R.string.message_download_open, Toast.LENGTH_LONG).show();
+                        LogHandler.logAndShow(e, context, R.string.message_download_open);
                     }
 
                     // stream error
                     catch (IOException e) {
-                        LogHandler.log(e);
-                        Toast.makeText(context, R.string.message_download_read, Toast.LENGTH_LONG).show();
+                        LogHandler.logAndShow(e, context, R.string.message_download_read);
                     }
 
                     // xml error
                     catch (XmlPullParserException e) {
-                        LogHandler.log(e);
-                        Toast.makeText(context, R.string.message_download_xml, Toast.LENGTH_LONG).show();
+                        LogHandler.logAndShow(e, context, R.string.message_download_xml);
                     }
 
                     // clean
