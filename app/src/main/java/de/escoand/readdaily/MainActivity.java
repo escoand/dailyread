@@ -118,6 +118,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        if (layout.isDrawerOpen(Gravity.LEFT) || layout.isDrawerOpen(Gravity.RIGHT))
+            layout.closeDrawers();
+        else
+            super.onBackPressed();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         DialogFragment dialog = null;
         Intent intent = null;
