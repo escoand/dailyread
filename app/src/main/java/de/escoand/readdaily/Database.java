@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
@@ -67,7 +68,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String TYPE_EXEGESIS = "exeg";
     public static final String TYPE_INTRO = "intr";
     public static final String TYPE_MEDIA = "media";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "data";
     private static final String TABLE_TEXTS = "texts";
     private static final String TABLE_SETS = "sets";
@@ -115,7 +116,8 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
                 COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
-                COLUMN_ID + " INTEGER NOT NULL)");
+                COLUMN_ID + " INTEGER NOT NULL, " +
+                COLUMN_TYPE + " TEXT)");
         db.execSQL("CREATE TABLE " + TABLE_SETS + " (" +
                 COLUMN_NAME + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                 COLUMN_REVISION + " LONG NOT NULL)");
@@ -176,6 +178,13 @@ public class Database extends SQLiteOpenHelper {
             values.put(COLUMN_NAME, TYPE_MEDIA);
             values.put(COLUMN_PRIORITY, PRIORITY_MEDIA);
             db.insert(TABLE_TYPES, null, values);
+        }
+        if (oldVersion < 5) {
+            db.execSQL("DROP TABLE " + TABLE_DOWNLOADS);
+            db.execSQL("CREATE TABLE " + TABLE_DOWNLOADS + " (" +
+                    COLUMN_SUBSCRIPTION + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
+                    COLUMN_ID + " INTEGER NOT NULL, " +
+                    COLUMN_TYPE + " TEXT)");
         }
     }
 
@@ -507,19 +516,24 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void addDownload(String set, long downloadId) {
+    public void addDownload(@NonNull final String set, @NonNull final long downloadId,
+                            @Nullable final String mimeType) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUBSCRIPTION, set);
         values.put(COLUMN_ID, downloadId);
+        values.put(COLUMN_TYPE, mimeType);
         getWritableDatabase().insertOrThrow(TABLE_DOWNLOADS, null, values);
     }
 
     public Cursor getDownloads() {
-        return getReadableDatabase().query(TABLE_DOWNLOADS, new String[]{COLUMN_SUBSCRIPTION, COLUMN_ID}, null, null, null, null, null);
+        return getReadableDatabase().query(TABLE_DOWNLOADS,
+                new String[]{COLUMN_SUBSCRIPTION, COLUMN_ID, COLUMN_TYPE},
+                null, null, null, null, null);
     }
 
     public void removeDownload(long downloadId) {
-        getWritableDatabase().delete(TABLE_DOWNLOADS, COLUMN_ID + "=?", new String[]{String.valueOf(downloadId)});
+        getWritableDatabase().delete(TABLE_DOWNLOADS, COLUMN_ID + "=?",
+                new String[]{String.valueOf(downloadId)});
     }
 
     public boolean isAnyInstalled() {

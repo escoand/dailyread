@@ -32,7 +32,6 @@ import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,8 +41,9 @@ import okhttp3.Response;
 
 public class StoreListItem implements Runnable {
     private final String productId;
-    Thread refrehThread = null;
-    float downloadProgress = -1;
+    private final String mimeType;
+    private Thread refrehThread = null;
+    private float downloadProgress = -1;
     private SkuDetails listing;
     private TransactionDetails transaction;
     private Activity activity;
@@ -56,15 +56,16 @@ public class StoreListItem implements Runnable {
     private ProgressBar progress;
     private BillingProcessor billing;
 
-    public StoreListItem(String productId) {
+    public StoreListItem(final String productId, final String mimeType) {
         this.productId = productId;
+        this.mimeType = mimeType;
     }
 
     public String getProductId() {
         return productId;
     }
 
-    public View getView(final Activity activity, ViewGroup parent, final BillingProcessor billing) {
+    public View getView(final Activity activity, final ViewGroup parent, final BillingProcessor billing) {
         this.activity = activity;
         this.billing = billing;
 
@@ -111,7 +112,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setText(activity.getString(R.string.button_remove));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     db.removeData(productId);
                     refreshUI();
                 }
@@ -138,7 +139,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setText(activity.getString(R.string.button_cancel));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     DownloadHandler.stopDownload(activity, productId);
                     refreshUI();
                 }
@@ -159,20 +160,7 @@ public class StoreListItem implements Runnable {
             buttonRemove.setVisibility(View.GONE);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(activity.getString(R.string.button_download));
-            buttonAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    long id = DownloadHandler.startDownload(
-                            activity,
-                            transaction.purchaseInfo.signature,
-                            transaction.purchaseInfo.responseData,
-                            (String) title.getText()
-                    );
-                    if (id > 0)
-                        buttonAction.setEnabled(false);
-                    refreshUI();
-                }
-            });
+            buttonAction.setOnClickListener(new OnDownloadClickListener());
             progress.setVisibility(View.GONE);
         }
 
@@ -209,9 +197,29 @@ public class StoreListItem implements Runnable {
             // sleep 5 second
             try {
                 Thread.sleep(5000);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 return;
             }
+        }
+    }
+
+    public void download() {
+        new OnDownloadClickListener().onClick(null);
+    }
+
+    private class OnDownloadClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            long id = DownloadHandler.startDownload(
+                    activity,
+                    transaction.purchaseInfo.signature,
+                    transaction.purchaseInfo.responseData,
+                    (String) title.getText(),
+                    mimeType
+            );
+            if (id > 0)
+                buttonAction.setEnabled(false);
+            refreshUI();
         }
     }
 
@@ -247,11 +255,7 @@ public class StoreListItem implements Runnable {
         }
 
         private void onFailue(final Throwable e) {
-
-            // ignore timeout
-            if (!(e instanceof TimeoutException))
-                LogHandler.log(e);
-
+            LogHandler.log(e);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
