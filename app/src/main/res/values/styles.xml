@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2016 escoand.
+  ~ Copyright (c) 2017 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -159,11 +159,12 @@
     </style>
 
     <!-- progress -->
-    <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
+    <style name="Progress"></style>
+
+    <style name="Progress.Circular">
         <item name="android:indeterminate">false</item>
-        <item name="android:indeterminateDrawable">@drawable/progress_circular_indeterminate</item>
         <item name="android:padding">5dp</item>
-        <item name="android:progressDrawable">@drawable/progress_circular</item>
+        <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
     </style>
 
     <style name="Progress.Circular.Indeterminate">
@@ -172,9 +173,6 @@
 
     <style name="Progress.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
-        <item name="android:indeterminateDrawable">@drawable/progress_horizontal</item>
-        <item name="android:minHeight">5dp</item>
-        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
     </style>
 
     <style name="Progress.Horizontal.Indeterminate">
