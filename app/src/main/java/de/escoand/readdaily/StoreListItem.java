@@ -194,9 +194,9 @@ public class StoreListItem implements Runnable {
                 }
             });
 
-            // sleep 5 second
+            // sleep 2 second
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return;
             }
@@ -209,16 +209,14 @@ public class StoreListItem implements Runnable {
 
     private class OnDownloadClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
-            long id = DownloadHandler.startDownload(
+        public void onClick(final View v) {
+            DownloadHandler.startDownload(
                     activity,
                     transaction.purchaseInfo.signature,
                     transaction.purchaseInfo.responseData,
                     (String) title.getText(),
                     mimeType
             );
-            if (id > 0)
-                buttonAction.setEnabled(false);
             refreshUI();
         }
     }
