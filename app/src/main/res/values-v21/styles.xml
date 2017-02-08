@@ -19,13 +19,23 @@
 
 <resources>
 
-    <style name="Progress">
-        <item name="android:indeterminateTint">?attr/color_progress_primary</item>
+    <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminate">false</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:progressDrawable">@drawable/progress_circular</item>
+        <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
         <item name="android:progressTint">?attr/color_progress_primary</item>
         <item name="android:secondaryProgressTint">?attr/color_progress_secondary</item>
     </style>
 
-    <style name="Progress.Horizontal" parent="@android:style/Widget.Material.ProgressBar.Horizontal">
+    <style name="Progress.Circular.Indeterminate" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTint">?attr/color_progress_primary</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
+    </style>
+
+    <style name="Progress.Horizontal" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
         <item name="android:indeterminateTint">?attr/color_progress_primary</item>
         <item name="android:progressTint">?attr/color_progress_primary</item>
