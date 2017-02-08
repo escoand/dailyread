@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2016 escoand.
+  ~ Copyright (c) 2017 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -22,7 +22,4 @@
     <color name="grey">#e6e6e6</color>
     <color name="darkblue">#007f98</color>
     <color name="darkgrey">#8d8d8d</color>
-    <!-- workaround for pre-lollipop -->
-    <color name="progress_primary">@color/blue</color>
-    <color name="progress_secondary">@android:color/white</color>
 </resources>
