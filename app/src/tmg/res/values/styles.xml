@@ -23,8 +23,10 @@
         <item name="android:textAppearance">@style/Text</item>
         <item name="android:textColorPrimary">@color/darkgrey</item>
         <item name="android:textColorSecondary">@color/darkgrey</item>
+
         <item name="colorPrimary">?attr/color_toolbar_background</item>
         <item name="colorPrimaryDark">?attr/color_statusbar_background</item>
+
         <item name="color_statusbar_background">@color/blue</item>
         <item name="color_toolbar_background">@color/blue</item>
         <item name="color_toolbar_title">@color/darkblue</item>
@@ -56,6 +58,11 @@
         <item name="color_about_background">@android:color/white</item>
         <item name="color_about_text">@color/darkgrey</item>
         <item name="color_about_action">@color/darkgrey</item>
+
+        <item name="text_size_large">18sp</item>
+        <item name="text_size_medium">16sp</item>
+        <item name="text_size_normal">14sp</item>
+        <item name="text_size_small">12sp</item>
     </style>
 
     <!-- card -->
@@ -66,8 +73,8 @@
 
     <!-- text -->
     <style name="Text">
+        <item name="android:textSize">?attr/text_size_normal</item>
         <item name="fontPath">fonts/Nunito-Light.ttf</item>
-        <item name="android:textSize">14dp</item>
     </style>
 
     <style name="Text.Toolbar.Title">
@@ -76,16 +83,15 @@
 
     <style name="Text.Header">
         <item name="android:textColor">?attr/color_header_title</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">?attr/text_size_medium</item>
     </style>
 
     <style name="Text.Header.Small">
         <item name="android:textColor">?attr/color_header_subtitle</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">?attr/text_size_small</item>
     </style>
 
     <style name="Text.Drawer">
-        <item name="android:textSize">14dp</item>
         <item name="itemIconTint">?attr/color_drawer_icon</item>
         <item name="itemTextAppearance">@style/Text</item>
         <item name="itemTextColor">?attr/color_drawer_text</item>
@@ -100,14 +106,14 @@
         <item name="android:layout_marginBottom">19dp</item>
         <item name="android:lineSpacingExtra">9dp</item>
         <item name="android:textColor">?attr/color_daily_text</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">?attr/text_size_medium</item>
     </style>
 
     <style name="Text.Daily.Title">
-        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
         <item name="android:lineSpacingExtra">9dp</item>
         <item name="android:textColor">?attr/color_daily_title</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">?attr/text_size_medium</item>
+        <item name="fontPath">fonts/Nunito-Bold.ttf</item>
     </style>
 
     <style name="Text.Daily.Source">
@@ -117,13 +123,13 @@
     <style name="Text.Player">
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:textColor">?attr/color_header_title</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">?attr/text_size_medium</item>
         <item name="fontPath">fonts/Nunito-Bold.ttf</item>
     </style>
 
     <style name="Text.BottomMenu">
         <item name="android:textColor">?attr/color_bottom_buttons_text</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">?attr/text_size_normal</item>
     </style>
 
     <style name="Text.Product.Title">
@@ -131,8 +137,8 @@
     </style>
 
     <style name="Text.About.Title">
-        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
         <item name="android:padding">0dp</item>
+        <item name="fontPath">fonts/Nunito-Regular.ttf</item>
     </style>
 
 </resources>

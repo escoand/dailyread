@@ -62,6 +62,11 @@
         <attr name="color_about_text" format="reference|color" />
         <attr name="color_about_action" format="reference|color" />
 
+        <attr name="text_size_large" format="reference|dimension" />
+        <attr name="text_size_medium" format="reference|dimension" />
+        <attr name="text_size_normal" format="reference|dimension" />
+        <attr name="text_size_small" format="reference|dimension" />
+
     </declare-styleable>
 
 </resources>
