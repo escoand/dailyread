@@ -17,7 +17,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
         <item name="android:textAppearance">@style/Text</item>
@@ -174,17 +174,33 @@
         <item name="android:padding">5dp</item>
         <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
         <item name="android:progressDrawable">@drawable/progress_circular</item>
+        <item name="android:progressTint" tools:targetApi="lollipop">?attr/color_progress_primary
+        </item>
+        <item name="android:secondaryProgressTint" tools:targetApi="lollipop">
+            ?attr/color_progress_secondary
+        </item>
     </style>
 
     <style name="Progress.Circular.Indeterminate" parent="@style/Widget.AppCompat.ProgressBar">
         <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">
+            ?attr/color_progress_primary
+        </item>
         <item name="android:padding">5dp</item>
         <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
     </style>
 
     <style name="Progress.Horizontal" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
+        <item name="android:indeterminateTint" tools:targetApi="lollipop">
+            ?attr/color_progress_primary
+        </item>
         <item name="android:progressDrawable">@drawable/progress_circular</item>
+        <item name="android:progressTint" tools:targetApi="lollipop">?attr/color_progress_primary
+        </item>
+        <item name="android:secondaryProgressTint" tools:targetApi="lollipop">
+            ?attr/color_progress_secondary
+        </item>
     </style>
 
     <style name="Progress.Horizontal.Indeterminate">
