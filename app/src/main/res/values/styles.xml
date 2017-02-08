@@ -167,20 +167,24 @@
     </style>
 
     <!-- progress -->
-    <style name="Progress"></style>
+    <style name="Progress" />
 
-    <style name="Progress.Circular">
+    <style name="Progress.Circular" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
+        <item name="android:progressDrawable">@drawable/progress_circular</item>
+    </style>
+
+    <style name="Progress.Circular.Indeterminate" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminate">true</item>
         <item name="android:padding">5dp</item>
         <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
     </style>
 
-    <style name="Progress.Circular.Indeterminate">
-        <item name="android:indeterminate">true</item>
-    </style>
-
-    <style name="Progress.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal">
+    <style name="Progress.Horizontal" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:indeterminate">false</item>
+        <item name="android:progressDrawable">@drawable/progress_circular</item>
     </style>
 
     <style name="Progress.Horizontal.Indeterminate">
@@ -192,7 +196,7 @@
         <item name="android:textSize">?attr/text_size_normal</item>
     </style>
 
-    <style name="Text.Toolbar"></style>
+    <style name="Text.Toolbar" />
 
     <style name="Text.Toolbar.Title">
         <item name="android:textColor">?attr/color_toolbar_title</item>
