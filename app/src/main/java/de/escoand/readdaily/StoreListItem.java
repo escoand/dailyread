@@ -197,7 +197,7 @@ public class StoreListItem implements Runnable {
             // sleep 5 second
             try {
                 Thread.sleep(5000);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 return;
             }
         }
@@ -209,23 +209,21 @@ public class StoreListItem implements Runnable {
 
     private class OnDownloadClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
-            long id = DownloadHandler.startDownload(
+        public void onClick(final View v) {
+            DownloadHandler.startDownload(
                     activity,
                     transaction.purchaseInfo.signature,
                     transaction.purchaseInfo.responseData,
                     (String) title.getText(),
                     mimeType
             );
-            if (id > 0)
-                buttonAction.setEnabled(false);
             refreshUI();
         }
     }
 
     private class RequestCallback implements Callback {
         @Override
-        public void onResponse(Call call, Response response) {
+        public void onResponse(final Call call, final Response response) {
             try {
                 final int len = Integer.valueOf(response.header("Content-Length"));
                 final byte[] data = response.body().bytes();
@@ -244,13 +242,13 @@ public class StoreListItem implements Runnable {
             }
 
             // unexpected
-            catch (Exception e) {
+            catch (final Exception e) {
                 onFailue(e);
             }
         }
 
         @Override
-        public void onFailure(Call call, IOException e) {
+        public void onFailure(final Call call, final IOException e) {
             onFailue(e);
         }
 
