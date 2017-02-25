@@ -31,7 +31,8 @@
         android:id="@+id/player_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:transitionName="playerImage" />
 
     <LinearLayout
         android:id="@+id/header_texts"

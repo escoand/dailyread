@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2016 escoand.
+  ~ Copyright (c) 2017 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
         <item name="android:textAppearance">@style/Text</item>
@@ -63,6 +63,10 @@
         <item name="text_size_medium">16sp</item>
         <item name="text_size_normal">14sp</item>
         <item name="text_size_small">12sp</item>
+
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap" tools:targetApi="lollipop">true
+        </item>
     </style>
 
     <!-- card -->

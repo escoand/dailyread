@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDateSelected(final Date date) {
-        SimpleDateFormat frmt = new SimpleDateFormat();
+        final SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
 
         // default title
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements
         playerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlayerDialogFragment player = new PlayerDialogFragment();
+                final PlayerDialogFragment player = new PlayerDialogFragment();
                 player.setDate(getBaseContext(), date);
                 player.show(getSupportFragmentManager(), player.getClass().getName());
             }
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements
     private class OnIntroSelectedListener implements OnDateSelectedListener {
         @Override
         public void onDateSelected(@NonNull final Date date) {
-            IntroContentFragment dialog = new IntroContentFragment();
+            final IntroContentFragment dialog = new IntroContentFragment();
             dialog.onDateSelected(date);
             dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
         }
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements
     private class OnVotySelectedListener implements OnDateSelectedListener {
         @Override
         public void onDateSelected(@NonNull final Date date) {
-            YearContentFragment dialog = new YearContentFragment();
+            final YearContentFragment dialog = new YearContentFragment();
             dialog.onDateSelected(date);
             dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
         }

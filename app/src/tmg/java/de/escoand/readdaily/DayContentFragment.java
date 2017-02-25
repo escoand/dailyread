@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.transition.ChangeBounds;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,9 +128,14 @@ public class DayContentFragment extends AbstractContentFragment {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                PlayerDialogFragment player = new PlayerDialogFragment();
+                final PlayerDialogFragment player = new PlayerDialogFragment();
                 player.setDate(getContext(), date);
-                player.show(getFragmentManager(), player.getClass().getName());
+                player.setSharedElementEnterTransition(new ChangeBounds());
+                getFragmentManager().beginTransaction()
+                        .add(player, player.getClass().getName())
+                        .addSharedElement(image, "playerImage")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
