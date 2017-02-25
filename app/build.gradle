@@ -19,7 +19,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply from: 'versioning.gradle'
 
-version = "1.1.0-beta5"
+version = "1.1.0-beta6"
 
 android {
     compileSdkVersion 25
@@ -75,24 +75,25 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // google
-    compile 'com.android.support:cardview-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.google.android.gms:play-services-gcm:10.0.1'
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.google.firebase:firebase-crash:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.android.support:cardview-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:support-annotations:25.2.0'
+    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+    compile 'com.google.firebase:firebase-core:10.2.0'
+    compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile 'com.google.firebase:firebase-messaging:10.2.0'
 
     // 3rd party
     compile 'com.anjlab.android.iab.v3:library:1.0.38'
     compile 'com.prolificinteractive:material-calendarview:1.4.2'
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
     // tmg flavor
     tmgCompile 'de.hdodenhof:circleimageview:2.1.0'
     tmgCompile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
     // testing
-    androidTestCompile 'com.android.support:support-annotations:25.1.0'
+    androidTestCompile 'com.android.support:support-annotations:25.2.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
 }
