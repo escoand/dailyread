@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -24,7 +25,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,14 +50,14 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        adapter = new SimpleCursorAdapter(getContext(), layout, null, from, to, 0);
+        adapter = new SimpleCursorAdapter(getActivity(), layout, null, from, to, 0);
         adapter.setViewBinder(this);
         adapter.changeCursor(cursor);
 
         if (savedInstanceState != null)
             onDateSelected(Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
 
-        ListView list = new ListView(getContext());
+        ListView list = new ListView(getActivity());
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         list.setAdapter(adapter);
 
@@ -67,7 +67,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setView(onCreateView(getActivity().getLayoutInflater(), null, null))
                 .setPositiveButton(getString(R.string.button_close), new DialogInterface.OnClickListener() {
                     @Override
@@ -87,7 +87,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     @Override
     public void onDateSelected(@NonNull final Date date) {
         this.date = date;
-        this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
+        this.cursor = Database.getInstance(getActivity()).getDay(date, condition, values);
 
         if (adapter != null)
             adapter.changeCursor(cursor);

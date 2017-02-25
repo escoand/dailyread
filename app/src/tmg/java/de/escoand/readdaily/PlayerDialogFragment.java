@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,7 +31,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +63,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
         progressText = (TextView) root.findViewById(R.id.player_text);
 
         if (savedInstanceState != null) {
-            setDate(getContext(), Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
+            setDate(getActivity(), Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
             player.seekTo(savedInstanceState.getInt(STATE_POSITION));
         }
 
@@ -83,7 +83,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setView(onCreateView(getActivity().getLayoutInflater(), null, null))
                 .create();
     }

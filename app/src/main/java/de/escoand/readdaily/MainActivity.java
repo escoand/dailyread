@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,7 +29,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // start dialog
         if (dialog != null) {
-            dialog.show(getSupportFragmentManager(), "dialog");
+            dialog.show(getFragmentManager(), "dialog");
         }
 
         // start intent

@@ -17,14 +17,14 @@
 
 package de.escoand.readdaily;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
@@ -68,15 +68,15 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
 
         // adapter
         adapter = new SimpleCursorAdapter(
-                getContext(),
+                getActivity(),
                 R.layout.item_dialog,
-                Database.getInstance(getContext()).getList(condition, values, order),
+                Database.getInstance(getActivity()).getList(condition, values, order),
                 from, to,
                 0);
         adapter.setViewBinder(this);
 
         // dialog
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setAdapter(adapter, this)
                 .setNegativeButton(R.string.button_cancel, null)
@@ -94,7 +94,7 @@ public class ListDialogFragment extends DialogFragment implements SimpleCursorAd
         } else if (columnIndex == cursor.getColumnIndex(Database.COLUMN_DATE)) {
             try {
                 ((TextView) view).setText(DateFormat.getMediumDateFormat(
-                        getContext()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
+                        getActivity()).format(Database.getDateFromInt(cursor.getInt(columnIndex))));
             } catch (NullPointerException e) {
                 return false;
             }

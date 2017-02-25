@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@
 
 package de.escoand.readdaily;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +50,9 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        FrameLayout v = new FrameLayout(getContext());
-        progress = new ProgressBar(new ContextThemeWrapper(getContext(), R.style.Progress_Circular));
-        cal = new MaterialCalendarView(getContext());
+        FrameLayout v = new FrameLayout(getActivity());
+        progress = new ProgressBar(new ContextThemeWrapper(getActivity(), R.style.Progress_Circular));
+        cal = new MaterialCalendarView(getActivity());
 
         v.addView(progress);
         v.addView(cal);
@@ -71,7 +71,7 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
 
         new DataLoader().execute();
 
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.navigation_calendar)
                 .setView(v)
                 .setNegativeButton(R.string.button_cancel, null)

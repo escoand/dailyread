@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ package de.escoand.readdaily;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
 public class ReminderDialogFragment extends DialogFragment implements TimePicker.OnTimeChangedListener, DialogInterface.OnClickListener {
@@ -37,7 +37,7 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        TimePicker v = new TimePicker(getContext());
+        TimePicker v = new TimePicker(getActivity());
 
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         hour = settings.getInt(SETTINGS_HOUR, 9);
@@ -48,7 +48,7 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
         v.setCurrentHour(hour);
         v.setCurrentMinute(minute);
 
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setPositiveButton(R.string.button_ok, this)
                 .setNegativeButton(R.string.button_cancel, this)
@@ -72,7 +72,7 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
                         .putInt(SETTINGS_HOUR, hour)
                         .putInt(SETTINGS_MINUTE, minute)
                         .apply();
-                ReminderHandler.startReminder(getContext(), hour, minute);
+                ReminderHandler.startReminder(getActivity(), hour, minute);
                 break;
 
 
@@ -81,7 +81,7 @@ public class ReminderDialogFragment extends DialogFragment implements TimePicker
                 settings.edit()
                         .putBoolean(SETTINGS_ACTIVE, false)
                         .apply();
-                ReminderHandler.endReminder(getContext());
+                ReminderHandler.endReminder(getActivity());
                 break;
 
             // do nothing
