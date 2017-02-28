@@ -32,6 +32,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,12 +52,13 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private Toolbar toolbarRight;
     private View playerButton;
+    private SearchView searchButton;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ToDo re-set theme after changing it
+        // theme
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("readability", false))
             setTheme(R.style.AppTheme_Readability);
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         playerButton = toolbar.findViewById(R.id.toolbar_player);
+        searchButton = (SearchView) toolbar.findViewById(R.id.toolbar_search);
 
         // search
         // ToDo make search work again
@@ -115,6 +118,18 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // restart after theme changed
+        if (resultCode == SettingsActivity.CODE_THEME_CHANGED) {
+            LogHandler.log(Log.INFO, "theme changed, restarting");
+            finish();
+            startActivity(new Intent(this, this.getClass()));
+        }
     }
 
     @Override
@@ -168,13 +183,13 @@ public class MainActivity extends AppCompatActivity implements
 
             // search
             case R.id.button_search:
-                /*if (search != null) {
-                    search.setVisibility(View.VISIBLE);
-                    search.setIconified(false);
-                    search.requestFocus();
-                    for (DataListener tmp : listener)
-                        tmp.onDataUpdated(null, null);
-                }*/
+                if (searchButton != null) {
+                    searchButton.setVisibility(View.VISIBLE);
+                    searchButton.setIconified(false);
+                    searchButton.requestFocus();
+                    /*for (DataListener tmp : listener)
+                        tmp.onDataUpdated(null, null);*/
+                }
                 break;
 
             // reminder
@@ -210,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements
         // start intent
         // TODO check intent-ed application
         else if (intent != null)
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, 1);
 
         return true;
     }
@@ -389,13 +404,13 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public boolean onQueryTextSubmit(final String query) {
             //adapter.changeCursor(db.getSearch(query));
-            //search.setVisibility(View.GONE);
+            searchButton.setVisibility(View.GONE);
             return true;
         }
 
         @Override
         public boolean onClose() {
-            //search.setVisibility(View.GONE);
+            searchButton.setVisibility(View.GONE);
             return true;
         }
     }
