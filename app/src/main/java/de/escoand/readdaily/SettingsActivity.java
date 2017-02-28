@@ -18,6 +18,7 @@
 package de.escoand.readdaily;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -26,6 +27,7 @@ import android.preference.PreferenceManager;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends PreferenceActivity {
+    public static int CODE_THEME_CHANGED = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -35,6 +37,18 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
+        // readability
+        findPreference("readability").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                setResult(CODE_THEME_CHANGED);
+                finish();
+                startActivity(new Intent(SettingsActivity.this, SettingsActivity.this.getClass()));
+                return true;
+            }
+        });
+
+        // notification
         findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(final Preference preference, final Object newValue) {
