@@ -130,6 +130,13 @@ public class MainActivity extends AppCompatActivity implements
             finish();
             startActivity(new Intent(this, this.getClass()));
         }
+
+        // restart after download
+        else if (resultCode == StoreActivity.CODE_CONTENT_LOADED) {
+            LogHandler.log(Log.INFO, "content loaded, restarting");
+            finish();
+            startActivity(new Intent(this, this.getClass()));
+        }
     }
 
     @Override

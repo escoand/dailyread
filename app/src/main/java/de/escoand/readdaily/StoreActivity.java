@@ -43,6 +43,8 @@ import okhttp3.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class StoreActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+    public static int CODE_CONTENT_LOADED = 2;
+
     private StoreArrayAdapter listAdapter;
     private BillingProcessor billing;
     private ListView list;
@@ -80,6 +82,9 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
         list.setEmptyView(findViewById(R.id.listLoading));
         listAdapter = new StoreArrayAdapter(this, billing);
         list.setAdapter(listAdapter);
+
+        // result
+        setResult(CODE_CONTENT_LOADED);
     }
 
     @Override
