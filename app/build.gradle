@@ -66,11 +66,6 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // google
