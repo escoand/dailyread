@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 public class YearContentFragment extends AbstractContentFragment {
     public YearContentFragment() {
+        super();
         condition = Database.COLUMN_TYPE + "=?";
         values = new String[]{Database.TYPE_YEAR};
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,29 +33,31 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-public abstract class AbstractContentFragment extends DialogFragment implements OnDateSelectedListener, SimpleCursorAdapter.ViewBinder {
-    private static final String STATE_DATE = "date";
-
+public abstract class AbstractContentFragment extends DialogFragment implements Observer, SimpleCursorAdapter.ViewBinder {
     protected int layout = R.layout.item_content;
     protected String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
     protected int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     protected String condition = null;
     protected String[] values = null;
-    protected Date date = null;
+    protected int dayOffset = 0;
 
     private SimpleCursorAdapter adapter = null;
-    private Cursor cursor = null;
+
+    public AbstractContentFragment() {
+        DatePersistence.getInstance().addObserver(this);
+    }
+
+    public void setDayOffset(final int offset) {
+        dayOffset = offset;
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         adapter = new SimpleCursorAdapter(getContext(), layout, null, from, to, 0);
         adapter.setViewBinder(this);
-        adapter.changeCursor(cursor);
-
-        if (savedInstanceState != null)
-            onDateSelected(Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
 
         ListView list = new ListView(getContext());
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -79,18 +81,9 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        outState.putInt(STATE_DATE, Database.getIntFromDate(date));
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onDateSelected(@NonNull final Date date) {
-        this.date = date;
-        this.cursor = Database.getInstance(getContext()).getDay(date, condition, values);
-
+    public void update(Observable observable, Object o) {
         if (adapter != null)
-            adapter.changeCursor(cursor);
+            adapter.changeCursor(DatePersistence.getInstance().getData(getContext(), condition, values, dayOffset));
     }
 
     @Override

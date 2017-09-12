@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,24 +26,20 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import java.util.Date;
-
 public class OnBibleClickListener implements View.OnClickListener {
     private Activity context;
-    private Date date;
     private String type;
 
-    public OnBibleClickListener(@NonNull final Activity context, @NonNull final Date date, @NonNull final String type) {
+    public OnBibleClickListener(@NonNull final Activity context, @NonNull final String type) {
         super();
         this.context = context;
-        this.date = date;
         this.type = type;
     }
 
     @Override
     public void onClick(final View v) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        Cursor cursor = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{type});
+        Cursor cursor = DatePersistence.getInstance().getData(context, Database.COLUMN_TYPE + "=?", new String[]{type});
 
         if (cursor.moveToFirst()) {
             String verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));

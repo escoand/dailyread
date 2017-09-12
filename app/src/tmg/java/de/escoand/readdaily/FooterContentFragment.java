@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +29,15 @@ import android.widget.ListView;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-public class FooterContentFragment extends AbstractContentFragment implements OnDateSelectedListener {
+public class FooterContentFragment extends AbstractContentFragment implements Observer {
     private String appTitle = "";
     private String shareText;
 
     public FooterContentFragment() {
+        super();
         layout = R.layout.item_footer;
         from = new String[]{BaseColumns._ID, BaseColumns._ID, BaseColumns._ID};
         to = new int[]{R.id.button_today, R.id.button_share, R.id.button_bible_exegesis};
@@ -55,6 +57,8 @@ public class FooterContentFragment extends AbstractContentFragment implements On
 
     @Override
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+        final Date date = DatePersistence.getInstance().getDate();
+
         switch (view.getId()) {
 
             // today
@@ -69,7 +73,7 @@ public class FooterContentFragment extends AbstractContentFragment implements On
 
             // online bible
             case R.id.button_bible_exegesis:
-                view.setOnClickListener(new OnBibleClickListener(getActivity(), date, Database.TYPE_EXEGESIS));
+                view.setOnClickListener(new OnBibleClickListener(getActivity(), Database.TYPE_EXEGESIS));
                 return true;
 
             // do nothing
@@ -81,8 +85,8 @@ public class FooterContentFragment extends AbstractContentFragment implements On
     }
 
     @Override
-    public void onDateSelected(@NonNull final Date date) {
-        final Cursor cursor = Database.getInstance(getContext()).getDay(date,
+    public void update(Observable observable, Object o) {
+        final Cursor cursor = DatePersistence.getInstance().getData(getContext(),
                 Database.COLUMN_TYPE + " IN (?,?)",
                 new String[]{Database.TYPE_EXEGESIS, Database.TYPE_DAY});
         String title = null;
@@ -105,18 +109,18 @@ public class FooterContentFragment extends AbstractContentFragment implements On
         cursor.close();
 
         if (title != null && text != null && verse != null)
-            shareText = DateFormat.getDateInstance().format(date) + "\n" +
-                    title + " (" + verse + ")\n" + text + "\n" + appTitle;
+            shareText = DateFormat.getDateInstance().format(DatePersistence.getInstance().getDate()) +
+                    "\n" + title + " (" + verse + ")\n" + text + "\n" + appTitle;
         else
             shareText = null;
 
-        super.onDateSelected(date);
+        super.update(observable, o);
     }
 
     private class OnTodayClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View view) {
-            DateListenerHandler.getInstance().onDateSelected(new Date());
+            DatePersistence.getInstance().setDate(new Date());
         }
     }
 

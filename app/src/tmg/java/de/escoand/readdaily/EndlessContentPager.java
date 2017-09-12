@@ -18,78 +18,63 @@
 package de.escoand.readdaily;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.ArrayList;
 
-public class EndlessContentPager extends ViewPager implements OnDateSelectedListener {
-    private static final int POSITIONS_MAX = 1000;
-    private static final int POSITIONS_INTIAL = POSITIONS_MAX / 2;
+public class EndlessContentPager extends ViewPager {
+    private final ArrayList<DayContentFragment> pages = new ArrayList<>(3);
 
-    private final HashMap<Integer, AbstractContentFragment> fragments = new HashMap<>();
-
-    public EndlessContentPager(final Context context, final AttributeSet attrs) {
+    public EndlessContentPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setAdapter(new EndlessDayPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
-        setCurrentItem(POSITIONS_INTIAL, false);
-    }
 
-    private Date getDateOfPosition(final int position) {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.add(Calendar.DATE, position - POSITIONS_INTIAL);
-        return calendar.getTime();
-    }
+        pages.add(new DayContentFragment());
+        pages.add(new DayContentFragment());
+        pages.add(new DayContentFragment());
 
-    private int getPositionOfDate(final Date date) {
-        return (int) Math.ceil(POSITIONS_INTIAL +
-                (date.getTime() - new Date().getTime()) / 24 / 60 / 60 / 1000.0);
-    }
+        pages.get(0).setDayOffset(-1);
+        pages.get(1).setDayOffset(0);
+        pages.get(2).setDayOffset(1);
 
-    @Override
-    public void onDateSelected(@NonNull final Date date) {
-        setCurrentItem(getPositionOfDate(date), false);
+        setAdapter(new CustomPageAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
+        setCurrentItem((pages.size() - 1) / 2, false);
     }
 
     @Override
-    protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
+    protected void onPageScrolled(int position, float offset, int offsetPixels) {
         super.onPageScrolled(position, offset, offsetPixels);
-        if (offset == 0)
-            DateListenerHandler.getInstance().onDateSelected(getDateOfPosition(position), this);
+
+        // end of days
+        if (position == 0 && offset == 0 || position == pages.size() - 1) {
+
+            DatePersistence.getInstance().deleteObserver(pages.get(position));
+            DatePersistence.getInstance().setDateOffset(position == 0 ? -1 : +1);
+            // TODO try to avoid flickering when changing item
+            setCurrentItem((pages.size() - 1) / 2, false);
+            pages.get(position).update(null, null);
+            DatePersistence.getInstance().addObserver(pages.get(position));
+        }
     }
 
-    private class EndlessDayPagerAdapter extends FragmentStatePagerAdapter {
-        public EndlessDayPagerAdapter(final FragmentManager fm) {
+    private class CustomPageAdapter extends FragmentPagerAdapter {
+
+        public CustomPageAdapter(final FragmentManager fm) {
             super(fm);
-            setOffscreenPageLimit(0);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return pages.get(position);
         }
 
         @Override
         public int getCount() {
-            return POSITIONS_MAX;
-        }
-
-        @Override
-        public Fragment getItem(final int position) {
-            final AbstractContentFragment content = new DayContentFragment();
-            content.onDateSelected(getDateOfPosition(position));
-            fragments.put(position, content);
-            return content;
-        }
-
-        @Override
-        public void destroyItem(final ViewGroup container, final int position, final Object object) {
-            super.destroyItem(container, position, object);
-            fragments.remove(position);
+            return pages.size();
         }
     }
 }
