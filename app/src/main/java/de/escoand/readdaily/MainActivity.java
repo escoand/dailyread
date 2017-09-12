@@ -40,12 +40,13 @@ import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements
-        OnDateSelectedListener, NavigationView.OnNavigationItemSelectedListener {
-    private DateListenerHandler handler = DateListenerHandler.getInstance();
+        Observer, NavigationView.OnNavigationItemSelectedListener {
     private Cursor cursor;
 
     private DrawerLayout layout;
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbarRight;
     private View playerButton;
     private SearchView searchButton;
+
+    public MainActivity() {
+        DatePersistence.getInstance().addObserver(this);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -92,13 +97,6 @@ public class MainActivity extends AppCompatActivity implements
         // ToDo make search work again
         ((SearchView) toolbar.findViewById(R.id.toolbar_search)).setOnQueryTextListener(new OnSearchListener());
 
-        // fragments
-        handler.addDateListener(this);
-        handler.addDateListener((OnDateSelectedListener) findViewById(R.id.content_pager));
-        handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_voty));
-        handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_intro));
-        handler.addDateListener((OnDateSelectedListener) getSupportFragmentManager().findFragmentById(R.id.content_footer));
-
         // floating buttons
         if (findViewById(R.id.button_more) != null)
             findViewById(R.id.button_more).setOnClickListener(new OnMoreClickListener());
@@ -113,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements
         // start store if no data
         if (!Database.getInstance(this).isAnyInstalled())
             startActivity(new Intent(getApplication(), StoreActivity.class));
+
+        DatePersistence.getInstance().setDate(new Date());
     }
 
     @Override
@@ -158,34 +158,30 @@ public class MainActivity extends AppCompatActivity implements
 
             // today
             case R.id.button_today:
-                handler.onDateSelected(new Date());
+                DatePersistence.getInstance().setDate(new Date());
                 break;
 
             // list dialogs
             case R.id.button_list:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_EXEGESIS});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(handler);
                 break;
             case R.id.button_list_intro:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_intro));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TITLE + "!=''", new String[]{Database.TYPE_INTRO});
                 ((ListDialogFragment) dialog).setMapping(new String[]{Database.COLUMN_TITLE, Database.COLUMN_READ}, new int[]{R.id.list_title, R.id.list_image});
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnIntroSelectedListener());
                 break;
             case R.id.button_list_voty:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
                 ((ListDialogFragment) dialog).setOrder(Database.COLUMN_DATE);
-                ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnVotySelectedListener());
                 break;
 
             // calendar
             case R.id.button_calendar:
                 dialog = new CalendarDialogFragment();
-                ((CalendarDialogFragment) dialog).setOnDateSelectedListener(handler);
                 break;
 
             // search
@@ -238,7 +234,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDateSelected(final Date date) {
+    public void update(Observable observable, Object o) {
+        final Date date = DatePersistence.getInstance().getDate();
         final SimpleDateFormat frmt = new SimpleDateFormat();
         String pattern;
 
@@ -258,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements
         // init buttons
         if (findViewById(R.id.button_bible_exegesis) != null)
             findViewById(R.id.button_bible_exegesis).setOnClickListener(
-                    new OnBibleClickListener(this, date, Database.TYPE_EXEGESIS));
+                    new OnBibleClickListener(this, Database.TYPE_EXEGESIS));
         ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
         toggleVisibility(R.id.button_more, View.GONE);
         toggleVisibility(R.id.button_intro, View.GONE);
@@ -360,24 +357,6 @@ public class MainActivity extends AppCompatActivity implements
                         break;
                 }
             }
-        }
-    }
-
-    private class OnIntroSelectedListener implements OnDateSelectedListener {
-        @Override
-        public void onDateSelected(@NonNull final Date date) {
-            final IntroContentFragment dialog = new IntroContentFragment();
-            dialog.onDateSelected(date);
-            dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
-        }
-    }
-
-    private class OnVotySelectedListener implements OnDateSelectedListener {
-        @Override
-        public void onDateSelected(@NonNull final Date date) {
-            final YearContentFragment dialog = new YearContentFragment();
-            dialog.onDateSelected(date);
-            dialog.show(getSupportFragmentManager(), dialog.getClass().getName());
         }
     }
 

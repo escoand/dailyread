@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ import java.util.NoSuchElementException;
 public class CalendarDialogFragment extends DialogFragment implements com.prolificinteractive.materialcalendarview.OnDateSelectedListener {
     private final HashSet<Integer> datesAvailable = new HashSet<>();
     private final HashSet<Integer> datesRead = new HashSet<>();
-    private OnDateSelectedListener listener;
     private ProgressBar progress;
     private MaterialCalendarView cal;
 
@@ -80,13 +79,8 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
 
     @Override
     public void onDateSelected(@NonNull final MaterialCalendarView widget, @NonNull final CalendarDay date, final boolean selected) {
-        if (listener != null)
-            listener.onDateSelected(date.getDate());
+        DatePersistence.getInstance().setDate(date.getDate());
         dismiss();
-    }
-
-    public void setOnDateSelectedListener(final OnDateSelectedListener listener) {
-        this.listener = listener;
     }
 
     private class AvailableDecorator implements DayViewDecorator {

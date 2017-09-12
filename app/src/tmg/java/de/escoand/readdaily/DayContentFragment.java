@@ -19,7 +19,6 @@ package de.escoand.readdaily;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.transition.ChangeBounds;
 import android.text.Html;
@@ -31,12 +30,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Date;
+import java.util.Observable;
 
 public class DayContentFragment extends AbstractContentFragment {
     private View header;
 
     public DayContentFragment() {
+        super();
         condition = Database.COLUMN_TYPE + " IN (?,?)";
         values = new String[]{Database.TYPE_WEEK, Database.TYPE_EXEGESIS};
     }
@@ -50,27 +50,31 @@ public class DayContentFragment extends AbstractContentFragment {
         // header
         header = inflater.inflate(R.layout.item_header, container, false);
         list.addHeaderView(header);
-        updateHeader();
 
         list.setDivider(null);
-        list.setEmptyView(empty);
+        // TODO fix exception: java.lang.ClassCastException: android.support.v4.view.ViewPager$LayoutParams cannot be cast to android.widget.AbsListView$LayoutParams
+        //list.setEmptyView(empty);
         root.addView(list);
-        root.addView(empty);
+        //root.addView(empty);
+
+        // get data
+        updateHeader();
+        update(null, null);
 
         return root;
     }
 
     @Override
-    public void onDateSelected(@NonNull Date date) {
-        super.onDateSelected(date);
+    public void update(Observable observable, Object o) {
         updateHeader();
+        super.update(observable, o);
     }
 
     private void updateHeader() {
-        if (date == null || header == null)
+        if (header == null)
             return;
 
-        final Cursor c = Database.getInstance(getContext()).getDay(date, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY});
+        final Cursor c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dayOffset);
         final ImageView image = (ImageView) header.findViewById(R.id.player_image);
         final TextView title = (TextView) header.findViewById(R.id.header_title);
         final TextView source = (TextView) header.findViewById(R.id.header_source);
@@ -84,7 +88,7 @@ public class DayContentFragment extends AbstractContentFragment {
         header.setVisibility(View.VISIBLE);
 
         // image
-        switch (date.getMonth()) {
+        switch (DatePersistence.getInstance().getDate().getMonth()) {
             case 0:
                 image.setImageResource(R.mipmap.img_month_01);
                 break;
@@ -129,7 +133,7 @@ public class DayContentFragment extends AbstractContentFragment {
             @Override
             public void onClick(final View v) {
                 final PlayerDialogFragment player = new PlayerDialogFragment();
-                player.setDate(getContext(), date);
+                player.setDate(getContext(), DatePersistence.getInstance().getDate());
                 player.setSharedElementEnterTransition(new ChangeBounds());
                 getFragmentManager().beginTransaction()
                         .add(player, player.getClass().getName())
@@ -144,6 +148,6 @@ public class DayContentFragment extends AbstractContentFragment {
         source.setText(c.getString(c.getColumnIndex(Database.COLUMN_SOURCE)));
 
         // button
-        button.setOnClickListener(new OnBibleClickListener(getActivity(), date, Database.TYPE_DAY));
+        button.setOnClickListener(new OnBibleClickListener(getActivity(), Database.TYPE_DAY));
     }
 }
