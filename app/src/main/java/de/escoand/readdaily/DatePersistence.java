@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.Observable;
 
 public class DatePersistence extends Observable {
-    private static DatePersistence instance = null;
+    private static DatePersistence instance = new DatePersistence();
     private GregorianCalendar calendar = new GregorianCalendar();
 
     private DatePersistence() {
@@ -33,23 +33,7 @@ public class DatePersistence extends Observable {
     }
 
     public static DatePersistence getInstance() {
-        if (instance == null)
-            instance = new DatePersistence();
         return instance;
-    }
-
-    public void setDateOffset(final int offset) {
-        calendar.add(GregorianCalendar.DATE, offset);
-        setChanged();
-        notifyObservers();
-    }
-
-    public void prevDate() {
-        setDateOffset(-1);
-    }
-
-    public void nextDate() {
-        setDateOffset(-1);
     }
 
     /* date getter */
@@ -60,6 +44,12 @@ public class DatePersistence extends Observable {
     /* date setters */
     public void setDate(final Date date) {
         calendar.setTime(date);
+        setChanged();
+        notifyObservers();
+    }
+
+    public void setDateOffset(final int offset) {
+        calendar.add(GregorianCalendar.DATE, offset);
         setChanged();
         notifyObservers();
     }
