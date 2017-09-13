@@ -44,18 +44,17 @@ public class DayContentFragment extends AbstractContentFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         final FrameLayout root = new FrameLayout(getContext());
-        final ListView list = (ListView) super.onCreateView(inflater, container, savedInstanceState);
-        final View empty = inflater.inflate(R.layout.list_empty, container, false);
+        final ListView list = (ListView) super.onCreateView(inflater, root, savedInstanceState);
+        final View empty = inflater.inflate(R.layout.list_empty, list, false);
 
         // header
-        header = inflater.inflate(R.layout.item_header, container, false);
+        header = inflater.inflate(R.layout.item_header, list, false);
         list.addHeaderView(header);
 
         list.setDivider(null);
-        // TODO fix exception: java.lang.ClassCastException: android.support.v4.view.ViewPager$LayoutParams cannot be cast to android.widget.AbsListView$LayoutParams
-        //list.setEmptyView(empty);
+        list.setEmptyView(empty);
         root.addView(list);
-        //root.addView(empty);
+        root.addView(empty);
 
         // get data
         updateHeader();
