@@ -32,6 +32,7 @@ import java.util.ArrayList;
 public class EndlessContentPager extends ViewPager {
     private final ArrayList<DayContentFragment> pages = new ArrayList<>(3);
     private final InstantScroller scroller;
+    private int delayedPage = -1;
 
     public EndlessContentPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -57,16 +58,21 @@ public class EndlessContentPager extends ViewPager {
         }
     }
 
+    private void delayedPageUpdate() {
+        if (delayedPage >= 0 && delayedPage < pages.size())
+            pages.get(delayedPage).update(null, null);
+    }
+
     @Override
     protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
         super.onPageScrolled(position, offset, offsetPixels);
         if (position == 0 && offset == 0 || position == pages.size() - 1) {
-            scroller.setScrollInstantly(true);
             DatePersistence.getInstance().deleteObserver(pages.get(position));
             DatePersistence.getInstance().setDateOffset(position == 0 ? -1 : +1);
             DatePersistence.getInstance().addObserver(pages.get(position));
+            delayedPage = position;
+            scroller.setScrollInstantly(true);
             setCurrentItem((pages.size() - 1) / 2, true);
-            pages.get(position).update(null, null);
         }
     }
 
@@ -92,7 +98,7 @@ public class EndlessContentPager extends ViewPager {
         private Field currX = null;
         private Field currY = null;
 
-        public InstantScroller(Context context) {
+        public InstantScroller(final Context context) {
             super(context);
             try {
                 currX = Scroller.class.getDeclaredField("mCurrX");
@@ -116,6 +122,7 @@ public class EndlessContentPager extends ViewPager {
                     currY.set(this, this.getFinalY());
                     this.forceFinished(true);
                     scrollInstantly = false;
+                    EndlessContentPager.this.delayedPageUpdate();
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();
