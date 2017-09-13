@@ -24,13 +24,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.widget.Scroller;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class EndlessContentPager extends ViewPager {
     private final ArrayList<DayContentFragment> pages = new ArrayList<>(3);
+    private final InstantScroller scroller;
 
-    public EndlessContentPager(Context context, AttributeSet attrs) {
+    public EndlessContentPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
         pages.add(new DayContentFragment());
@@ -43,21 +46,27 @@ public class EndlessContentPager extends ViewPager {
 
         setAdapter(new CustomPageAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
         setCurrentItem((pages.size() - 1) / 2, false);
+
+        scroller = new InstantScroller(context);
+        try {
+            final Field field = ViewPager.class.getDeclaredField("mScroller");
+            field.setAccessible(true);
+            field.set(this, scroller);
+        } catch (Exception e) {
+            LogHandler.log(e);
+        }
     }
 
     @Override
-    protected void onPageScrolled(int position, float offset, int offsetPixels) {
+    protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
         super.onPageScrolled(position, offset, offsetPixels);
-
-        // end of days
         if (position == 0 && offset == 0 || position == pages.size() - 1) {
-
+            scroller.setScrollInstantly(true);
             DatePersistence.getInstance().deleteObserver(pages.get(position));
             DatePersistence.getInstance().setDateOffset(position == 0 ? -1 : +1);
-            // TODO try to avoid flickering when changing item
-            setCurrentItem((pages.size() - 1) / 2, false);
-            pages.get(position).update(null, null);
             DatePersistence.getInstance().addObserver(pages.get(position));
+            setCurrentItem((pages.size() - 1) / 2, true);
+            pages.get(position).update(null, null);
         }
     }
 
@@ -68,13 +77,51 @@ public class EndlessContentPager extends ViewPager {
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             return pages.get(position);
         }
 
         @Override
         public int getCount() {
             return pages.size();
+        }
+    }
+
+    private class InstantScroller extends Scroller {
+        private boolean scrollInstantly = false;
+        private Field currX = null;
+        private Field currY = null;
+
+        public InstantScroller(Context context) {
+            super(context);
+            try {
+                currX = Scroller.class.getDeclaredField("mCurrX");
+                currY = Scroller.class.getDeclaredField("mCurrY");
+                currX.setAccessible(true);
+                currY.setAccessible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void setScrollInstantly(final boolean instantly) {
+            scrollInstantly = instantly;
+        }
+
+        @Override
+        public boolean computeScrollOffset() {
+            if (scrollInstantly && currX != null && currY != null) {
+                try {
+                    currX.set(this, this.getFinalX());
+                    currY.set(this, this.getFinalY());
+                    this.forceFinished(true);
+                    scrollInstantly = false;
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return super.computeScrollOffset();
         }
     }
 }
