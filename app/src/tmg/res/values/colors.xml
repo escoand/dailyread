@@ -18,8 +18,13 @@
   -->
 
 <resources>
+    <!-- 2017 -->
     <color name="blue">#61c3d9</color>
     <color name="grey">#e6e6e6</color>
     <color name="darkblue">#007f98</color>
     <color name="darkgrey">#8d8d8d</color>
+    <!-- 2018 -->
+    <color name="grey_2018">#acadaf</color>
+    <color name="cyan_2018">#afd6da</color>
+    <color name="darkcyan_2018">#4a8296</color>
 </resources>
