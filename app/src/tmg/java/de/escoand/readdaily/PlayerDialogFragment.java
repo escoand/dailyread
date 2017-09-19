@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -28,12 +29,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,8 +52,9 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     private MediaPlayer player;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_player, null);
+    @NonNull
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final View root = getActivity().getLayoutInflater().inflate(R.layout.fragment_player, null);
         final TextView playerTitle = (TextView) root.findViewById(R.id.player_title);
         final ImageView playerImage = (ImageView) root.findViewById(R.id.player_image);
         progressBar = (ProgressBar) root.findViewById(R.id.player_progress);
@@ -77,14 +75,8 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
         playerTitle.setText(title);
 
-        return root;
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         return new AlertDialog.Builder(getContext())
-                .setView(onCreateView(getActivity().getLayoutInflater(), null, null))
+                .setView(root)
                 .create();
     }
 
@@ -157,7 +149,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
                 break;
         }
 
-        final Cursor c = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + " IN (?,?)", new String[]{Database.TYPE_EXEGESIS, Database.TYPE_MEDIA});
+        Cursor c = Database.getInstance(context).getDay(date, Database.COLUMN_TYPE + " IN (?,?)", new String[]{Database.TYPE_EXEGESIS, Database.TYPE_MEDIA});
         while (c.moveToNext())
             switch (c.getString(c.getColumnIndex(Database.COLUMN_TYPE))) {
 
