@@ -111,13 +111,17 @@ public class MainActivity extends AppCompatActivity implements
         // start store if no data
         if (!Database.getInstance(this).isAnyInstalled())
             startActivity(new Intent(getApplication(), StoreActivity.class));
-
-        DatePersistence.getInstance().setDate(new Date());
     }
 
     @Override
     protected void attachBaseContext(final Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DatePersistence.getInstance().setDate(new Date());
     }
 
     @Override
