@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements
         if (findViewById(R.id.button_voty) != null)
             findViewById(R.id.button_voty).setOnClickListener(new OnVotyClickListener());
 
-        // registration
-        PushInstanceService.doRegistration(this, true);
-
         // start store if no data
         if (!Database.getInstance(this).isAnyInstalled())
             startActivity(new Intent(getApplication(), StoreActivity.class));
