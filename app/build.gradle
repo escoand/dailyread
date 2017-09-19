@@ -16,7 +16,6 @@
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.firebase-crash'
 apply from: 'versioning.gradle'
 
 version = "1.1.0-beta8"
@@ -72,11 +71,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-annotations:25.3.1'
-    compile 'com.google.android.gms:play-services-gcm:11.2.2'
-    compile 'com.google.firebase:firebase-core:11.2.2'
-    compile 'com.google.firebase:firebase-crash:11.2.2'
-    compile 'com.google.firebase:firebase-messaging:11.2.2'
     // 3rd party
+    compile 'ch.acra:acra:4.9.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.44'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
@@ -89,4 +85,4 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.5'
 }
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
