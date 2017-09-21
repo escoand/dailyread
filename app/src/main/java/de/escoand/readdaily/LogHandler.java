@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import org.acra.ACRA;
 
+import java.util.Calendar;
+
 public class LogHandler {
     private static String getTag() {
         final Thread thread = Thread.currentThread();
@@ -42,8 +44,7 @@ public class LogHandler {
 
     public static void log(final String caller, final int priority, final String message) {
         Log.println(priority, caller, message);
-        ACRA.getErrorReporter().putCustomData(caller, message);
-        ACRA.getErrorReporter().handleException(null);
+        ACRA.getErrorReporter().putCustomData(Calendar.getInstance().getTime().toString(), caller + ": " + message);
     }
 
     public static void log(final Throwable error) {

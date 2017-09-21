@@ -49,7 +49,5 @@ public class MyApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        ACRA.getErrorReporter().handleException(new NullPointerException());
     }
 }
