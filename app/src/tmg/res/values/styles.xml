@@ -20,6 +20,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
+        <item name="colorAccent">@color/darkcyan_2018</item>
+
         <item name="android:textAppearance">@style/Text</item>
         <item name="android:textColorPrimary">@color/darkgrey</item>
         <item name="android:textColorSecondary">@color/darkgrey</item>
@@ -42,7 +44,7 @@
         <item name="color_drawer_subtitle">@android:color/white</item>
         <item name="color_floating_background">@android:color/white</item>
         <item name="color_floating_icon">@android:color/black</item>
-        <item name="color_button_background">@color/blue</item>
+        <item name="color_button_background">@color/darkcyan_2018</item>
         <item name="color_button_text">@android:color/white</item>
         <item name="color_button_light_background">@android:color/transparent</item>
         <item name="color_button_light_text">@color/darkgrey</item>
