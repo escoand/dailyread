@@ -15,25 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-    }
-}
+package de.escoand.readdaily;
 
-allprojects {
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven {
-            url "https://maven.google.com" // Google's Maven repository
-        }
-    }
-}
+import android.support.annotation.NonNull;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+import java.util.Date;
+
+public interface OnDateSelectedListener {
+    void onDateSelected(@NonNull final Date date);
 }

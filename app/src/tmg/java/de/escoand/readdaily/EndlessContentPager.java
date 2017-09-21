@@ -41,9 +41,9 @@ public class EndlessContentPager extends ViewPager {
         pages.add(new DayContentFragment());
         pages.add(new DayContentFragment());
 
-        pages.get(0).setDayOffset(-1);
-        pages.get(1).setDayOffset(0);
-        pages.get(2).setDayOffset(1);
+        pages.get(0).setDateOffset(-1);
+        pages.get(1).setDateOffset(0);
+        pages.get(2).setDateOffset(1);
 
         setAdapter(new CustomPageAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
         setCurrentItem((pages.size() - 1) / 2, false);
@@ -78,7 +78,7 @@ public class EndlessContentPager extends ViewPager {
 
     private class CustomPageAdapter extends FragmentPagerAdapter {
 
-        public CustomPageAdapter(final FragmentManager fm) {
+        CustomPageAdapter(final FragmentManager fm) {
             super(fm);
         }
 
@@ -98,7 +98,7 @@ public class EndlessContentPager extends ViewPager {
         private Field currX = null;
         private Field currY = null;
 
-        public InstantScroller(final Context context) {
+        InstantScroller(final Context context) {
             super(context);
             try {
                 currX = Scroller.class.getDeclaredField("mCurrX");
@@ -110,7 +110,7 @@ public class EndlessContentPager extends ViewPager {
             }
         }
 
-        public void setScrollInstantly(final boolean instantly) {
+        void setScrollInstantly(final boolean instantly) {
             scrollInstantly = instantly;
         }
 
