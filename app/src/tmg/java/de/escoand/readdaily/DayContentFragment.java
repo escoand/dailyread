@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,6 +52,16 @@ public class DayContentFragment extends AbstractContentFragment {
         header = inflater.inflate(R.layout.item_header, list, false);
         list.addHeaderView(header);
 
+        // store button
+        if (empty.findViewById(R.id.button_store) != null)
+            empty.findViewById(R.id.button_store).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(new Intent(getContext(), StoreActivity.class), 1);
+                }
+            });
+
+        // wrap everything
         list.setDivider(null);
         list.setEmptyView(empty);
         root.addView(list);
