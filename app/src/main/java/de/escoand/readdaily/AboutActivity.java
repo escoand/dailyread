@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,23 +59,21 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         // licenses
         ((TextView) v.findViewById(R.id.about_libraries)).setText(String.format("%s\n\n" +
+                        "Application Crash Reports for Android %s\nApache License 2.0 by Kevin Gaudin\n\n" +
                         "Android In-App Billing v3 Library %s\nApache License 2.0 by AnjLab\n\n" +
                         "Calligraphy %s\nApache License 2.0 by Christopher Jenkins\n\n" +
                         "CircleImageView %s\nApache License 2.0 by Henning Dodenhof\n\n" +
                         "Design Support Library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
-                        "Google Firebase Core %s\nApache License 2.0 by The Google\n\n" +
-                        "Google Firebase Messaging %s\nApache License 2.0 by Google\n\n" +
                         "Material Calendar View %s\nby Prolific Interactive\n\n" +
                         "OkHttp %s\nApache License 2.0 by Square, Inc.\n\n" +
                         "v7 appcompat library %s\nApache License 2.0 by The Android Open Source Project\n\n" +
                         "v7 cardview library %s\nApache License 2.0 by The Android Open Source Project",
                 getString(R.string.about_libraries),
+                "",
                 com.anjlab.android.iab.v3.BuildConfig.VERSION_NAME,
                 uk.co.chrisjenx.calligraphy.BuildConfig.VERSION_NAME,
                 de.hdodenhof.circleimageview.BuildConfig.VERSION_NAME,
                 android.support.design.BuildConfig.VERSION_NAME,
-                "",
-                "",
                 com.prolificinteractive.materialcalendarview.BuildConfig.VERSION_NAME,
                 "",
                 android.support.v7.appcompat.BuildConfig.VERSION_NAME,
