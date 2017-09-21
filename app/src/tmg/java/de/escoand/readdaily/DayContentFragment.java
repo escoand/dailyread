@@ -50,7 +50,8 @@ public class DayContentFragment extends AbstractContentFragment {
 
         // header
         header = inflater.inflate(R.layout.item_header, list, false);
-        list.addHeaderView(header);
+        if (list != null)
+            list.addHeaderView(header);
 
         // store button
         if (empty.findViewById(R.id.button_store) != null)
@@ -84,7 +85,7 @@ public class DayContentFragment extends AbstractContentFragment {
         if (header == null)
             return;
 
-        final Cursor c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dayOffset);
+        final Cursor c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dateOffset);
         final ImageView image = (ImageView) header.findViewById(R.id.player_image);
         final TextView title = (TextView) header.findViewById(R.id.header_title);
         final TextView source = (TextView) header.findViewById(R.id.header_source);

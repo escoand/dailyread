@@ -32,9 +32,9 @@
 
     <Button
         android:id="@+id/button_store"
-        style="@style/Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/navigation_store" />
+        android:text="@string/navigation_store"
+        android:theme="@style/Button" />
 
 </LinearLayout>
