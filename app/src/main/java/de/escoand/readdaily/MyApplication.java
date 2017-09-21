@@ -47,7 +47,7 @@ public class MyApplication extends Application {
                     })
                     .build());
         } catch (Exception e) {
-            e.printStackTrace();
+            LogHandler.log(e);
         }
     }
 }

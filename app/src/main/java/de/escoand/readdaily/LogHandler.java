@@ -49,7 +49,7 @@ public class LogHandler {
 
     public static void log(final Throwable error) {
         Log.e(getTag(), Log.getStackTraceString(error));
-        ACRA.getErrorReporter().handleException(error);
+        ACRA.getErrorReporter().handleSilentException(error);
     }
 
     public static void logAndShow(final Throwable error, final View view, @StringRes final int message,
