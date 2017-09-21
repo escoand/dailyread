@@ -31,10 +31,10 @@
         android:text="@string/message_nodata" />
 
     <Button
-        android:id="@+id/buttonStore"
-        style="@style/Button"
+        android:id="@+id/button_store"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/navigation_store" />
+        android:text="@string/navigation_store"
+        android:theme="@style/Button" />
 
 </LinearLayout>

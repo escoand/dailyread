@@ -25,7 +25,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.crash.FirebaseCrash;
+import org.acra.ACRA;
+
+import java.util.Calendar;
 
 public class LogHandler {
     private static String getTag() {
@@ -42,12 +44,12 @@ public class LogHandler {
 
     public static void log(final String caller, final int priority, final String message) {
         Log.println(priority, caller, message);
-        FirebaseCrash.log(caller + ": " + message);
+        ACRA.getErrorReporter().putCustomData(Calendar.getInstance().getTime().toString(), caller + ": " + message);
     }
 
     public static void log(final Throwable error) {
         Log.e(getTag(), Log.getStackTraceString(error));
-        FirebaseCrash.report(error);
+        ACRA.getErrorReporter().handleSilentException(error);
     }
 
     public static void logAndShow(final Throwable error, final View view, @StringRes final int message,

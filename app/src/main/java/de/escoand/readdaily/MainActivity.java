@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements
         if (findViewById(R.id.button_voty) != null)
             findViewById(R.id.button_voty).setOnClickListener(new OnVotyClickListener());
 
-        // registration
-        PushInstanceService.doRegistration(this, true);
-
         // start store if no data
         if (!Database.getInstance(this).isAnyInstalled())
             startActivity(new Intent(getApplication(), StoreActivity.class));
@@ -175,12 +172,28 @@ public class MainActivity extends AppCompatActivity implements
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_intro));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_TITLE + "!=''", new String[]{Database.TYPE_INTRO});
                 ((ListDialogFragment) dialog).setMapping(new String[]{Database.COLUMN_TITLE, Database.COLUMN_READ}, new int[]{R.id.list_title, R.id.list_image});
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(@NonNull final Date date) {
+                        final AbstractContentFragment dialog = new IntroContentFragment();
+                        dialog.setDateOnCreate(date);
+                        dialog.show(getSupportFragmentManager(), "dialog");
+                    }
+                });
                 break;
             case R.id.button_list_voty:
                 dialog = new ListDialogFragment();
                 ((ListDialogFragment) dialog).setTitle(getString(R.string.navigation_voty));
                 ((ListDialogFragment) dialog).setFilter(Database.COLUMN_TYPE + "=? AND " + Database.COLUMN_SOURCE + "!=''", new String[]{Database.TYPE_YEAR});
                 ((ListDialogFragment) dialog).setOrder(Database.COLUMN_DATE);
+                ((ListDialogFragment) dialog).setOnDateSelectedListener(new OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(@NonNull final Date date) {
+                        final AbstractContentFragment dialog = new YearContentFragment();
+                        dialog.setDateOnCreate(date);
+                        dialog.show(getSupportFragmentManager(), "dialog");
+                    }
+                });
                 break;
 
             // calendar

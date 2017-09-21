@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -42,16 +43,17 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     protected int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     protected String condition = null;
     protected String[] values = null;
-    protected int dayOffset = 0;
+    protected Date dateOnCreate = null;
+    protected int dateOffset = 0;
 
     private SimpleCursorAdapter adapter = null;
 
-    public AbstractContentFragment() {
-        DatePersistence.getInstance().addObserver(this);
+    public void setDateOnCreate(final Date date) {
+        dateOnCreate = date;
     }
 
-    public void setDayOffset(final int offset) {
-        dayOffset = offset;
+    public void setDateOffset(final int days) {
+        dateOffset = days;
     }
 
     @Override
@@ -59,9 +61,15 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
         adapter = new SimpleCursorAdapter(getContext(), layout, null, from, to, 0);
         adapter.setViewBinder(this);
 
-        ListView list = new ListView(getContext());
+        final ListView list = new ListView(getContext());
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         list.setAdapter(adapter);
+
+        // load explicitly or observe date
+        if (dateOnCreate != null)
+            adapter.changeCursor(Database.getInstance(getContext()).getDay(dateOnCreate, condition, values));
+        else
+            DatePersistence.getInstance().addObserver(this);
 
         return list;
     }
@@ -83,7 +91,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     @Override
     public void update(Observable observable, Object o) {
         if (adapter != null)
-            adapter.changeCursor(DatePersistence.getInstance().getData(getContext(), condition, values, dayOffset));
+            adapter.changeCursor(DatePersistence.getInstance().getData(getContext(), condition, values, dateOffset));
     }
 
     @Override

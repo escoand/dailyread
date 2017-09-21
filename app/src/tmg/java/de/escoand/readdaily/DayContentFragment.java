@@ -17,6 +17,7 @@
 
 package de.escoand.readdaily;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,8 +50,19 @@ public class DayContentFragment extends AbstractContentFragment {
 
         // header
         header = inflater.inflate(R.layout.item_header, list, false);
-        list.addHeaderView(header);
+        if (list != null)
+            list.addHeaderView(header);
 
+        // store button
+        if (empty.findViewById(R.id.button_store) != null)
+            empty.findViewById(R.id.button_store).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(new Intent(getContext(), StoreActivity.class), 1);
+                }
+            });
+
+        // wrap everything
         list.setDivider(null);
         list.setEmptyView(empty);
         root.addView(list);
@@ -73,7 +85,7 @@ public class DayContentFragment extends AbstractContentFragment {
         if (header == null)
             return;
 
-        final Cursor c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dayOffset);
+        final Cursor c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dateOffset);
         final ImageView image = (ImageView) header.findViewById(R.id.player_image);
         final TextView title = (TextView) header.findViewById(R.id.header_title);
         final TextView source = (TextView) header.findViewById(R.id.header_source);
