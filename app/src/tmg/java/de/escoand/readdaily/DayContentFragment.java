@@ -68,24 +68,30 @@ public class DayContentFragment extends AbstractContentFragment {
         root.addView(list);
         root.addView(empty);
 
-        // get data
-        updateHeader();
-        update(null, null);
-
         return root;
     }
 
     @Override
-    public void update(Observable observable, Object o) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         updateHeader();
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
         super.update(observable, o);
+        updateHeader();
     }
 
     private void updateHeader() {
         if (header == null)
             return;
 
-        final Cursor c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dateOffset);
+        Cursor c;
+        if (dateOnCreate != null)
+            c = Database.getInstance(getContext()).getDay(dateOnCreate, Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY});
+        else
+            c = DatePersistence.getInstance().getData(getContext(), Database.COLUMN_TYPE + "=?", new String[]{Database.TYPE_DAY}, dateOffset);
         final ImageView image = (ImageView) header.findViewById(R.id.player_image);
         final TextView title = (TextView) header.findViewById(R.id.header_title);
         final TextView source = (TextView) header.findViewById(R.id.header_source);
