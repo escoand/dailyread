@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,7 +49,7 @@ public class ReminderHandler extends BroadcastReceiver {
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
 
-        LogHandler.log(Log.WARN, "activated " + hour + ":" + minute);
+        LogHandler.w("activated " + hour + ":" + minute);
     }
 
     public static void endReminder(final Context context) {
@@ -60,7 +59,7 @@ public class ReminderHandler extends BroadcastReceiver {
 
         am.cancel(pendingIntent);
 
-        LogHandler.log(Log.WARN, "deactivated");
+        LogHandler.w("deactivated");
     }
 
     @Override

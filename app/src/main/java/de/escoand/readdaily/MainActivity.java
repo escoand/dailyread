@@ -32,7 +32,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -127,14 +126,14 @@ public class MainActivity extends AppCompatActivity implements
 
         // restart after theme changed
         if (resultCode == SettingsActivity.CODE_THEME_CHANGED) {
-            LogHandler.log(Log.INFO, "theme changed, restarting");
+            LogHandler.i("theme changed, restarting");
             finish();
             startActivity(new Intent(this, this.getClass()));
         }
 
         // restart after download
         else if (resultCode == StoreActivity.CODE_CONTENT_LOADED) {
-            LogHandler.log(Log.INFO, "content loaded, restarting");
+            LogHandler.i("content loaded, restarting");
             finish();
             startActivity(new Intent(this, this.getClass()));
         }

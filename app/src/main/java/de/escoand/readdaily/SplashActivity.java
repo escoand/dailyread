@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 public class SplashActivity extends Activity {
     @Override
@@ -39,7 +38,7 @@ public class SplashActivity extends Activity {
 
         // remove test data
         else {
-            LogHandler.log(Log.INFO, "start clean");
+            LogHandler.i("start clean");
 
             // android
             Database.getInstance(this).removeData("android.test.canceled");
@@ -52,7 +51,7 @@ public class SplashActivity extends Activity {
             Database.getInstance(this).removeData("android.test.xml");
             Database.getInstance(this).removeData("android.test.zip");
 
-            LogHandler.log(Log.INFO, "end clean");
+            LogHandler.i("end clean");
         }
 
         setContentView(R.layout.activity_splash);

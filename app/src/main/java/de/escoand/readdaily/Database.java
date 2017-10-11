@@ -26,7 +26,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -492,8 +491,8 @@ public class Database extends SQLiteOpenHelper {
             final FileOutputStream outstream = new FileOutputStream(outfile);
             final String date = outfile.getName().substring(0, filename.lastIndexOf("."));
 
-            LogHandler.log(Log.INFO, "file " + outfile.getAbsolutePath());
-            LogHandler.log(Log.INFO, "date " + date);
+            LogHandler.i("file " + outfile.getAbsolutePath());
+            LogHandler.i("date " + date);
 
             // save file
             while ((len = zip.read(buffer)) != -1)
@@ -519,7 +518,7 @@ public class Database extends SQLiteOpenHelper {
                 final String table = values.get(i).getAsString(tabname);
                 values.get(i).remove(tabname);
                 final long id = db.insertOrThrow(table, null, values.get(i));
-                LogHandler.log(Log.INFO, "insert into table " + table + "(" + id + ")");
+                LogHandler.i("insert into table " + table + "(" + id + ")");
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -642,10 +641,10 @@ public class Database extends SQLiteOpenHelper {
         // remove from disk
         File outdir = new File(context.getFilesDir(), subscription);
         if (outdir.exists() && outdir.isDirectory()) {
-            LogHandler.log(Log.INFO, "directory " + outdir.getAbsolutePath());
+            LogHandler.i("directory " + outdir.getAbsolutePath());
             File[] files = outdir.listFiles();
             for (File file : files) {
-                LogHandler.log(Log.INFO, "file " + file.getAbsolutePath());
+                LogHandler.i("file " + file.getAbsolutePath());
                 //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
@@ -653,6 +652,6 @@ public class Database extends SQLiteOpenHelper {
         //noinspection ResultOfMethodCallIgnored
         outdir.delete();
 
-        LogHandler.log(Log.WARN, subscription + " removed " + result);
+        LogHandler.w(subscription + " removed " + result);
     }
 }

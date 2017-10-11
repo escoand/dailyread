@@ -38,6 +38,22 @@ public class LogHandler {
                 "[" + thread.getId() + "]";
     }
 
+    public static void e(final String message) {
+        log(Log.ERROR, message);
+    }
+
+    public static void w(final String message) {
+        log(Log.WARN, message);
+    }
+
+    public static void i(final String message) {
+        log(Log.INFO, message);
+    }
+
+    public static void d(final String message) {
+        log(Log.DEBUG, message);
+    }
+
     public static void log(final int priority, final String message) {
         log(getTag(), priority, message);
     }
