@@ -105,8 +105,16 @@ public class StoreListItem implements Runnable {
         final boolean isInstalled = db.isInstalled(productId);
         downloadProgress = DownloadHandler.downloadProgress(activity, productId);
 
+        // failed
+        if (downloadProgress == DownloadHandler.DOWNLOAD_FAILED) {
+            LogHandler.i("failed");
+            DownloadHandler.stopDownload(activity, productId);
+            db.removeData(productId);
+            refreshUI();
+        }
+
         // up-to-date
-        if (isInstalled) {
+        else if (isInstalled) {
             LogHandler.d("up-to-date");
             buttonRemove.setVisibility(View.VISIBLE);
             buttonRemove.setText(activity.getString(R.string.button_remove));
@@ -119,11 +127,14 @@ public class StoreListItem implements Runnable {
             });
             buttonAction.setVisibility(View.GONE);
             progress.setVisibility(View.GONE);
+            if (refrehThread == null || !refrehThread.isAlive()) {
+                refrehThread = new Thread(this);
+                refrehThread.start();
+            }
         }
 
         // importing
         else if (listing != null && transaction != null && downloadProgress == 1) {
-            buttonRemove.setVisibility(View.GONE);
             LogHandler.d("importing");
             buttonAction.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
@@ -157,8 +168,30 @@ public class StoreListItem implements Runnable {
             }
         }
 
+        // pending or paused
+        else if (listing != null && transaction != null && (downloadProgress == DownloadHandler.DOWNLOAD_PENDING || downloadProgress == DownloadHandler.DOWNLOAD_PAUSED)) {
+            LogHandler.d("pending or paused " + downloadProgress);
+            buttonRemove.setVisibility(View.VISIBLE);
+            buttonRemove.setText(activity.getString(R.string.button_cancel));
+            buttonRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    DownloadHandler.stopDownload(activity, productId);
+                    refreshUI();
+                }
+            });
+            buttonAction.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            progress.setIndeterminate(true);
+            if (refrehThread == null || !refrehThread.isAlive()) {
+                refrehThread = new Thread(this);
+                refrehThread.start();
+            }
+        }
+
         // download
         else if (listing != null && transaction != null) {
+            LogHandler.i("download");
             buttonRemove.setVisibility(View.GONE);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(activity.getString(R.string.button_download));
@@ -199,7 +232,7 @@ public class StoreListItem implements Runnable {
 
             // sleep 5 second
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (final InterruptedException e) {
                 return;
             }

@@ -38,6 +38,9 @@ import java.io.IOException;
 import java.util.Random;
 
 public class DownloadHandler extends BroadcastReceiver {
+    public final static long DOWNLOAD_FAILED = -5;
+    public final static long DOWNLOAD_PAUSED = -4;
+    public final static long DOWNLOAD_PENDING = -3;
     public final static long SUBSCRIPTION_DOWNLOAD_UNKNOWN = -2;
     public final static long DOWNLOAD_ID_UNKNOWN = -1;
 
@@ -80,11 +83,11 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     public static float downloadProgress(final Context context, final String name) {
-        Cursor cursor = Database.getInstance(context).getDownloads();
+        Cursor cursor = null;
         long id = 0;
-        float progress;
 
         // get download id
+        cursor = Database.getInstance(context).getDownloads();
         while (cursor.moveToNext())
             if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_SUBSCRIPTION)).equals(name)) {
                 id = cursor.getLong(cursor.getColumnIndex(Database.COLUMN_ID));
@@ -99,12 +102,24 @@ public class DownloadHandler extends BroadcastReceiver {
                 .query(new DownloadManager.Query().setFilterById(id));
         if (!cursor.moveToFirst()) {
             Database.getInstance(context).removeDownload(id);
+            cursor.close();
             return DOWNLOAD_ID_UNKNOWN;
         }
 
-        // get progress
-        progress = cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
+        // get status
+        final int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+        final int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+        float progress = cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)) /
                 cursor.getFloat(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+        if (status == DownloadManager.STATUS_FAILED)
+            progress = DOWNLOAD_FAILED;
+        else if (status == DownloadManager.STATUS_PAUSED)
+            progress = DOWNLOAD_PAUSED;
+        //else if (status == DownloadManager.STATUS_PENDING)
+        //    progress = DOWNLOAD_PENDING;
+
+        // get progress
 
         cursor.close();
         return progress;
