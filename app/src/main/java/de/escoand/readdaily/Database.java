@@ -102,7 +102,7 @@ public class Database extends SQLiteOpenHelper {
         try {
             return Integer.valueOf(dateFormat.format(date));
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            LogHandler.log(e);
         }
         return Integer.parseInt(null);
     }
@@ -112,7 +112,7 @@ public class Database extends SQLiteOpenHelper {
         try {
             return dateFormat.parse(String.valueOf(date));
         } catch (ParseException e) {
-            e.printStackTrace();
+            LogHandler.log(e);
         }
         return null;
     }

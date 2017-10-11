@@ -106,7 +106,7 @@ public class EndlessContentPager extends ViewPager {
                 currX.setAccessible(true);
                 currY.setAccessible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                LogHandler.log(e);
             }
         }
 
@@ -125,7 +125,7 @@ public class EndlessContentPager extends ViewPager {
                     EndlessContentPager.this.delayedPageUpdate();
                     return true;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LogHandler.log(e);
                 }
             }
             return super.computeScrollOffset();
