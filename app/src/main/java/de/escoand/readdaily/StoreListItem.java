@@ -19,7 +19,6 @@ package de.escoand.readdaily;
 
 import android.app.Activity;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -83,9 +82,9 @@ public class StoreListItem implements Runnable {
         if (listing != null) {
             title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
             description.setText(listing.description);
-            LogHandler.log(Log.INFO, "product: " + productId);
+            LogHandler.i("product: " + productId);
         } else {
-            LogHandler.log(Log.ERROR, "product not found: " + productId);
+            LogHandler.e("product not found: " + productId);
             this.parent.setVisibility(View.GONE);
         }
 
@@ -108,6 +107,7 @@ public class StoreListItem implements Runnable {
 
         // up-to-date
         if (isInstalled) {
+            LogHandler.d("up-to-date");
             buttonRemove.setVisibility(View.VISIBLE);
             buttonRemove.setText(activity.getString(R.string.button_remove));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +124,7 @@ public class StoreListItem implements Runnable {
         // importing
         else if (listing != null && transaction != null && downloadProgress == 1) {
             buttonRemove.setVisibility(View.GONE);
+            LogHandler.d("importing");
             buttonAction.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
             progress.setIndeterminate(true);
@@ -135,6 +136,7 @@ public class StoreListItem implements Runnable {
 
         // downloading
         else if (listing != null && transaction != null && downloadProgress >= 0 && downloadProgress < 1) {
+            LogHandler.d("downloading");
             buttonRemove.setVisibility(View.VISIBLE);
             buttonRemove.setText(activity.getString(R.string.button_cancel));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +168,7 @@ public class StoreListItem implements Runnable {
 
         // purchase
         else if (listing != null) {
+            LogHandler.i("purchase");
             buttonRemove.setVisibility(View.GONE);
             buttonAction.setVisibility(View.VISIBLE);
             buttonAction.setText(listing.priceText);
@@ -228,7 +231,7 @@ public class StoreListItem implements Runnable {
                 final int len = Integer.valueOf(response.header("Content-Length"));
                 final byte[] data = response.body().bytes();
 
-                LogHandler.log(Log.INFO, "image size: " + len);
+                LogHandler.i("image size: " + len);
 
                 activity.runOnUiThread(new Runnable() {
                     @Override

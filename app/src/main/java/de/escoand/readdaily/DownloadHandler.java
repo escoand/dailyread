@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +45,7 @@ public class DownloadHandler extends BroadcastReceiver {
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
-        LogHandler.log(Log.WARN, "load invisible " + url);
+        LogHandler.w("load invisible " + url);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setTitle(title));
@@ -68,7 +67,7 @@ public class DownloadHandler extends BroadcastReceiver {
             return -1;
         }
 
-        LogHandler.log(Log.WARN, "load " + name);
+        LogHandler.w("load " + name);
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(context.getString(R.string.product_data_url)))
                 .addRequestHeader("App-Signature", signature)
@@ -137,7 +136,7 @@ public class DownloadHandler extends BroadcastReceiver {
         final Database db = Database.getInstance(context);
         final Cursor downloads = db.getDownloads();
 
-        LogHandler.log(Log.WARN, "receive starting");
+        LogHandler.w("receive starting");
 
         while (downloads.moveToNext()) {
             final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
@@ -158,16 +157,16 @@ public class DownloadHandler extends BroadcastReceiver {
                 @Override
                 public void run() {
                     try {
-                        LogHandler.log(Log.WARN, "import starting of " + name);
+                        LogHandler.w("import starting of " + name);
 
                         final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
                         final String mimeServer = manager.getMimeTypeForDownloadedFile(id);
 
-                        LogHandler.log(Log.INFO, "id: " + String.valueOf(id));
-                        LogHandler.log(Log.INFO, "manager: " + manager.toString());
-                        LogHandler.log(Log.INFO, "stream: " + stream.toString());
-                        LogHandler.log(Log.INFO, "mime: " + mime);
-                        LogHandler.log(Log.INFO, "mimeServer: " + mimeServer);
+                        LogHandler.i("id: " + String.valueOf(id));
+                        LogHandler.i("manager: " + manager.toString());
+                        LogHandler.i("stream: " + stream.toString());
+                        LogHandler.i("mime: " + mime);
+                        LogHandler.i("mimeServer: " + mimeServer);
 
                         switch (mime != null ? mime : (mimeServer != null ? mimeServer : "")) {
 
@@ -175,8 +174,7 @@ public class DownloadHandler extends BroadcastReceiver {
                             case "application/json":
                                 final byte[] buf = new byte[256];
                                 final int len = stream.read(buf);
-                                LogHandler.log(Log.WARN,
-                                        "register feedback: " + new String(buf, 0, len));
+                                LogHandler.w("register feedback: " + new String(buf, 0, len));
                                 break;
 
                             // csv data
@@ -202,7 +200,7 @@ public class DownloadHandler extends BroadcastReceiver {
                         }
 
                         stream.close();
-                        LogHandler.log(Log.WARN, "import finished (" + name + ")");
+                        LogHandler.w("import finished (" + name + ")");
                     }
 
 
@@ -225,13 +223,13 @@ public class DownloadHandler extends BroadcastReceiver {
                     finally {
                         manager.remove(id);
                         db.removeDownload(id);
-                        LogHandler.log(Log.WARN, "clean finished");
+                        LogHandler.w("clean finished");
                     }
                 }
             }).start();
         }
 
         downloads.close();
-        LogHandler.log(Log.WARN, "receiving done");
+        LogHandler.w("receiving done");
     }
 }
