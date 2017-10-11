@@ -65,13 +65,18 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         list.setAdapter(adapter);
 
+        return list;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         // load explicitly or observe date
         if (dateOnCreate != null)
             adapter.changeCursor(Database.getInstance(getContext()).getDay(dateOnCreate, condition, values));
         else
             DatePersistence.getInstance().addObserver(this);
-
-        return list;
     }
 
     @NonNull
