@@ -22,11 +22,15 @@ import android.database.Cursor;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
 
 public class DatePersistence extends Observable {
     private static DatePersistence instance = new DatePersistence();
     private GregorianCalendar calendar = new GregorianCalendar();
+    private Vector<Observer> observers = new Vector<>();
 
     private DatePersistence() {
         super();
@@ -52,6 +56,24 @@ public class DatePersistence extends Observable {
         calendar.add(GregorianCalendar.DATE, offset);
         setChanged();
         notifyObservers();
+    }
+
+    @Override
+    public synchronized void addObserver(final Observer o) {
+        super.addObserver(o);
+        observers.add(o);
+    }
+
+    @Override
+    public synchronized void deleteObserver(final Observer o) {
+        super.deleteObserver(o);
+        observers.remove(o);
+    }
+
+    public synchronized void restoreObservers() {
+        final Iterator<Observer> i = observers.iterator();
+        while (i.hasNext())
+            super.addObserver(i.next());
     }
 
     /* data getter */
