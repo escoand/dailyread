@@ -37,7 +37,9 @@ public class PushInstanceService extends FirebaseInstanceIdService {
     public static boolean doRegistration(@NonNull final Context context, final boolean activate, final boolean force) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if (!force && prefs.getBoolean(REGISTRATION_DONE, false))
+        if (!force && prefs.getBoolean(REGISTRATION_DONE, false)
+                || context.getString(R.string.push_register_url).isEmpty()
+                || context.getString(R.string.push_unregister_url).isEmpty())
             return true;
 
         long id = DownloadHandler.startInvisibleDownload(
