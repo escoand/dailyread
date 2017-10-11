@@ -37,4 +37,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_group_other">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notifications"
+            android:summary="@string/pref_notification_desc"
+            android:title="@string/pref_notification" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -47,6 +47,14 @@ public class SettingsActivity extends PreferenceActivity {
                 return true;
             }
         });
+
+        // notification
+        findPreference("notifications").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                return PushInstanceService.doRegistration(SettingsActivity.this, (Boolean) newValue, true);
+            }
+        });
     }
 
     @Override
