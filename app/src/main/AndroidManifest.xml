@@ -28,7 +28,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_title"
         android:supportsRtl="false"
-        android:name=".MyApplication"
         android:theme="@style/AppTheme">
 
         <activity
@@ -55,6 +54,17 @@
         <receiver
             android:name=".ReminderHandler"
             android:exported="true" />
+
+        <service android:name=".PushInstanceService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".PushMessageService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 
