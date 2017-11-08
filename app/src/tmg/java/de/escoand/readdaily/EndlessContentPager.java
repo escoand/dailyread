@@ -24,56 +24,63 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.widget.Scroller;
+import android.view.MotionEvent;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Observable;
+import java.util.Observer;
 
-public class EndlessContentPager extends ViewPager {
-    private final ArrayList<DayContentFragment> pages = new ArrayList<>(3);
-    private final InstantScroller scroller;
-    private int delayedPage = -1;
+public class EndlessContentPager extends ViewPager implements Observer {
+    private final static int CENTER_PAGE = Integer.MAX_VALUE / 2;
+    private boolean isScrolling = false;
 
     public EndlessContentPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
-        pages.add(new DayContentFragment());
-        pages.add(new DayContentFragment());
-        pages.add(new DayContentFragment());
-
-        pages.get(0).setDateOffset(-1);
-        pages.get(1).setDateOffset(0);
-        pages.get(2).setDateOffset(1);
-
         setAdapter(new CustomPageAdapter(((AppCompatActivity) context).getSupportFragmentManager()));
-        setCurrentItem((pages.size() - 1) / 2, false);
-
-        scroller = new InstantScroller(context);
-        try {
-            final Field field = ViewPager.class.getDeclaredField("mScroller");
-            field.setAccessible(true);
-            field.set(this, scroller);
-        } catch (Exception e) {
-            LogHandler.log(e);
-        }
+        setCurrentItem(CENTER_PAGE, false);
     }
 
-    private void delayedPageUpdate() {
-        if (delayedPage >= 0 && delayedPage < pages.size())
-            pages.get(delayedPage).update(null, null);
-    }
 
     @Override
     protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
         super.onPageScrolled(position, offset, offsetPixels);
-        if (position == 0 && offset == 0 || position == pages.size() - 1) {
-            DatePersistence.getInstance().deleteObserver(pages.get(position));
-            DatePersistence.getInstance().setDateOffset(position == 0 ? -1 : +1);
-            DatePersistence.getInstance().addObserver(pages.get(position));
-            delayedPage = position;
-            scroller.setScrollInstantly(true);
-            setCurrentItem((pages.size() - 1) / 2, true);
-        }
+        if (offset == 0) {
+            final GregorianCalendar calendar = new GregorianCalendar();
+            calendar.add(Calendar.DATE, getCurrentItem() - CENTER_PAGE);
+            DatePersistence.getInstance().deleteObserver(this);
+            DatePersistence.getInstance().setDate(calendar.getTime());
+            DatePersistence.getInstance().addObserver(this);
+            isScrolling = false;
+        } else
+            isScrolling = true;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (isScrolling && ev.getAction() == MotionEvent.ACTION_DOWN)
+            return false;
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (isScrolling && ev.getAction() == MotionEvent.ACTION_DOWN)
+            return false;
+        return super.onTouchEvent(ev);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        final Date cur = new Date();
+        final Date set = DatePersistence.getInstance().getDate();
+        final int diff = (int) ((set.getTime() - cur.getTime()) / (1000 * 60 * 60 * 24));
+        DatePersistence.getInstance().deleteObservers();
+        setCurrentItem(CENTER_PAGE + diff, false);
+        DatePersistence.getInstance().restoreObservers();
+        DatePersistence.getInstance().notifyObservers();
     }
 
     private class CustomPageAdapter extends FragmentPagerAdapter {
@@ -84,51 +91,16 @@ public class EndlessContentPager extends ViewPager {
 
         @Override
         public Fragment getItem(final int position) {
-            return pages.get(position);
+            final DayContentFragment fragment = new DayContentFragment();
+            final GregorianCalendar calendar = new GregorianCalendar();
+            calendar.add(Calendar.DATE, position - CENTER_PAGE);
+            fragment.setDateOnCreate(calendar.getTime());
+            return fragment;
         }
 
         @Override
         public int getCount() {
-            return pages.size();
-        }
-    }
-
-    private class InstantScroller extends Scroller {
-        private boolean scrollInstantly = false;
-        private Field currX = null;
-        private Field currY = null;
-
-        InstantScroller(final Context context) {
-            super(context);
-            try {
-                currX = Scroller.class.getDeclaredField("mCurrX");
-                currY = Scroller.class.getDeclaredField("mCurrY");
-                currX.setAccessible(true);
-                currY.setAccessible(true);
-            } catch (Exception e) {
-                LogHandler.log(e);
-            }
-        }
-
-        void setScrollInstantly(final boolean instantly) {
-            scrollInstantly = instantly;
-        }
-
-        @Override
-        public boolean computeScrollOffset() {
-            if (scrollInstantly && currX != null && currY != null) {
-                try {
-                    currX.set(this, this.getFinalX());
-                    currY.set(this, this.getFinalY());
-                    this.forceFinished(true);
-                    scrollInstantly = false;
-                    EndlessContentPager.this.delayedPageUpdate();
-                    return true;
-                } catch (Exception e) {
-                    LogHandler.log(e);
-                }
-            }
-            return super.computeScrollOffset();
+            return CENTER_PAGE * 2;
         }
     }
 }
