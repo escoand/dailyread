@@ -81,18 +81,21 @@ public class DownloadHandlerTest {
 
     @Test
     public void test_22_Progress() throws InterruptedException {
+        int cnt = 0;
+
         while (true) {
             try {
                 float prog = DownloadHandler.downloadProgress(context, DOWNLOAD_ID);
+                cnt++;
 
-                Assert.assertTrue("0 <= " + prog + " <= 1", prog >= 0 && prog <= 1);
+                Assert.assertTrue("0 <= " + prog + " <= 1 (loop " + cnt + ")", prog >= 0 && prog <= 1);
 
                 if (prog >= 1) break;
             } catch (IllegalStateException e) {
                 // ignore
             }
 
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
     }
 
