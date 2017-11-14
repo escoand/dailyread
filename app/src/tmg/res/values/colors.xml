@@ -26,5 +26,6 @@
     <!-- 2018 -->
     <color name="grey_2018">#acadaf</color>
     <color name="cyan_2018">#afd6da</color>
+    <color name="darkgrey_2018">#737373</color>
     <color name="darkcyan_2018">#4a8296</color>
 </resources>

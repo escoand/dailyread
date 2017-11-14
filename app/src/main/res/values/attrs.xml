@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2016 escoand.
+  ~ Copyright (c) 2017 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
         <attr name="color_header_background" format="reference|color" />
         <attr name="color_header_title" format="reference|color" />
         <attr name="color_header_subtitle" format="reference|color" />
+        <attr name="color_header_icon" format="reference|color" />
 
         <attr name="color_drawer_background" format="reference|color" />
         <attr name="color_drawer_divider" format="reference|color" />

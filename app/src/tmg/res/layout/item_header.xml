@@ -71,7 +71,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="0"
                 android:src="@drawable/icon_bible"
-                android:tint="?attr/color_statusbar_background" />
+                android:tint="?attr/color_header_icon" />
 
         </LinearLayout>
 
