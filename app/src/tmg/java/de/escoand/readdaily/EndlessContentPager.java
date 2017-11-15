@@ -77,7 +77,7 @@ public class EndlessContentPager extends ViewPager implements Observer {
         final DatePersistence dp = DatePersistence.getInstance();
         final Date cur = new Date();
         final Date set = dp.getDate();
-        final int diff = (int) ((set.getTime() - cur.getTime()) / (1000 * 60 * 60 * 24));
+        final int diff = (int) Math.ceil((set.getTime() - cur.getTime()) / (1000 * 60 * 60 * 24));
         dp.deleteObservers();
         setCurrentItem(CENTER_PAGE + diff, false);
         dp.restoreObservers();
