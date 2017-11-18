@@ -85,6 +85,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
         if (player != null) {
             outState.putInt(STATE_DATE, Database.getIntFromDate(date));
             outState.putInt(STATE_POSITION, player.getCurrentPosition());
+            player.pause();
         }
         super.onSaveInstanceState(outState);
     }
@@ -175,7 +176,8 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
     @Override
     public void onCompletion(final MediaPlayer mp) {
-        dismiss();
+        if (!getActivity().isFinishing())
+            dismiss();
     }
 
     @Override
