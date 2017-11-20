@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 escoand.
+ * Copyright (c) 2017 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,21 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.anjlab.android.iab.v3.BillingProcessor;
-
 public class StoreArrayAdapter extends ArrayAdapter<StoreListItem> {
     private final Activity activity;
-    private final BillingProcessor billing;
 
-    public StoreArrayAdapter(final Activity activity, final BillingProcessor billing) {
+    public StoreArrayAdapter(final Activity activity) {
         super(activity, R.layout.item_store);
         this.activity = activity;
-        this.billing = billing;
     }
 
     @NonNull
     @Override
     public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
-        return getItem(position).getView(activity, parent, billing);
+        return getItem(position).getView(activity, parent);
     }
 }

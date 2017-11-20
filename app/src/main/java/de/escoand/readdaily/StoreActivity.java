@@ -21,15 +21,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.TransactionDetails;
 
 import org.json.JSONArray;
 
@@ -42,11 +39,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class StoreActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+public class StoreActivity extends AppCompatActivity implements Billing.OnBillingInitializedListener {
     public static int CODE_CONTENT_LOADED = 2;
 
-    private StoreArrayAdapter listAdapter;
-    private BillingProcessor billing;
+    private ArrayAdapter listAdapter;
     private ListView list;
 
     @Override
@@ -58,12 +54,6 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nodrawer);
-
-        billing = new BillingProcessor(
-                getBaseContext(),
-                getString(R.string.license_key),
-                getString(R.string.merchant_id),
-                this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,8 +70,11 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
         list = (ListView) findViewById(R.id.listView);
         list.setEmptyView(findViewById(R.id.listLoading));
-        listAdapter = new StoreArrayAdapter(this, billing);
+        listAdapter = new StoreArrayAdapter(this);
         list.setAdapter(listAdapter);
+
+        //
+        Billing.getInstance(getBaseContext()).setOnBillingInitializedListener(this);
 
         // result
         setResult(CODE_CONTENT_LOADED);
@@ -89,40 +82,13 @@ public class StoreActivity extends AppCompatActivity implements BillingProcessor
 
     @Override
     public void onBillingInitialized() {
-        billing.loadOwnedPurchasesFromGoogle();
         new OnReloadClickListener().onClick(null);
-    }
-
-    @Override
-    public void onProductPurchased(@NonNull final String productId, @NonNull final TransactionDetails details) {
-        for (int i = 0; i < listAdapter.getCount(); i++)
-            if (listAdapter.getItem(i).getProductId().equals(productId))
-                listAdapter.getItem(i).download();
-    }
-
-    @Override
-    public void onPurchaseHistoryRestored() {
-        // empty, but must be implemented
-    }
-
-    @Override
-    public void onBillingError(final int errorCode, final Throwable error) {
-        // TODO non-technical message to user
-        LogHandler.log(error);
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (!billing.handleActivityResult(requestCode, resultCode, data))
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onDestroy() {
-        if (billing != null)
-            billing.release();
-        super.onDestroy();
+        Billing.getInstance(getBaseContext()).handleActivityResult(requestCode, resultCode, data);
     }
 
     private class OnReloadClickListener implements View.OnClickListener {

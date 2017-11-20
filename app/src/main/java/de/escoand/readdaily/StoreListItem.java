@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
@@ -53,7 +52,6 @@ public class StoreListItem implements Runnable {
     private Button buttonRemove;
     private Button buttonAction;
     private ProgressBar progress;
-    private BillingProcessor billing;
 
     public StoreListItem(final String productId, final String mimeType) {
         this.productId = productId;
@@ -64,9 +62,9 @@ public class StoreListItem implements Runnable {
         return productId;
     }
 
-    public View getView(final Activity activity, final ViewGroup parent, final BillingProcessor billing) {
+    public View getView(Activity activity, ViewGroup parent) {
+        Billing billing = Billing.getInstance(activity);
         this.activity = activity;
-        this.billing = billing;
 
         this.parent = activity.getLayoutInflater().inflate(R.layout.item_store, parent, false);
         image = (ImageView) this.parent.findViewById(R.id.product_image);
@@ -208,9 +206,10 @@ public class StoreListItem implements Runnable {
             buttonAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    billing.purchase(activity, productId);
+                    Billing billing = Billing.getInstance(activity);
+                    billing.purchase(activity, productId, mimeType);
                     listing = billing.getPurchaseListingDetails(productId);
-                    transaction = billing.getSubscriptionTransactionDetails(productId);
+                    transaction = billing.getPurchaseTransactionDetails(productId);
                     refreshUI();
                 }
             });
