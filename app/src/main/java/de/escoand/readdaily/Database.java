@@ -92,7 +92,7 @@ public class Database extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    public static Database getInstance(@NonNull final Context context) {
+    public synchronized static Database getInstance(@NonNull final Context context) {
         if (db == null)
             db = new Database(context);
         return db;
