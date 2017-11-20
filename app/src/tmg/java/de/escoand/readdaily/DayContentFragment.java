@@ -50,7 +50,7 @@ public class DayContentFragment extends AbstractContentFragment {
 
         // header
         header = inflater.inflate(R.layout.item_header, list, false);
-        if (list != null)
+        if (list != null && list.getHeaderViewsCount() == 0)
             list.addHeaderView(header);
 
         // store button

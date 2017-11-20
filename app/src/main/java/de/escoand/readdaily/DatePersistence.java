@@ -36,7 +36,7 @@ public class DatePersistence extends Observable {
         super();
     }
 
-    public static DatePersistence getInstance() {
+    public synchronized static DatePersistence getInstance() {
         return instance;
     }
 
