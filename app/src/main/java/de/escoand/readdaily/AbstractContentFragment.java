@@ -107,6 +107,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     @Override
     public boolean setViewValue(final View view, final Cursor cursor, final int columnIndex) {
         View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
+        View wrapper = ((ViewGroup) view.getParent()).findViewById(R.id.wrapper_source);
         switch (cursor.getColumnName(columnIndex)) {
 
             // title
@@ -141,7 +142,10 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
             // source
             case Database.COLUMN_SOURCE:
                 if (cursor.isNull(columnIndex)) {
-                    view.setVisibility(View.GONE);
+                    if (wrapper != null)
+                        wrapper.setVisibility(View.GONE);
+                    else
+                        view.setVisibility(View.GONE);
                     return true;
                 }
                 break;

@@ -19,6 +19,7 @@ package de.escoand.readdaily;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.transition.ChangeBounds;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,8 +52,15 @@ public class DayContentFragment extends AbstractContentFragment {
 
         // header
         header = inflater.inflate(R.layout.item_header, list, false);
-        if (list != null && list.getHeaderViewsCount() == 0)
+        // on pre-18 addHeaderView throws error after setAdapter
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            final ListAdapter adapter = list.getAdapter();
+            list.setAdapter(null);
             list.addHeaderView(header);
+            list.setAdapter(adapter);
+        } else
+            list.addHeaderView(header);
+
 
         // store button
         if (empty.findViewById(R.id.button_store) != null)
