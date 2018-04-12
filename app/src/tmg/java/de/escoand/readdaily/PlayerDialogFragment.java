@@ -38,7 +38,7 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.Locale;
 
-public class PlayerDialogFragment extends DialogFragment implements Runnable, MediaPlayer.OnCompletionListener {
+public class PlayerDialogFragment extends DialogFragment implements Runnable, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
     private static final String STATE_DATE = "date";
     private static final String STATE_POSITION = "position";
 
@@ -50,6 +50,8 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     private int image = -1;
     private String title;
     private MediaPlayer player;
+    private boolean isPrepared = false;
+    private int startPosition = 0;
 
     @Override
     @NonNull
@@ -62,7 +64,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
         if (savedInstanceState != null) {
             setDate(getContext(), Database.getDateFromInt(savedInstanceState.getInt(STATE_DATE)));
-            player.seekTo(savedInstanceState.getInt(STATE_POSITION));
+            startPosition = savedInstanceState.getInt(STATE_POSITION);
         }
 
         if (image > 0) {
@@ -82,27 +84,17 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        if (player != null && player.isPlaying()) {
+        if (isPrepared && player.isPlaying()) {
+            player.pause();
             outState.putInt(STATE_DATE, Database.getIntFromDate(date));
             outState.putInt(STATE_POSITION, player.getCurrentPosition());
-            player.pause();
         }
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (player != null) {
-            player.start();
-            new Thread(this).start();
-        } else
-            dismiss();
-    }
-
-    @Override
     public void onDestroyView() {
-        if (player != null)
+        if (isPrepared)
             player.release();
         super.onDestroyView();
     }
@@ -164,6 +156,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
                 // media
                 case Database.TYPE_MEDIA:
                     player = MediaPlayer.create(context, Uri.parse(c.getString(c.getColumnIndex(Database.COLUMN_SOURCE))));
+                    player.setOnPreparedListener(this);
                     player.setOnCompletionListener(this);
                     break;
 
@@ -175,6 +168,14 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
     }
 
     @Override
+    public void onPrepared(final MediaPlayer mp) {
+        isPrepared = true;
+        player.seekTo(startPosition);
+        player.start();
+        new Thread(this).start();
+    }
+
+    @Override
     public void onCompletion(final MediaPlayer mp) {
         if (!getActivity().isFinishing())
             dismiss();
@@ -182,7 +183,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
     @Override
     public void run() {
-        while (getActivity() != null && player != null) {
+        while (getActivity() != null && isPrepared) {
             try {
                 final int duration = player.getDuration();
                 final int progress = player.getCurrentPosition();
