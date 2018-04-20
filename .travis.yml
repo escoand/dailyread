@@ -29,9 +29,8 @@ before_install:
 
 before_script:
   - echo no | android create avd --force -n test -t android-${ANDROID_API} --abi ${ANDROID_ABI} --tag ${ANDROID_TAG}
-  - emulator -avd test -no-audio -no-window &
-  #- android-wait-for-emulator
-  - travis_wait 10 sleep 300
+  - emulator -avd test -no-window &
+  - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 script:
