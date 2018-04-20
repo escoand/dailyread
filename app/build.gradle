@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply from: 'versioning.gradle'
 
-version = "1.1.2"
+version = "1.1.3"
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "de.escoand.readdaily"
@@ -72,26 +72,26 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     // google
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-annotations:25.3.1'
-    compile 'com.google.android.gms:play-services-gcm:11.2.2'
-    compile 'com.google.firebase:firebase-core:11.2.2'
-    compile 'com.google.firebase:firebase-crash:11.2.2'
-    compile 'com.google.firebase:firebase-messaging:11.2.2'
+    implementation 'com.android.support:cardview-v7:25.3.1'
+    implementation 'com.android.support:design:25.3.1'
+    implementation 'com.android.support:support-annotations:25.3.1'
+    implementation 'com.google.android.gms:play-services-gcm:11.2.2'
+    implementation 'com.google.firebase:firebase-core:11.2.2'
+    implementation 'com.google.firebase:firebase-crash:11.2.2'
+    implementation 'com.google.firebase:firebase-messaging:11.2.2'
     // 3rd party
-    compile 'com.anjlab.android.iab.v3:library:1.0.44'
-    compile 'com.prolificinteractive:material-calendarview:1.4.3'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     // tmg flavor
-    tmgCompile 'de.hdodenhof:circleimageview:2.1.0'
-    tmgCompile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    tmgImplementation 'de.hdodenhof:circleimageview:2.1.0'
+    tmgImplementation 'uk.co.chrisjenx:calligraphy:2.2.0'
     // testing
-    androidTestCompile 'com.android.support:support-annotations:25.3.1'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestImplementation 'com.android.support:support-annotations:25.3.1'
+    androidTestImplementation 'com.android.support.test:runner:0.5'
+    androidTestImplementation 'com.android.support.test:rules:0.5'
 }
 
 apply plugin: 'com.google.gms.google-services'
