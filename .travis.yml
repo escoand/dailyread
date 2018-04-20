@@ -25,6 +25,7 @@ before_install:
 
 before_script:
   - android || true
+  - android list avd || true
   - echo no | android create avd --force -n test -t android-${ANDROID_API}
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
