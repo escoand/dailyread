@@ -4,9 +4,10 @@ sudo: false
 
 android:
   components:
-    - tools # needs to be first to get new package versions
-    - build-tools-24.0.1
+    - tools
     - platform-tools
+    - tools
+    - build-tools-26.0.2
     - $ANDROID_TARGET
     - sys-img-armeabi-v7a-$ANDROID_TARGET
 
