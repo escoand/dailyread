@@ -20,7 +20,7 @@ android:
     - android-${ANDROID_API}
     #- build-tools-${ANDROID_BUILD_TOOLS}
     - sys-img-${ANDROID_ABI}-${ANDROID_TAG}-${ANDROID_API}
-    - extra
+    #- extra
 
 before_install:
   - mkdir "$ANDROID_HOME/licenses" || true
