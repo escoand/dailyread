@@ -14,11 +14,11 @@ env:
 
 android:
   components:
-    - tools
-    - tools # Running this twice get's the latest build tools (https://github.com/codepath/android_guides/wiki/Setting-up-Travis-CI)
-    - platform-tools
+    #- tools
+    #- tools # Running this twice get's the latest build tools (https://github.com/codepath/android_guides/wiki/Setting-up-Travis-CI)
+    #- platform-tools
     - android-${ANDROID_API}
-    - build-tools-${ANDROID_BUILD_TOOLS}
+    #- build-tools-${ANDROID_BUILD_TOOLS}
     - sys-img-${ANDROID_ABI}-${ANDROID_TAG}-${ANDROID_API}
     - extra
 
