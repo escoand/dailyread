@@ -19,7 +19,7 @@ android:
     - platform-tools
     - android-${ANDROID_API}
     - build-tools-${ANDROID_BUILD_TOOLS}
-    - sys-img-${ANDROID_ABI}-${ANDROID_TAG}-google-${ANDROID_API}
+    - sys-img-${ANDROID_ABI}-${ANDROID_TAG}-${ANDROID_API}
     - extra
 
 before_install:
