@@ -15,7 +15,7 @@ android:
     - platform-tools
     - android-${ANDROID_API}
     - build-tools-${ANDROID_BUILD_TOOLS}
-    #z- sys-img-armeabi-v7a-${ANDROID_API}
+    #- sys-img-x86-${ANDROID_API}
     - extra
 
 before_install:
@@ -25,7 +25,7 @@ before_install:
 
 before_script:
   - android list sdk -a || true
-  - echo no | android create avd --force -n test -t android-${ANDROID_API} --abi default/armeabi
+  - echo no | android create avd --force -n test -t android-${ANDROID_API} --abi x86
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
