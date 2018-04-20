@@ -1,50 +1,111 @@
 language: android
 jdk: oraclejdk8
-sudo: false
+sudo: required # false for Container-Based Infrastructure, required for Sudo-enabled Infrastructure
 
-env:
-  global:
-    - ANDROID_BUILD_TOOLS=23.0.3
-    - ANDROID_ABI=armeabi-v7a
-    - ANDROID_TAG=google_apis
-  matrix:
-    - ANDROID_API=15
-    - ANDROID_API=21
-    - ANDROID_API=25
+before_cache:
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/modules-2/modules-2.lock # Avoid to repack it due locks
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/3.3/classAnalysis/classAnalysis.lock
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/3.3/jarSnapshots/jarSnapshots.lock
+
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/gradle/caches/
+    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
 
 android:
-  components:
-    - tools
-    - tools # Running this twice get's the latest build tools (https://github.com/codepath/android_guides/wiki/Setting-up-Travis-CI)
-    - platform-tools
-    - android-${ANDROID_API}
-    - build-tools-${ANDROID_BUILD_TOOLS}
-    - sys-img-${ANDROID_ABI}-${ANDROID_TAG}-${ANDROID_API}
-    - extra
+  components: # Cookbooks version: https://github.com/travis-ci/travis-cookbooks/tree/9c6cd11
+    - tools # Update preinstalled tools from revision 24.0.2 to 24.4.1
+    - build-tools-25.0.2 # Match build-tools version used in build.gradle
+    - platform-tools # Update platform-tools to revision 25.0.3+
+    - tools # Update tools from revision 24.4.1 to 25.2.5
+
+env:
+  global:
+    - API=25 # Android API level 25 by default
+    - TAG=google_apis # Google APIs by default, alternatively use default
+    - ABI=armeabi-v7a # ARM ABI v7a by default
+    - QEMU_AUDIO_DRV=none # Disable emulator audio to avoid warning
+    - GRADLE_USER_HOME="${TRAVIS_BUILD_DIR}/gradle" # Change location for Gradle Wrapper and cache
+    - ANDROID_HOME=/usr/local/android-sdk-24.0.2 # Depends on the cookbooks version used in the VM
+    - TOOLS=${ANDROID_HOME}/tools # PATH order matters, exists more than one emulator script
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
+
+matrix:
+  include: # More Emulator API levels to build in parallel
+    - env: API=25
+    - env: API=21
+    - env: API=15
+  fast_finish: false
 
 before_install:
-  - mkdir "$ANDROID_HOME/licenses" || true
-  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-  - echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
+  - export EMULATOR="system-images;android-${API};${TAG};${ABI}" # Used to install/create emulator
+  - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid warning
+
+install:
+  # List and delete unnecessary components to free space
+  - sdkmanager --list || true
+  - sdkmanager --uninstall "system-images;android-16;default;armeabi-v7a"
+  - sdkmanager --uninstall "system-images;android-17;default;armeabi-v7a"
+  - sdkmanager --uninstall "system-images;android-18;default;armeabi-v7a"
+  - sdkmanager --uninstall "system-images;android-19;default;armeabi-v7a"
+  - sdkmanager --uninstall "system-images;android-22;default;armeabi-v7a"
+  - sdkmanager --uninstall "system-images;android-23;default;armeabi-v7a"
+  - sdkmanager --uninstall "system-images;android-24;default;armeabi-v7a"
+  - sdkmanager --uninstall "extras;google;google_play_services"
+  - sdkmanager --uninstall "extras;android;support"
+  - sdkmanager --uninstall "platforms;android-10"
+  - sdkmanager --uninstall "platforms;android-16"
+  - sdkmanager --uninstall "platforms;android-17"
+  - sdkmanager --uninstall "platforms;android-18"
+  - sdkmanager --uninstall "platforms;android-19"
+  - sdkmanager --uninstall "platforms;android-20"
+  - sdkmanager --uninstall "platforms;android-22"
+  - sdkmanager --uninstall "platforms;android-23"
+  - sdkmanager --uninstall "platforms;android-24"
+  - sdkmanager --uninstall "build-tools;21.1.2"
+  # Update sdk tools to latest version and install/update components
+  - echo yes | sdkmanager "tools"
+  - echo yes | sdkmanager "platforms;android-25" # Latest platform required by SDK tools
+  - echo yes | sdkmanager "platforms;android-${API}" # Android platform required by emulator
+  - echo yes | sdkmanager "extras;android;m2repository"
+  - echo yes | sdkmanager "extras;google;m2repository"
+  - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+  - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+  - echo yes | sdkmanager "$EMULATOR" # Install emulator system image
+  # Create and start emulator
+  - echo no | avdmanager create avd -n acib -k "$EMULATOR" -f --abi "$ABI" --tag "$TAG"
+  - emulator -avd acib -engine classic -no-window -camera-back none -camera-front none -selinux permissive -verbose -qemu -m 512 &
+  # Start adbd, wait for device connected and show android serial to avoid heavy tasks in parallel
+  - adb wait-for-device get-serialno
+  # Show version and download Gradle Wrapper if it's not already cached
+  - ./gradlew --version
+  # Clean project and download missing dependencies and components
+  - ./gradlew clean
+  # Check components status
+  - sdkmanager --list || true
+  # Run all checks
+  #- ./gradlew check -PdisablePreDex
 
 before_script:
-  - echo no | android create avd --force -n test -t android-${ANDROID_API} --abi ${ANDROID_ABI} --tag ${ANDROID_TAG}
-  - emulator -avd test -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+  # Wait for emulator fully-booted and disable animations
+  - android-wait-for-emulator
+  - adb shell settings put global window_animation_scale 0 &
+  - adb shell settings put global transition_animation_scale 0 &
+  - adb shell settings put global animator_duration_scale 0 &
+  - sleep 30
+  - adb shell input keyevent 82 &
+  - sleep 15
 
 script:
-  - ./gradlew clean connectedTmgDebugAndroidTest
+  # Run all device checks
+  - ./gradlew connectedTmgDebugAndroidTest -x library:signArchives -PdisablePreDex
+
+after_script:
+  # Show tests and lint results
+  - cat ${TRAVIS_BUILD_DIR}/*/build/outputs/androidTest-results/connected/*
+  - cat ${TRAVIS_BUILD_DIR}/library/build/reports/lint-results.xml
+  - cat ${TRAVIS_BUILD_DIR}/demo/build/reports/lint-results.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
-
-cache:
-  directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
-  - $HOME/.android/build-cache
