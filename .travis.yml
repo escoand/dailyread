@@ -15,7 +15,7 @@ android:
     - platform-tools
     - android-${ANDROID_API}
     - build-tools-${ANDROID_BUILD_TOOLS}
-    #- sys-img-x86-${ANDROID_API}
+    - sys-img-x86-${ANDROID_API}
     - extra
 
 before_install:
