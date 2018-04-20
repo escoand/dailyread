@@ -7,7 +7,10 @@ android:
     - tools # needs to be first to get new package versions
     - build-tools-24.0.1
     - platform-tools
+    - android-15
+    - android-21
     - android-25
+    - $ANDROID_TARGET
 
 env:
   matrix:
