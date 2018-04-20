@@ -23,6 +23,9 @@ before_install:
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 
 before_script:
+  - android list target
+  - android list avd
+  - android list sdk
   - echo no | android create avd --force -n test -t android-$ANDROID_VERSION --abi armeabi-x86
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
