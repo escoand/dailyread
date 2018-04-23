@@ -84,7 +84,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        if (isPrepared && player.isPlaying()) {
+        if (isPrepared) {
             player.pause();
             outState.putInt(STATE_DATE, Database.getIntFromDate(date));
             outState.putInt(STATE_POSITION, player.getCurrentPosition());
@@ -177,6 +177,7 @@ public class PlayerDialogFragment extends DialogFragment implements Runnable, Me
 
     @Override
     public void onCompletion(final MediaPlayer mp) {
+        isPrepared = false;
         if (!getActivity().isFinishing())
             dismiss();
     }
