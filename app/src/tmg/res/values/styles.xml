@@ -62,6 +62,30 @@
         <item name="color_about_text">@color/darkgrey_2018</item>
         <item name="color_about_action">@color/darkgrey_2018</item>
 
+        <item name="icon_about">@drawable/icon_about</item>
+        <item name="icon_bible">@drawable/icon_bible</item>
+        <item name="icon_bible_list">@drawable/icon_list</item>
+        <item name="icon_calendar">@drawable/icon_calendar</item>
+        <item name="icon_calendar_read">@drawable/calendar_read</item>
+        <item name="icon_intro">@drawable/icon_intro</item>
+        <item name="icon_intro_list">@drawable/icon_intro</item>
+        <item name="icon_menu_open">@drawable/icon_plus</item>
+        <item name="icon_menu_close">@drawable/icon_close</item>
+        <item name="icon_navigation">@drawable/icon_menu</item>
+        <item name="icon_navigation_back">@drawable/icon_back</item>
+        <item name="icon_note">@drawable/icon_note</item>
+        <item name="icon_play">@drawable/icon_speaker</item>
+        <item name="icon_read">@drawable/icon_read</item>
+        <item name="icon_read_all">@drawable/icon_readall</item>
+        <item name="icon_reminder">@drawable/alarm</item>
+        <item name="icon_search">@drawable/icon_search</item>
+        <item name="icon_settings">@drawable/icon_settings</item>
+        <item name="icon_share">@drawable/icon_share</item>
+        <item name="icon_store">@drawable/icon_store</item>
+        <item name="icon_today">@drawable/icon_today</item>
+        <item name="icon_voty">@drawable/icon_voty</item>
+        <item name="icon_voty_list">@drawable/icon_voty</item>
+
         <item name="text_size_large">18sp</item>
         <item name="text_size_medium">16sp</item>
         <item name="text_size_normal">14sp</item>

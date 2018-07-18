@@ -54,7 +54,7 @@ public class PushMessageService extends FirebaseMessagingService {
 
         // build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.icon_notification)
+                .setSmallIcon(R.attr.icon_reminder)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(title)
                 .setContentText(message)

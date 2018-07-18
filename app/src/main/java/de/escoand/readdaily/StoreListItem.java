@@ -272,7 +272,7 @@ public class StoreListItem implements Runnable {
                         if (len < 1024 * 1024)
                             image.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, len));
                         else
-                            image.setImageResource(R.drawable.icon_close);
+                            image.setImageResource(R.attr.icon_menu_close);
                     }
                 });
             }
@@ -293,7 +293,7 @@ public class StoreListItem implements Runnable {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    image.setImageResource(R.drawable.icon_close);
+                    image.setImageResource(R.attr.icon_menu_close);
                 }
             });
         }

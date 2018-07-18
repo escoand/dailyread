@@ -63,6 +63,30 @@
         <attr name="color_about_text" format="reference|color" />
         <attr name="color_about_action" format="reference|color" />
 
+        <attr name="icon_about" format="reference|drawable" />
+        <attr name="icon_bible" format="reference|drawable" />
+        <attr name="icon_bible_list" format="reference|drawable" />
+        <attr name="icon_calendar" format="reference|drawable" />
+        <attr name="icon_calendar_read" format="reference|drawable" />
+        <attr name="icon_intro" format="reference|drawable" />
+        <attr name="icon_intro_list" format="reference|drawable" />
+        <attr name="icon_menu_open" format="reference|drawable" />
+        <attr name="icon_menu_close" format="reference|drawable" />
+        <attr name="icon_navigation" format="reference|drawable" />
+        <attr name="icon_navigation_back" format="reference|drawable" />
+        <attr name="icon_note" format="reference|drawable" />
+        <attr name="icon_play" format="reference|drawable" />
+        <attr name="icon_read" format="reference|drawable" />
+        <attr name="icon_read_all" format="reference|drawable" />
+        <attr name="icon_reminder" format="reference|drawable" />
+        <attr name="icon_search" format="reference|drawable" />
+        <attr name="icon_settings" format="reference|drawable" />
+        <attr name="icon_share" format="reference|drawable" />
+        <attr name="icon_store" format="reference|drawable" />
+        <attr name="icon_today" format="reference|drawable" />
+        <attr name="icon_voty" format="reference|drawable" />
+        <attr name="icon_voty_list" format="reference|drawable" />
+
         <attr name="text_size_large" format="reference|dimension" />
         <attr name="text_size_medium" format="reference|dimension" />
         <attr name="text_size_normal" format="reference|dimension" />

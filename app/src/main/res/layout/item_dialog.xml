@@ -28,7 +28,7 @@
         android:id="@+id/list_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/calendar_read" />
+        android:src="?attr/icon_calendar_read" />
 
     <TextView
         android:id="@+id/list_title"

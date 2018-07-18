@@ -103,7 +103,7 @@ public class CalendarDialogFragment extends DialogFragment implements com.prolif
 
         @Override
         public void decorate(final DayViewFacade view) {
-            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.calendar_read));
+            view.setBackgroundDrawable(getResources().getDrawable(R.attr.icon_calendar_read));
         }
     }
 

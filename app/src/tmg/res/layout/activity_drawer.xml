@@ -66,7 +66,7 @@
                             style="@style/Toolbar.Icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/icon_speaker" />
+                            android:src="?attr/icon_play" />
 
                     </android.support.v7.widget.Toolbar>
 
@@ -87,7 +87,7 @@
                 android:id="@+id/button_voty"
                 style="@style/FloatingActionButton.Mini"
                 android:layout_gravity="top"
-                android:src="@drawable/icon_voty"
+                android:src="?attr/icon_voty"
                 android:tint="@android:color/white"
                 app:backgroundTint="#50e3c2"
                 app:layout_anchor="@+id/button_more"
@@ -97,7 +97,7 @@
                 android:id="@+id/button_intro"
                 style="@style/FloatingActionButton.Mini"
                 android:layout_gravity="top"
-                android:src="@drawable/icon_intro"
+                android:src="?attr/icon_intro"
                 android:tint="@android:color/white"
                 app:backgroundTint="#4a90e2"
                 app:layout_anchor="@+id/button_more"
@@ -108,7 +108,7 @@
                 style="@style/FloatingActionButton.Mini"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp"
-                android:src="@drawable/icon_plus" />
+                android:src="?attr/icon_menu_open" />
 
         </android.support.design.widget.CoordinatorLayout>
 
@@ -152,7 +152,7 @@
                 style="@style/Toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:navigationIcon="@drawable/icon_close" />
+                app:navigationIcon="?attr/icon_menu_close" />
 
             <fragment
                 android:id="@+id/content_voty"

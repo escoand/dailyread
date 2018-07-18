@@ -35,7 +35,7 @@
             style="@style/Image.BottomMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_today" />
+            android:src="?attr/icon_today" />
 
         <TextView
             style="@style/Text.BottomMenu"
@@ -56,7 +56,7 @@
             style="@style/Image.BottomMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_share" />
+            android:src="?attr/icon_share" />
 
         <TextView
             style="@style/Text.BottomMenu"

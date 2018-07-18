@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements
         if (findViewById(R.id.button_bible_exegesis) != null)
             findViewById(R.id.button_bible_exegesis).setOnClickListener(
                     new OnBibleClickListener(this, Database.TYPE_EXEGESIS));
-        ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.drawable.icon_plus);
+        ((FloatingActionButton) findViewById(R.id.button_more)).setImageResource(R.attr.icon_menu_open);
         toggleVisibility(R.id.button_more, View.GONE);
         toggleVisibility(R.id.button_intro, View.GONE);
         toggleVisibility(R.id.button_voty, View.GONE);
@@ -354,9 +354,9 @@ public class MainActivity extends AppCompatActivity implements
             // image
             if (findViewById(R.id.button_voty).getVisibility() == View.VISIBLE ||
                     findViewById(R.id.button_intro).getVisibility() == View.VISIBLE)
-                ((FloatingActionButton) v).setImageResource(R.drawable.icon_plus);
+                ((FloatingActionButton) v).setImageResource(R.attr.icon_menu_open);
             else
-                ((FloatingActionButton) v).setImageResource(R.drawable.icon_close);
+                ((FloatingActionButton) v).setImageResource(R.attr.icon_menu_close);
 
             // buttons
             cursor.moveToPosition(-1);

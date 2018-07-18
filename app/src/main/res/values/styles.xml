@@ -57,6 +57,30 @@
         <item name="color_about_text">@android:color/primary_text_light</item>
         <item name="color_about_action">?attr/color_toolbar_background</item>
 
+        <item name="icon_about">@drawable/information_outline</item>
+        <item name="icon_bible">@drawable/book_open_page_variant</item>
+        <item name="icon_bible_list">@drawable/book_open_page_variant</item>
+        <item name="icon_calendar">@drawable/calendar_multiselect</item>
+        <item name="icon_calendar_read">@drawable/check_all</item>
+        <item name="icon_intro">@drawable/routes</item>
+        <item name="icon_intro_list">@drawable/routes</item>
+        <item name="icon_menu_open">@drawable/plus</item>
+        <item name="icon_menu_close">@drawable/close</item>
+        <item name="icon_navigation">@drawable/menu</item>
+        <item name="icon_navigation_back">@drawable/backburger</item>
+        <item name="icon_note">@drawable/note_plus</item>
+        <item name="icon_play">@drawable/volume_high</item>
+        <item name="icon_read">@drawable/check</item>
+        <item name="icon_read_all">@drawable/check_all</item>
+        <item name="icon_reminder">@drawable/alarm</item>
+        <item name="icon_search">@drawable/magnify</item>
+        <item name="icon_settings">@drawable/settings</item>
+        <item name="icon_share">@drawable/share_variant</item>
+        <item name="icon_store">@drawable/cart</item>
+        <item name="icon_today">@drawable/calendar_today</item>
+        <item name="icon_voty">@drawable/calendar_star</item>
+        <item name="icon_voty_list">@drawable/calendar_star</item>
+
         <item name="text_size_large">18sp</item>
         <item name="text_size_medium">16sp</item>
         <item name="text_size_normal">14sp</item>
@@ -78,7 +102,7 @@
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/color_toolbar_background</item>
-        <item name="navigationIcon">@drawable/icon_menu</item>
+        <item name="navigationIcon">?attr/icon_menu</item>
         <item name="subtitleTextAppearance">@style/Text.Toolbar.Subtitle</item>
         <item name="titleTextAppearance">@style/Text.Toolbar.Title</item>
     </style>

@@ -69,7 +69,7 @@ public class ReminderHandler extends BroadcastReceiver {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.icon_notification)
+                .setSmallIcon(R.attr.icon_reminder)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(context.getString(R.string.app_title))
                 .setContentText(context.getString(R.string.message_reminder))
