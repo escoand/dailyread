@@ -18,6 +18,7 @@
 package de.escoand.readdaily;
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -27,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -51,6 +51,7 @@ import static junit.framework.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class RoomDatabaseTest {
+    private Context context;
     private TextDatabase db;
     private DownloadDao downloadDao;
     private SubscriptionDao subscriptionDao;
@@ -60,7 +61,8 @@ public class RoomDatabaseTest {
 
     @Before
     public void createDb() {
-        db = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getTargetContext(), TextDatabase.class).build();
+        context = InstrumentationRegistry.getTargetContext();
+        db = Room.inMemoryDatabaseBuilder(context, TextDatabase.class).build();
         downloadDao = db.getDownloadDao();
         subscriptionDao = db.getSubscriptionDao();
         textTypeDao = db.getTextTypeDao();
@@ -208,25 +210,6 @@ public class RoomDatabaseTest {
     @Test
     public void testImportXml() throws IOException, XmlPullParserException {
         final String name = "text_xml";
-        final String data = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-                "<collection creationDate=\"01.01.1970 01:02:03\">" +
-                "<entry sourceId=\"123\" source=\"Name of the Book 1\" title=\"Title of the Book 1\" subtitle=\"Subtitle of the Book 1\">Description of the Book 1</entry>" +
-                "<entry sourceId=\"567\" source=\"Name of the Book 2\" title=\"Title of the Book 2\" subtitle=\"Subtitle of the Book 2\">Description of the Book 2</entry>" +
-                "<entry date=\"2000-01-01\" description=\"Name of the Day 1\">" +
-                "<exegesis sourceId=\"123\" source=\"Name of the Book\" sourceChapter=\"234\" sourceVerse=\"345\" title=\"Title of the Day\" subtitle=\"Subtitle of the Day\">Text of the Day</exegesis>" +
-                "<verse_of_the_day source=\"Scripture of the Day\">Verse of the Day</verse_of_the_day>" +
-                "<verse_of_the_week source=\"Scripture of the Week\">Verse of the Week</verse_of_the_week>" +
-                "<verse_of_the_month source=\"Scripture of the Month\">Verse of the Month</verse_of_the_month>" +
-                "<verse_of_the_year source=\"Scripture of the Year\">Verse of the Year</verse_of_the_year>" +
-                "</entry>" +
-                "<entry date=\"2000-01-02\" description=\"Name of the Day 2\">" +
-                "<exegesis sourceId=\"123\" source=\"Name of the Book\" sourceChapter=\"234\" sourceVerse=\"345\" title=\"Title of the Day\" subtitle=\"Subtitle of the Day\">Text of the Day</exegesis>" +
-                "<verse_of_the_day source=\"Scripture of the Day\">Verse of the Day</verse_of_the_day>" +
-                "<verse_of_the_week source=\"Scripture of the Week\">Verse of the Week</verse_of_the_week>" +
-                "<verse_of_the_month source=\"Scripture of the Month\">Verse of the Month</verse_of_the_month>" +
-                "<verse_of_the_year source=\"Scripture of the Year\">Verse of the Year</verse_of_the_year>" +
-                "</entry>" +
-                "</collection>";
 
         textTypeDao.insert(
                 new TextType(TextType.TYPE_DAY, "day"),
@@ -237,7 +220,7 @@ public class RoomDatabaseTest {
                 new TextType(TextType.TYPE_YEAR, "year")
         );
 
-        importer.importXML(name, new ByteArrayInputStream(data.getBytes()));
+        importer.importXML(name, context.getResources().openRawResource(de.brunnen_verlag.termine_mit_gott.test.R.xml.data_import));
         assertNotNull(subscriptionDao.findByName(name));
         assertEquals(5, textDao.findByDate(new GregorianCalendar(2000, 1 - 1, 1)).size());
         assertEquals(5, textDao.findByDate(new GregorianCalendar(2000, 1 - 1, 2)).size());
