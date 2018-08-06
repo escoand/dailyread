@@ -64,6 +64,7 @@ public abstract class Importer {
 
         // subscription
         long id = subscriptionDao.insert(new Subscription(subscription, 0));
+        text_entry.setSubscription(id);
         text_item.setSubscription(id);
 
         try {
