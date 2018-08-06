@@ -33,9 +33,6 @@ public class Download {
     private long downloadId;
     private String mimeType;
 
-    public Download() {
-    }
-
     public Download(String subscription, long downloadId, String mimeType) {
         this.subscription = subscription;
         this.downloadId = downloadId;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,9 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 
 import java.io.IOException;
 
+import de.escoand.readdaily.database.TextDatabase;
+import de.escoand.readdaily.database.dao.SubscriptionDao;
+import de.escoand.readdaily.database.entity.Subscription;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -69,12 +72,12 @@ public class StoreListItem implements Runnable {
         this.billing = billing;
 
         this.parent = activity.getLayoutInflater().inflate(R.layout.item_store, parent, false);
-        image = (ImageView) this.parent.findViewById(R.id.product_image);
-        title = (TextView) this.parent.findViewById(R.id.product_name);
-        description = (TextView) this.parent.findViewById(R.id.product_description);
-        buttonRemove = (Button) this.parent.findViewById(R.id.product_remove);
-        buttonAction = (Button) this.parent.findViewById(R.id.procuct_action);
-        progress = (ProgressBar) this.parent.findViewById(R.id.product_progress);
+        image = this.parent.findViewById(R.id.product_image);
+        title = this.parent.findViewById(R.id.product_name);
+        description = this.parent.findViewById(R.id.product_description);
+        buttonRemove = this.parent.findViewById(R.id.product_remove);
+        buttonAction = this.parent.findViewById(R.id.procuct_action);
+        progress = this.parent.findViewById(R.id.product_progress);
 
         // listing
         listing = billing.getPurchaseListingDetails(productId);
