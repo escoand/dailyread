@@ -100,7 +100,7 @@ public class RoomDatabaseTest {
     @Test
     public void testDownload() {
         Download obj1, obj2;
-        obj1 = new Download("test", 1);
+        obj1 = new Download("test", 1, null);
 
         // insert
         downloadDao.insert(obj1);

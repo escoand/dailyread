@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
+import de.escoand.readdaily.database.TextDatabase;
+import de.escoand.readdaily.database.dao.DownloadDao;
+import de.escoand.readdaily.database.entity.Download;
+import de.escoand.readdaily.database.util.Importer;
+
 public class DownloadHandler extends BroadcastReceiver {
     public final static long DOWNLOAD_FAILED = -5;
     public final static long DOWNLOAD_PAUSED = -4;
@@ -45,6 +50,7 @@ public class DownloadHandler extends BroadcastReceiver {
     public final static long DOWNLOAD_ID_UNKNOWN = -1;
 
     public static long startInvisibleDownload(final Context context, final String url, final String title) {
+        final DownloadDao dao = TextDatabase.getInstance(context).getDownloadDao();
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name = String.valueOf(new Random().nextInt());
 
@@ -52,7 +58,7 @@ public class DownloadHandler extends BroadcastReceiver {
 
         long id = manager.enqueue(new DownloadManager.Request(Uri.parse(url))
                 .setTitle(title));
-        Database.getInstance(context).addDownload(name, id, null);
+        dao.insert(new Download(name, id, null));
 
         return id;
     }
@@ -83,26 +89,18 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     public static float downloadProgress(final Context context, final String name) {
-        Cursor cursor = null;
-        long id = 0;
+        final DownloadDao dao = TextDatabase.getInstance(context).getDownloadDao();
+        final Download download = dao.findBySubscription(name);
 
-        // get download id
-        cursor = Database.getInstance(context).getDownloads();
-        while (cursor.moveToNext())
-            if (cursor.getString(cursor.getColumnIndex(Database.COLUMN_SUBSCRIPTION)).equals(name)) {
-                id = cursor.getLong(cursor.getColumnIndex(Database.COLUMN_ID));
-                break;
-            }
-        cursor.close();
-        if (id <= 0)
+        // check if exists
+        if (download == null)
             return SUBSCRIPTION_DOWNLOAD_UNKNOWN;
 
         // get download
-        cursor = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE))
-                .query(new DownloadManager.Query().setFilterById(id));
+        final Cursor cursor = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE))
+                .query(new DownloadManager.Query().setFilterById(download.getDownloadId()));
         if (!cursor.moveToFirst()) {
-            Database.getInstance(context).removeDownload(id);
-            cursor.close();
+            dao.delete(download);
             return DOWNLOAD_ID_UNKNOWN;
         }
 
@@ -126,45 +124,35 @@ public class DownloadHandler extends BroadcastReceiver {
     }
 
     public static void stopDownload(final Context context, final String name) {
-        Database db = Database.getInstance(context);
-        Cursor c = db.getDownloads();
-        long id = 0;
+        final DownloadDao dao = TextDatabase.getInstance(context).getDownloadDao();
+        final Download download = dao.findBySubscription(name);
 
-        // get download id
-        while (c.moveToNext())
-            if (c.getString(c.getColumnIndex(Database.COLUMN_SUBSCRIPTION)).equals(name)) {
-                id = c.getLong(c.getColumnIndex(Database.COLUMN_ID));
-                break;
-            }
-        c.close();
-        if (id <= 0)
+        // check if exists
+        if (download == null)
             return;
 
         // stop download
-        ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).remove(id);
-        db.removeDownload(id);
+        ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).remove(download.getDownloadId());
+        dao.delete(download);
     }
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        final DownloadDao dao = TextDatabase.getInstance(context).getDownloadDao();
+        final Importer importer = TextDatabase.getInstance(context).getImporter();
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        final Database db = Database.getInstance(context);
-        final Cursor downloads = db.getDownloads();
 
         LogHandler.w("receive starting");
 
-        while (downloads.moveToNext()) {
-            final long id = downloads.getLong(downloads.getColumnIndex(Database.COLUMN_ID));
-            final String name = downloads.getString(downloads.getColumnIndex(Database.COLUMN_SUBSCRIPTION));
-            final String mime = downloads.getString(downloads.getColumnIndex(Database.COLUMN_TYPE));
-            final Cursor download = manager.query(new DownloadManager.Query().setFilterById(id));
+        for (final Download download : dao.getAll()) {
+            final Cursor managerData = manager.query(new DownloadManager.Query().setFilterById(download.getDownloadId()));
 
             // download exists
-            if (!download.moveToFirst())
+            if (!managerData.moveToFirst())
                 continue;
 
             // download finished
-            if (download.getInt(download.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
+            if (managerData.getInt(managerData.getColumnIndex(DownloadManager.COLUMN_STATUS)) != DownloadManager.STATUS_SUCCESSFUL)
                 continue;
 
             // import file in background
@@ -172,18 +160,18 @@ public class DownloadHandler extends BroadcastReceiver {
                 @Override
                 public void run() {
                     try {
-                        LogHandler.w("import starting of " + name);
+                        LogHandler.w("import starting of " + download.getSubscription());
 
-                        final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(id));
-                        final String mimeServer = manager.getMimeTypeForDownloadedFile(id);
+                        final FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(manager.openDownloadedFile(download.getDownloadId()));
+                        final String mimeServer = manager.getMimeTypeForDownloadedFile(download.getDownloadId());
 
-                        LogHandler.i("id: " + String.valueOf(id));
+                        LogHandler.i("id: " + String.valueOf(download.getDownloadId()));
                         LogHandler.i("manager: " + manager.toString());
                         LogHandler.i("stream: " + stream.toString());
-                        LogHandler.i("mime: " + mime);
+                        LogHandler.i("mime: " + download.getMimeType());
                         LogHandler.i("mimeServer: " + mimeServer);
 
-                        switch (mime != null ? mime : (mimeServer != null ? mimeServer : "")) {
+                        switch (download.getMimeType() != null ? download.getMimeType() : (mimeServer != null ? mimeServer : "")) {
 
                             // register feedback
                             case "application/json":
@@ -192,20 +180,15 @@ public class DownloadHandler extends BroadcastReceiver {
                                 LogHandler.w("register feedback: " + new String(buf, 0, len));
                                 break;
 
-                            // csv data
-                            case "text/plain":
-                                db.importCSV(name, stream);
-                                break;
-
                             // xml data
                             case "application/xml":
                             case "text/xml":
-                                db.importXML(name, stream);
+                                importer.importXML(download.getSubscription(), stream);
                                 break;
 
                             // zipped data
                             case "application/zip":
-                                db.importZIP(name, stream);
+                                importer.importZIP(download.getSubscription(), stream, context.getFilesDir());
                                 break;
 
                             // do nothing
@@ -215,7 +198,7 @@ public class DownloadHandler extends BroadcastReceiver {
                         }
 
                         stream.close();
-                        LogHandler.w("import finished (" + name + ")");
+                        LogHandler.w("import finished (" + download.getSubscription() + ")");
                     }
 
 
@@ -236,15 +219,14 @@ public class DownloadHandler extends BroadcastReceiver {
 
                     // clean
                     finally {
-                        manager.remove(id);
-                        db.removeDownload(id);
+                        manager.remove(download.getDownloadId());
+                        dao.delete(download);
                         LogHandler.w("clean finished");
                     }
                 }
             }).start();
         }
 
-        downloads.close();
         LogHandler.w("receiving done");
     }
 }

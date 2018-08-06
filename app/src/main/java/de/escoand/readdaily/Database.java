@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+@Deprecated
 public class Database extends SQLiteOpenHelper {
     public static final String COLUMN_SUBSCRIPTION = "subscription";
     public static final String COLUMN_TYPE = "type";
@@ -92,6 +93,7 @@ public class Database extends SQLiteOpenHelper {
         this.context = context;
     }
 
+    @Deprecated
     public static Database getInstance(@NonNull final Context context) {
         if (db == null)
             db = new Database(context);

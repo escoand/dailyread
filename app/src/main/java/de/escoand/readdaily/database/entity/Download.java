@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,14 +30,16 @@ public class Download {
     @PrimaryKey(autoGenerate = true)
     private long id;
     private String subscription;
-    private int downloadId;
+    private long downloadId;
+    private String mimeType;
 
     public Download() {
     }
 
-    public Download(String subscription, int downloadHandlerId) {
+    public Download(String subscription, long downloadId, String mimeType) {
         this.subscription = subscription;
-        this.downloadId = downloadHandlerId;
+        this.downloadId = downloadId;
+        this.mimeType = mimeType;
     }
 
     public long getId() {
@@ -56,12 +58,20 @@ public class Download {
         this.subscription = subscription;
     }
 
-    public int getDownloadId() {
+    public long getDownloadId() {
         return downloadId;
     }
 
-    public void setDownloadId(int downloadId) {
+    public void setDownloadId(long downloadId) {
         this.downloadId = downloadId;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     @Override
