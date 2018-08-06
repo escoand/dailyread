@@ -23,8 +23,8 @@
         <item name="colorAccent">@color/darkcyan_2018</item>
 
         <item name="android:textAppearance">@style/Text</item>
-        <item name="android:textColorPrimary">@color/darkgrey</item>
-        <item name="android:textColorSecondary">@color/darkgrey</item>
+        <item name="android:textColorPrimary">@color/darkgrey_2018</item>
+        <item name="android:textColorSecondary">@color/darkgrey_2018</item>
 
         <item name="colorPrimary">?attr/color_toolbar_background</item>
         <item name="colorPrimaryDark">?attr/color_statusbar_background</item>
@@ -34,8 +34,9 @@
         <item name="color_toolbar_title">@android:color/white</item>
         <item name="color_toolbar_subtitle">@android:color/white</item>
         <item name="color_header_background">@color/cyan_2018</item>
-        <item name="color_header_title">@android:color/black</item>
-        <item name="color_header_subtitle">@android:color/black</item>
+        <item name="color_header_title">@color/darkgrey_2018</item>
+        <item name="color_header_subtitle">@color/darkgrey_2018</item>
+        <item name="color_header_icon">@color/darkgrey_2018</item>
         <item name="color_drawer_background">@color/darkcyan_2018</item>
         <item name="color_drawer_divider">@android:color/white</item>
         <item name="color_drawer_icon">@android:color/white</item>
@@ -47,19 +48,19 @@
         <item name="color_button_background">@color/darkcyan_2018</item>
         <item name="color_button_text">@android:color/white</item>
         <item name="color_button_light_background">@android:color/transparent</item>
-        <item name="color_button_light_text">@color/darkgrey</item>
+        <item name="color_button_light_text">@color/darkgrey_2018</item>
         <item name="color_bottom_buttons_background">@android:color/white</item>
-        <item name="color_bottom_buttons_text">@color/darkgrey</item>
-        <item name="color_bottom_buttons_icon">@color/darkgrey</item>
+        <item name="color_bottom_buttons_text">@color/darkgrey_2018</item>
+        <item name="color_bottom_buttons_icon">@color/darkgrey_2018</item>
         <item name="color_progress_primary">@color/darkcyan_2018</item>
         <item name="color_progress_secondary">@color/cyan_2018</item>
         <item name="color_daily_background">@android:color/white</item>
-        <item name="color_daily_text">@color/darkgrey</item>
-        <item name="color_daily_title">@color/darkgrey</item>
-        <item name="color_daily_source">@color/darkgrey</item>
+        <item name="color_daily_text">@color/darkgrey_2018</item>
+        <item name="color_daily_title">@color/darkgrey_2018</item>
+        <item name="color_daily_source">@color/darkgrey_2018</item>
         <item name="color_about_background">@android:color/white</item>
-        <item name="color_about_text">@color/darkgrey</item>
-        <item name="color_about_action">@color/darkgrey</item>
+        <item name="color_about_text">@color/darkgrey_2018</item>
+        <item name="color_about_action">@color/darkgrey_2018</item>
 
         <item name="text_size_large">18sp</item>
         <item name="text_size_medium">16sp</item>
@@ -69,6 +70,22 @@
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <item name="android:windowAllowEnterTransitionOverlap" tools:targetApi="lollipop">true
         </item>
+    </style>
+
+    <style name="AppTheme.Readability">
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
+
+        <item name="color_header_title">@android:color/black</item>
+        <item name="color_header_subtitle">@android:color/black</item>
+        <item name="color_header_icon">@android:color/black</item>
+        <item name="color_bottom_buttons_text">@android:color/black</item>
+        <item name="color_bottom_buttons_icon">@android:color/black</item>
+        <item name="color_daily_title">@android:color/black</item>
+        <item name="color_daily_text">@android:color/black</item>
+        <item name="color_daily_source">@android:color/black</item>
+        <item name="color_about_text">@android:color/black</item>
+        <item name="color_about_action">@android:color/black</item>
     </style>
 
     <!-- card -->

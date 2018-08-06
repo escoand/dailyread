@@ -80,7 +80,7 @@ public class StoreListItem implements Runnable {
         listing = billing.getPurchaseListingDetails(productId);
         transaction = billing.getPurchaseTransactionDetails(productId);
         if (listing != null) {
-            title.setText(listing.title.replace(" (" + activity.getString(R.string.app_title) + ")", ""));
+            title.setText(listing.title.replaceFirst(" \\([^()]+\\)$", ""));
             description.setText(listing.description);
             LogHandler.i("product: " + productId);
         } else {

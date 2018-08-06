@@ -33,7 +33,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class EndlessContentPager extends ViewPager implements Observer {
-    private final static int CENTER_PAGE = Integer.MAX_VALUE / 2;
+    private final static int CENTER_PAGE = 10000 / 2;
     private boolean isScrolling = false;
 
     public EndlessContentPager(final Context context, final AttributeSet attrs) {
@@ -43,16 +43,16 @@ public class EndlessContentPager extends ViewPager implements Observer {
         setCurrentItem(CENTER_PAGE, false);
     }
 
-
     @Override
     protected void onPageScrolled(final int position, final float offset, final int offsetPixels) {
         super.onPageScrolled(position, offset, offsetPixels);
         if (offset == 0) {
+            final DatePersistence dp = DatePersistence.getInstance();
             final GregorianCalendar calendar = new GregorianCalendar();
             calendar.add(Calendar.DATE, getCurrentItem() - CENTER_PAGE);
-            DatePersistence.getInstance().deleteObserver(this);
-            DatePersistence.getInstance().setDate(calendar.getTime());
-            DatePersistence.getInstance().addObserver(this);
+            dp.deleteObserver(this);
+            dp.setDate(calendar.getTime());
+            dp.addObserver(this);
             isScrolling = false;
         } else
             isScrolling = true;
@@ -74,13 +74,14 @@ public class EndlessContentPager extends ViewPager implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        final DatePersistence dp = DatePersistence.getInstance();
         final Date cur = new Date();
-        final Date set = DatePersistence.getInstance().getDate();
-        final int diff = (int) ((set.getTime() - cur.getTime()) / (1000 * 60 * 60 * 24));
-        DatePersistence.getInstance().deleteObservers();
+        final Date set = dp.getDate();
+        final int diff = (int) Math.ceil((set.getTime() - cur.getTime()) / (1000 * 60 * 60 * 24));
+        dp.deleteObservers();
         setCurrentItem(CENTER_PAGE + diff, false);
-        DatePersistence.getInstance().restoreObservers();
-        DatePersistence.getInstance().notifyObservers();
+        dp.restoreObservers();
+        dp.notifyObservers();
     }
 
     private class CustomPageAdapter extends FragmentPagerAdapter {

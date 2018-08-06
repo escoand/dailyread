@@ -52,8 +52,13 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
         dateOnCreate = date;
     }
 
-    public void setDateOffset(final int days) {
-        dateOffset = days;
+    private void initDateOnCreate() {
+        if (dateOnCreate != null) {
+            DatePersistence.getInstance().deleteObserver(this);
+            if (adapter != null)
+                adapter.changeCursor(Database.getInstance(getContext()).getDay(dateOnCreate, condition, values));
+        } else
+            DatePersistence.getInstance().addObserver(this);
     }
 
     @Override
@@ -72,18 +77,14 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // load explicitly or observe date
-        if (dateOnCreate != null)
-            adapter.changeCursor(Database.getInstance(getContext()).getDay(dateOnCreate, condition, values));
-        else
-            DatePersistence.getInstance().addObserver(this);
+        initDateOnCreate();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getContext())
-                .setView(onCreateView(getActivity().getLayoutInflater(), null, null))
+        final Dialog dialog = new AlertDialog.Builder(getContext())
+                .setView(onCreateView(getActivity().getLayoutInflater(), null, savedInstanceState))
                 .setPositiveButton(getString(R.string.button_close), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
@@ -91,6 +92,10 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
                     }
                 })
                 .create();
+
+        initDateOnCreate();
+
+        return dialog;
     }
 
     @Override
@@ -102,6 +107,7 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     @Override
     public boolean setViewValue(final View view, final Cursor cursor, final int columnIndex) {
         View source = ((ViewGroup) view.getParent()).findViewById(R.id.daily_source);
+        View wrapper = ((ViewGroup) view.getParent()).findViewById(R.id.wrapper_source);
         switch (cursor.getColumnName(columnIndex)) {
 
             // title
@@ -136,7 +142,10 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
             // source
             case Database.COLUMN_SOURCE:
                 if (cursor.isNull(columnIndex)) {
-                    view.setVisibility(View.GONE);
+                    if (wrapper != null)
+                        wrapper.setVisibility(View.GONE);
+                    else
+                        view.setVisibility(View.GONE);
                     return true;
                 }
                 break;
