@@ -101,27 +101,27 @@ public class StoreListItem implements Runnable {
     }
 
     public void refreshUI() {
-        final Database db = Database.getInstance(activity);
-        final boolean isInstalled = db.isInstalled(productId);
+        final SubscriptionDao dao = TextDatabase.getInstance(activity).getSubscriptionDao();
+	final Subscription subscription = dao.findByName(productId);
         downloadProgress = DownloadHandler.downloadProgress(activity, productId);
 
         // failed
         if (downloadProgress == DownloadHandler.DOWNLOAD_FAILED) {
             LogHandler.i("failed");
             DownloadHandler.stopDownload(activity, productId);
-            db.removeData(productId);
+            dao.delete(subscription);
             refreshUI();
         }
 
         // up-to-date
-        else if (isInstalled) {
+        else if (subscription != null) {
             LogHandler.d("up-to-date");
             buttonRemove.setVisibility(View.VISIBLE);
             buttonRemove.setText(activity.getString(R.string.button_remove));
             buttonRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    db.removeData(productId);
+                    dao.delete(subscription);
                     refreshUI();
                 }
             });

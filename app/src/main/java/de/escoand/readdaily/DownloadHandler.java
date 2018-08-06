@@ -51,8 +51,8 @@ public class DownloadHandler extends BroadcastReceiver {
 
     public static long startInvisibleDownload(final Context context, final String url, final String title) {
         final DownloadDao dao = TextDatabase.getInstance(context).getDownloadDao();
-        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        String name = String.valueOf(new Random().nextInt());
+        final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        final String name = String.valueOf(new Random().nextInt());
 
         LogHandler.w("load invisible " + url);
 
@@ -83,7 +83,7 @@ public class DownloadHandler extends BroadcastReceiver {
                 .addRequestHeader("App-ResponseData", responseData)
                 .setTitle(title)
                 .setDescription(context.getString(R.string.app_title)));
-        Database.getInstance(context).addDownload(name, id, mimeType);
+        dao.insert(new Download(name, id, mimeType));
 
         return id;
     }

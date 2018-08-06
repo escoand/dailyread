@@ -38,15 +38,13 @@ public class OnBibleClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(final View v) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        Cursor cursor = DatePersistence.getInstance().getData(context, Database.COLUMN_TYPE + "=?", new String[]{type});
+        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if (cursor.moveToFirst()) {
-            String verse = cursor.getString(cursor.getColumnIndex(Database.COLUMN_SOURCE));
-            String url = context.getString(R.string.url_bible)
+        for(final TextInfo item: TextDatabase.getInstance(context).getTextDao().findByType(type)) {
+            final String url = context.getString(R.string.url_bible)
                     + settings.getString("bible_translation", "LUT") + "/"
-                    + verse.replaceAll(" ", "");
-            Intent intent = new Intent();
+                    + item.getSource().replaceAll(" ", "");
+            final Intent intent = new Intent();
 
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
