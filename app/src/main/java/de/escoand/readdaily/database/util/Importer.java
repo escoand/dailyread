@@ -160,12 +160,12 @@ public abstract class Importer {
                 }
 
                 // text element
-                else if (parser.getEventType() == XmlPullParser.TEXT && !parser.getText().isEmpty()) {
+                else if (parser.getEventType() == XmlPullParser.TEXT && !parser.getText().trim().isEmpty()) {
 
                     switch (name) {
 
                         case "entry":
-                            text_entry.setText(parser.getText());
+                            text_entry.setText(parser.getText().trim());
                             break;
 
                         case "exegesis":
@@ -174,7 +174,7 @@ public abstract class Importer {
                         case "verse_of_the_month":
                         case "verse_of_the_year":
                         case "thoughts_on_bible_quote_year":
-                            text_item.setText(parser.getText());
+                            text_item.setText(parser.getText().trim());
                             break;
 
                         default: // do nothing
@@ -191,6 +191,8 @@ public abstract class Importer {
                             if (text_entry.getText() != null) {
                                 LogHandler.d(text_entry.toString());
                                 textDao.insert(text_entry);
+                                text_entry.setText(null);
+                                text_item.setText(null);
                             }
                             break;
 

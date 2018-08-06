@@ -51,7 +51,6 @@ import static junit.framework.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class RoomDatabaseTest {
-    private Context context;
     private TextDatabase db;
     private DownloadDao downloadDao;
     private SubscriptionDao subscriptionDao;
@@ -61,7 +60,7 @@ public class RoomDatabaseTest {
 
     @Before
     public void createDb() {
-        context = InstrumentationRegistry.getTargetContext();
+        final Context context = InstrumentationRegistry.getTargetContext();
         db = Room.inMemoryDatabaseBuilder(context, TextDatabase.class).build();
         downloadDao = db.getDownloadDao();
         subscriptionDao = db.getSubscriptionDao();
@@ -209,6 +208,8 @@ public class RoomDatabaseTest {
     // test xml file handling
     @Test
     public void testImportXml() throws IOException, XmlPullParserException {
+        final Context context = InstrumentationRegistry.getContext();
+        int id = context.getResources().getIdentifier("data_xml", "raw", context.getPackageName());
         final String name = "text_xml";
 
         textTypeDao.insert(
@@ -220,7 +221,7 @@ public class RoomDatabaseTest {
                 new TextType(TextType.TYPE_YEAR, "year")
         );
 
-        importer.importXML(name, context.getResources().openRawResource(de.brunnen_verlag.termine_mit_gott.test.R.xml.data_import));
+        importer.importXML(name, context.getResources().openRawResource(id));
         assertNotNull(subscriptionDao.findByName(name));
         assertEquals(5, textDao.findByDate(new GregorianCalendar(2000, 1 - 1, 1)).size());
         assertEquals(5, textDao.findByDate(new GregorianCalendar(2000, 1 - 1, 2)).size());
