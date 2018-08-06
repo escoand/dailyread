@@ -19,15 +19,19 @@
 
 <resources>
     <string name="app_title">%app_title%</string>
+    <string name="app_subtitle"></string>
 
     <string name="toolbar_title">%app_title%</string>
     <string name="toolbar_subtitle">dd.MM.YYYY</string>
 
     <string name="navigation_today">Heute</string>
     <string name="navigation_calendar">Kalender</string>
+    <string name="navigation_intro">Einleitungen</string>
+    <string name="navigation_voty">Jahreslosung</string>
     <string name="navigation_list">Liste</string>
     <string name="navigation_store">Store</string>
     <string name="navigation_other">Sonstiges</string>
+    <string name="navigation_reminder">Erninnerung</string>
     <string name="navigation_settings">Einstellungen</string>
     <string name="navigation_about">Über</string>
 
