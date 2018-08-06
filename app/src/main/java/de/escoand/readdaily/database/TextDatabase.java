@@ -18,8 +18,10 @@
 package de.escoand.readdaily.database;
 
 import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.content.Context;
 
 import de.escoand.readdaily.database.dao.DownloadDao;
 import de.escoand.readdaily.database.dao.SubscriptionDao;
@@ -39,6 +41,15 @@ import de.escoand.readdaily.database.util.Importer;
 )
 @TypeConverters({Converters.class})
 public abstract class TextDatabase extends RoomDatabase {
+    private static final String DATABASE_NAME = "texts";
+    private static TextDatabase instance = null;
+
+    public static synchronized TextDatabase getInstance(Context context) {
+        if (instance == null)
+            instance = Room.databaseBuilder(context, TextDatabase.class, DATABASE_NAME).build();
+        return instance;
+    }
+
     abstract public DownloadDao getDownloadDao();
 
     abstract public SubscriptionDao getSubscriptionDao();
