@@ -375,32 +375,32 @@ public class Database extends SQLiteOpenHelper {
                 }
 
                 // text element
-                else if (parser.getEventType() == XmlPullParser.TEXT && !parser.getText().isEmpty()) {
+                else if (parser.getEventType() == XmlPullParser.TEXT && !parser.getText().trim().isEmpty()) {
 
                     switch (name) {
 
                         case "entry":
-                            values_intro.put(COLUMN_TEXT, parser.getText());
+                            values_intro.put(COLUMN_TEXT, parser.getText().trim());
                             break;
 
                         case "exegesis":
-                            values_exeg.put(COLUMN_TEXT, parser.getText());
+                            values_exeg.put(COLUMN_TEXT, parser.getText().trim());
                             break;
 
                         case "verse_of_the_day":
-                            values_day.put(COLUMN_TEXT, parser.getText());
+                            values_day.put(COLUMN_TEXT, parser.getText().trim());
                             break;
 
                         case "verse_of_the_week":
-                            values_week.put(COLUMN_TEXT, parser.getText());
+                            values_week.put(COLUMN_TEXT, parser.getText().trim());
                             break;
 
                         case "verse_of_the_month":
-                            values_month.put(COLUMN_TEXT, parser.getText());
+                            values_month.put(COLUMN_TEXT, parser.getText().trim());
                             break;
 
                         case "thoughts_on_bible_quote_year":
-                            values_year.put(COLUMN_TEXT, parser.getText());
+                            values_year.put(COLUMN_TEXT, parser.getText().trim());
                             break;
 
                         default: // do nothing
