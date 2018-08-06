@@ -1,0 +1,9 @@
+{
+  "packageName": "com.example.android.app",
+  "orderId": "transactionId.android.test.purchased",
+  "productId": "android.test.purchased",
+  "developerPayload": "inapp:android.test.purchased:2d7328a9-f376-4556-ad2f-dc8c1feb0271",
+  "purchaseTime": 0,
+  "purchaseState": 0,
+  "purchaseToken": "inapp:com.example.android.app:android.test.purchased"
+}

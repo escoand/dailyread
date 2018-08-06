@@ -1,0 +1,6 @@
+[
+  "android.test.purchased",
+  "android.test.canceled",
+  "android.test.refunded",
+  "android.test.item_unavailable"
+]
