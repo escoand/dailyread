@@ -30,12 +30,8 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew tasks --all
-  - ./gradlew clean lint${FLAVOUR}Debug
-  - ./gradlew clean lint${FLAVOUR}Release
-  - ./gradlew clean test${FLAVOUR}DebugUnitTest
-  - ./gradlew clean test${FLAVOUR}ReleaseUnitTest
-  - ./gradlew clean assemble${FLAVOUR}
+  #- ./gradlew check
+  - ./gradlew connected${FLAVOUR}DebugAndroidTest
 
 after_script:
   - cat ${TRAVIS_BUILD_DIR}/*/build/outputs/androidTest-results/connected/*
