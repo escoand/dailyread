@@ -15,29 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.escoand.readdaily.database.dao;
+package de.escoand.readdaily.database.entity;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
+import java.util.Calendar;
 
-import java.util.List;
+public class CalendarInfo {
 
-import de.escoand.readdaily.database.entity.TextType;
-
-@Dao
-public interface TextTypeDao {
-
-    @Insert
-    long insert(TextType type);
-
-    @Insert
-    List<Long> insert(TextType... types);
-
-    @Query("SELECT * FROM texttype WHERE priority = :priority")
-    TextType findByPriority(long priority);
-
-    @Query("SELECT * FROM texttype WHERE name = :name")
-    TextType findByName(String name);
+    public Calendar date;
+    public boolean read;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,22 +32,13 @@ public class TextType {
     public static final int TYPE_INTRO = 25;
     public static final int TYPE_MEDIA = 70;
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
     private int priority;
     private String name;
 
     public TextType(int priority, String name) {
         this.priority = priority;
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public int getPriority() {
@@ -71,7 +62,7 @@ public class TextType {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(),
-                "%s [#%d priority=%d name='%s']",
-                getClass().getSimpleName(), id, priority, name);
+                "%s [priority=%d name='%s']",
+                getClass().getSimpleName(), priority, name);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 package de.escoand.readdaily.database.util;
 
-import android.content.Context;
+import android.arch.persistence.room.Dao;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -41,14 +41,13 @@ import de.escoand.readdaily.database.entity.Subscription;
 import de.escoand.readdaily.database.entity.Text;
 import de.escoand.readdaily.database.entity.TextType;
 
-public class Importer {
-    private Context context;
+@Dao
+public abstract class Importer {
     private TextDatabase db;
     private SubscriptionDao subscriptionDao;
     private TextDao textDao;
 
-    Importer(Context context, TextDatabase db) {
-        this.context = context;
+    Importer(TextDatabase db) {
         this.db = db;
         subscriptionDao = db.getSubscriptionDao();
         textDao = db.getTextDao();
@@ -138,6 +137,14 @@ public class Importer {
                             text_item.setSource(parser.getAttributeValue(null, "source"));
                             break;
 
+                        case "verse_of_the_year":
+                            text_item.setType(TextType.TYPE_YEAR);
+                            text_item.setGroup(0);
+                            text_item.setTitle(null);
+                            text_item.setText(null);
+                            text_item.setSource(parser.getAttributeValue(null, "source"));
+                            break;
+
                         case "thoughts_on_bible_quote_year":
                             text_item.setType(TextType.TYPE_YEAR);
                             text_item.setGroup(0);
@@ -161,21 +168,10 @@ public class Importer {
                             break;
 
                         case "exegesis":
-                            text_item.setText(parser.getText());
-                            break;
-
                         case "verse_of_the_day":
-                            text_item.setText(parser.getText());
-                            break;
-
                         case "verse_of_the_week":
-                            text_item.setText(parser.getText());
-                            break;
-
                         case "verse_of_the_month":
-                            text_item.setText(parser.getText());
-                            break;
-
+                        case "verse_of_the_year":
                         case "thoughts_on_bible_quote_year":
                             text_item.setText(parser.getText());
                             break;
@@ -191,33 +187,23 @@ public class Importer {
                     switch (name) {
 
                         case "entry":
-                            if (text_entry.getText() != null)
+                            if (text_entry.getText() != null) {
+                                LogHandler.d(text_entry.toString());
                                 textDao.insert(text_entry);
+                            }
                             break;
 
                         case "exegesis":
-                            if (text_item.getDate() != null && text_item.getText() != null)
-                                textDao.insert(text_item);
-                            break;
-
                         case "verse_of_the_day":
-                            if (text_item.getDate() != null && text_item.getText() != null)
-                                textDao.insert(text_item);
-                            break;
-
                         case "verse_of_the_week":
-                            if (text_item.getDate() != null && text_item.getText() != null)
-                                textDao.insert(text_item);
-                            break;
-
                         case "verse_of_the_month":
-                            if (text_item.getDate() != null && text_item.getText() != null)
-                                textDao.insert(text_item);
-                            break;
-
+                        case "verse_of_the_year":
                         case "thoughts_on_bible_quote_year":
-                            if (text_item.getDate() != null && text_item.getText() != null)
+                            if (text_item.getDate() != null && text_item.getText() != null) {
+                                LogHandler.d(text_item.toString());
                                 textDao.insert(text_item);
+                                text_item.setText(null);
+                            }
                             break;
 
                         default: // do nothing
@@ -235,7 +221,7 @@ public class Importer {
         }
     }
 
-    public void importZIP(String subscription, InputStream stream) throws IOException {
+    public void importZIP(String subscription, InputStream stream, File dir) throws IOException {
         Text text = new Text();
         ZipInputStream zip = new ZipInputStream(stream);
         ZipEntry entry;
@@ -252,7 +238,7 @@ public class Importer {
         text.setTitle(null);
         text.setText(null);
 
-        File outdir = new File(context.getFilesDir(), subscription);
+        File outdir = new File(dir, subscription);
         if (!outdir.exists())
             outdir.mkdir();
 

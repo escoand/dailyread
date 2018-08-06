@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 @Entity(
         foreignKeys = {
                 @ForeignKey(entity = Subscription.class, parentColumns = "id", childColumns = "subscription", onDelete = CASCADE),
-                @ForeignKey(entity = TextType.class, parentColumns = "id", childColumns = "type")
+                @ForeignKey(entity = TextType.class, parentColumns = "priority", childColumns = "type")
         },
         indices = {
                 @Index(value = {"subscription", "type", "date"}, unique = true),
@@ -59,7 +59,7 @@ public class Text {
     }
 
     public Text(Subscription subscription, TextType type, Calendar date, float group, String title, String text, String source) {
-        this(subscription.getId(), type.getId(), date, group, title, text, source);
+        this(subscription.getId(), type.getPriority(), date, group, title, text, source);
     }
 
     public Text(long subscription, long type, Calendar date, float group, String title, String text, String source) {
@@ -101,7 +101,7 @@ public class Text {
     }
 
     public void setType(@NonNull TextType type) {
-        this.type = type.getId();
+        this.type = type.getPriority();
     }
 
     public Calendar getDate() {
@@ -175,7 +175,7 @@ public class Text {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(),
-                "%s [#%d subscription=%d type=%d date=%d group=%f read=%b]",
-                getClass().getSimpleName(), id, subscription, type, Converters.calendarToInt(date), group, read);
+                "%s [#%d subscription=%d type=%d date=%d group=%f read=%b title=%.50s text=%.50s]",
+                getClass().getSimpleName(), id, subscription, type, Converters.calendarToInt(date), group, read, title, text);
     }
 }

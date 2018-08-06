@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,13 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -41,6 +43,11 @@ import de.escoand.readdaily.database.entity.Text;
 import de.escoand.readdaily.database.entity.TextInfo;
 import de.escoand.readdaily.database.entity.TextType;
 import de.escoand.readdaily.database.util.Converters;
+import de.escoand.readdaily.database.util.Importer;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class RoomDatabaseTest {
@@ -49,6 +56,7 @@ public class RoomDatabaseTest {
     private SubscriptionDao subscriptionDao;
     private TextTypeDao textTypeDao;
     private TextDao textDao;
+    private Importer importer;
 
     @Before
     public void createDb() {
@@ -57,6 +65,7 @@ public class RoomDatabaseTest {
         subscriptionDao = db.getSubscriptionDao();
         textTypeDao = db.getTextTypeDao();
         textDao = db.getTextDao();
+        importer = db.getImporter();
     }
 
     @After
@@ -68,21 +77,21 @@ public class RoomDatabaseTest {
     public void testConverters() {
 
         // date to int
-        Assert.assertEquals(
+        assertEquals(
                 20171201,
                 Converters.calendarToInt(new GregorianCalendar(2017, 12 - 1, 1))
         );
-        Assert.assertEquals(
+        assertEquals(
                 20170101,
                 Converters.calendarToInt(new GregorianCalendar(2017, 1 - 1, 1))
         );
 
         // int to date
-        Assert.assertEquals(
+        assertEquals(
                 new GregorianCalendar(2017, 12 - 1, 1),
                 Converters.intToCalendar(20171201)
         );
-        Assert.assertEquals(
+        assertEquals(
                 new GregorianCalendar(2017, 1 - 1, 1),
                 Converters.intToCalendar(20170101)
         );
@@ -96,25 +105,25 @@ public class RoomDatabaseTest {
         // insert
         downloadDao.insert(obj1);
         obj2 = downloadDao.findBySubscription(obj1.getSubscription());
-        Assert.assertEquals(obj1, obj2);
+        assertEquals(obj1, obj2);
 
         // update 1
         obj2.setSubscription("test2");
         downloadDao.update(obj2);
         obj1 = downloadDao.findBySubscription(obj2.getSubscription());
-        Assert.assertEquals(obj1, obj2);
+        assertEquals(obj1, obj2);
 
         // update 2
         obj1.setDownloadId(2);
         downloadDao.update(obj1);
         obj2 = downloadDao.findByDownloadId(obj1.getDownloadId());
         downloadDao.update(obj2);
-        Assert.assertEquals(obj1, obj2);
+        assertEquals(obj1, obj2);
 
         // delete
         downloadDao.delete(obj2);
         obj1 = downloadDao.findBySubscription(obj2.getSubscription());
-        Assert.assertNull(obj1);
+        assertNull(obj1);
     }
 
     @Test
@@ -125,12 +134,12 @@ public class RoomDatabaseTest {
         // insert
         subscriptionDao.insert(obj1);
         obj2 = subscriptionDao.findByName(obj1.getName());
-        Assert.assertEquals(obj1, obj2);
+        assertEquals(obj1, obj2);
 
         // delete
         subscriptionDao.delete(obj2);
         obj1 = subscriptionDao.findByName(obj2.getName());
-        Assert.assertNull(obj1);
+        assertNull(obj1);
     }
 
     @Test
@@ -142,7 +151,7 @@ public class RoomDatabaseTest {
 
         // insert
         obj2 = textDao.findById(textDao.insert(obj1)).text;
-        Assert.assertEquals(obj1, obj2);
+        assertEquals(obj1, obj2);
     }
 
     @Test
@@ -178,20 +187,62 @@ public class RoomDatabaseTest {
         );
 
         // check dates
-        Assert.assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 1)).size());
-        Assert.assertEquals(2, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 2)).size());
-        Assert.assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 3)).size());
-        Assert.assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 4)).size());
+        assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 1)).size());
+        assertEquals(2, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 2)).size());
+        assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 3)).size());
+        assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 4)).size());
 
         // check order
         List<TextInfo> txts = textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 2));
-        Assert.assertEquals("title1", txts.get(1).text.getTitle());
+        assertEquals("title1", txts.get(1).text.getTitle());
 
         // delete
         subscriptionDao.delete(sub1);
-        Assert.assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 1)).size());
-        Assert.assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 2)).size());
-        Assert.assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 3)).size());
-        Assert.assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 4)).size());
+        assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 1)).size());
+        assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 2)).size());
+        assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 3)).size());
+        assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 4)).size());
+    }
+
+    // test xml file handling
+    @Test
+    public void testImportXml() throws IOException, XmlPullParserException {
+        final String name = "text_xml";
+        final String data = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<collection creationDate=\"01.01.1970 01:02:03\">" +
+                "<entry sourceId=\"123\" source=\"Name of the Book 1\" title=\"Title of the Book 1\" subtitle=\"Subtitle of the Book 1\">Description of the Book 1</entry>" +
+                "<entry sourceId=\"567\" source=\"Name of the Book 2\" title=\"Title of the Book 2\" subtitle=\"Subtitle of the Book 2\">Description of the Book 2</entry>" +
+                "<entry date=\"2000-01-01\" description=\"Name of the Day 1\">" +
+                "<exegesis sourceId=\"123\" source=\"Name of the Book\" sourceChapter=\"234\" sourceVerse=\"345\" title=\"Title of the Day\" subtitle=\"Subtitle of the Day\">Text of the Day</exegesis>" +
+                "<verse_of_the_day source=\"Scripture of the Day\">Verse of the Day</verse_of_the_day>" +
+                "<verse_of_the_week source=\"Scripture of the Week\">Verse of the Week</verse_of_the_week>" +
+                "<verse_of_the_month source=\"Scripture of the Month\">Verse of the Month</verse_of_the_month>" +
+                "<verse_of_the_year source=\"Scripture of the Year\">Verse of the Year</verse_of_the_year>" +
+                "</entry>" +
+                "<entry date=\"2000-01-02\" description=\"Name of the Day 2\">" +
+                "<exegesis sourceId=\"123\" source=\"Name of the Book\" sourceChapter=\"234\" sourceVerse=\"345\" title=\"Title of the Day\" subtitle=\"Subtitle of the Day\">Text of the Day</exegesis>" +
+                "<verse_of_the_day source=\"Scripture of the Day\">Verse of the Day</verse_of_the_day>" +
+                "<verse_of_the_week source=\"Scripture of the Week\">Verse of the Week</verse_of_the_week>" +
+                "<verse_of_the_month source=\"Scripture of the Month\">Verse of the Month</verse_of_the_month>" +
+                "<verse_of_the_year source=\"Scripture of the Year\">Verse of the Year</verse_of_the_year>" +
+                "</entry>" +
+                "</collection>";
+
+        textTypeDao.insert(
+                new TextType(TextType.TYPE_DAY, "day"),
+                new TextType(TextType.TYPE_EXEGESIS, "exegesis"),
+                new TextType(TextType.TYPE_INTRO, "intro"),
+                new TextType(TextType.TYPE_WEEK, "week"),
+                new TextType(TextType.TYPE_MONTH, "month"),
+                new TextType(TextType.TYPE_YEAR, "year")
+        );
+
+        importer.importXML(name, new ByteArrayInputStream(data.getBytes()));
+        assertNotNull(subscriptionDao.findByName(name));
+        assertEquals(5, textDao.findByDate(new GregorianCalendar(2000, 1 - 1, 1)).size());
+        assertEquals(5, textDao.findByDate(new GregorianCalendar(2000, 1 - 1, 2)).size());
+        assertEquals(5 + 5, textDao.getAllDays().size());
+        assertEquals(2, textDao.getCalendar().size());
+        assertEquals(2, textDao.findByPattern("%text%").size());
     }
 }

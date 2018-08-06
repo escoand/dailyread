@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@ package de.escoand.readdaily.database.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.RoomWarnings;
 import android.arch.persistence.room.Transaction;
 
 import java.util.Calendar;
 import java.util.List;
 
+import de.escoand.readdaily.database.entity.CalendarInfo;
 import de.escoand.readdaily.database.entity.Text;
 import de.escoand.readdaily.database.entity.TextInfo;
 
@@ -45,17 +45,25 @@ public interface TextDao {
     int markAsRead(Calendar date);
 
     @Transaction
+    @Query("SELECT text.* FROM text JOIN texttype ON text.type=texttype.priority WHERE date>=20000000 and date<=21000000 ORDER BY date, texttype.priority DESC")
+    List<TextInfo> getAllDays();
+
+    @Transaction
     @Query("SELECT * FROM text WHERE id = :id")
     TextInfo findById(long id);
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
-    @Query("SELECT * FROM text JOIN texttype ON text.type=texttype.id WHERE date = :calendar ORDER BY date, texttype.priority DESC")
+    @Query("SELECT text.* FROM text JOIN texttype ON text.type=texttype.priority WHERE date = :calendar ORDER BY date, texttype.priority DESC")
     List<TextInfo> findByDate(Calendar calendar);
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
-    @Query("SELECT * FROM text JOIN texttype ON text.type=texttype.id WHERE text MATCH :pattern ORDER BY date, texttype.priority DESC")
+    @Query("SELECT text.* FROM text JOIN texttype ON text.type=texttype.priority WHERE source!='' AND texttype.name = :type ORDER BY date, texttype.priority DESC")
+    List<TextInfo> findByType(String type);
+
+    @Transaction
+    @Query("SELECT text.* FROM text JOIN texttype ON text.type=texttype.priority WHERE text LIKE :pattern ORDER BY date, texttype.priority DESC")
     List<TextInfo> findByPattern(String pattern);
 
+    @Query("SELECT date, MAX(read) read FROM text WHERE date>=20000000 and date<=21000000 GROUP BY date")
+    List<CalendarInfo> getCalendar();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ public class TextInfo {
     @Relation(parentColumn = "id", entityColumn = "id")
     public List<Subscription> subscription;
 
-    @Relation(parentColumn = "id", entityColumn = "id")
+    @Relation(parentColumn = "id", entityColumn = "priority")
     public List<TextType> type;
 
 }

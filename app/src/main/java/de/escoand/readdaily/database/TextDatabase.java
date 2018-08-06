@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import de.escoand.readdaily.database.entity.Subscription;
 import de.escoand.readdaily.database.entity.Text;
 import de.escoand.readdaily.database.entity.TextType;
 import de.escoand.readdaily.database.util.Converters;
+import de.escoand.readdaily.database.util.Importer;
 
 @Database(
         entities = {Download.class, Subscription.class, TextType.class, Text.class},
@@ -45,4 +46,6 @@ public abstract class TextDatabase extends RoomDatabase {
     abstract public TextTypeDao getTextTypeDao();
 
     abstract public TextDao getTextDao();
+
+    abstract public Importer getImporter();
 }
