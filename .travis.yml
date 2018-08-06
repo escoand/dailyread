@@ -33,10 +33,14 @@ script:
   #- ./gradlew check
   - ./gradlew connected${FLAVOUR}DebugAndroidTest
 
-after_script:
-  - cat ${TRAVIS_BUILD_DIR}/*/build/outputs/androidTest-results/connected/*
-  - cat ${TRAVIS_BUILD_DIR}/library/build/reports/lint-results.xml
-  - cat ${TRAVIS_BUILD_DIR}/demo/build/reports/lint-results.xml
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
