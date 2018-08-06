@@ -85,7 +85,9 @@ public class DatabaseTest {
     // test csv file handling
     @Test
     public void test_11_CSV() throws Exception {
-        db.importCSV(TEST_CSV, context.getResources().openRawResource(de.brunnen_verlag.termine_mit_gott.test.R.raw.data_import));
+        Context context = InstrumentationRegistry.getContext();
+        int id = context.getResources().getIdentifier("data_csv", "raw", context.getPackageName());
+        db.importCSV(TEST_CSV, context.getResources().openRawResource(id));
         Assert.assertTrue(db.isInstalled(TEST_CSV));
 
         Assert.assertEquals(4, db.getDay(new GregorianCalendar(2000, 11 - 1, 1).getTime()).getCount());
@@ -103,7 +105,9 @@ public class DatabaseTest {
     // test xml file handling
     @Test
     public void test_12_XML() throws Exception {
-        db.importXML(TEST_XML, context.getResources().openRawResource(de.brunnen_verlag.termine_mit_gott.test.R.xml.data_import));
+        Context context = InstrumentationRegistry.getContext();
+        int id = context.getResources().getIdentifier("data_xml", "raw", context.getPackageName());
+        db.importXML(TEST_XML, context.getResources().openRawResource(id));
         Assert.assertTrue(db.isInstalled(TEST_XML));
 
         Assert.assertEquals(5, db.getDay(new GregorianCalendar(2000, 1 - 1, 1).getTime()).getCount());
