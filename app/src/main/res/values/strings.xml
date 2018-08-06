@@ -28,6 +28,7 @@
     <string name="navigation_list">Liste</string>
     <string name="navigation_store">Store</string>
     <string name="navigation_other">Sonstiges</string>
+    <string name="navigation_reminder">Erninnerung</string>
     <string name="navigation_settings">Einstellungen</string>
     <string name="navigation_about">Über</string>
 
