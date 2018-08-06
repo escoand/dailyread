@@ -8,7 +8,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=22.0.1
   matrix:
     - FLAVOUR=Tmg
-    #- FLAVOUR=Ls
+    - FLAVOUR=Ls
 
 android:
   components:
