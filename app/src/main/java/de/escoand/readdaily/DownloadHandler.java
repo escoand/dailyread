@@ -66,6 +66,7 @@ public class DownloadHandler extends BroadcastReceiver {
     public static long startDownload(@NonNull final Context context, @NonNull final String signature,
                                      @NonNull final String responseData, @NonNull final String title,
                                      @Nullable final String mimeType) {
+        final DownloadDao dao = TextDatabase.getInstance(context).getDownloadDao();
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String name;
 

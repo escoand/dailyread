@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,13 @@ package de.escoand.readdaily;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.View;
+
+import de.escoand.readdaily.database.TextDatabase;
+import de.escoand.readdaily.database.entity.TextInfo;
 
 public class OnBibleClickListener implements View.OnClickListener {
     private Activity context;
@@ -40,10 +42,10 @@ public class OnBibleClickListener implements View.OnClickListener {
     public void onClick(final View v) {
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
-        for(final TextInfo item: TextDatabase.getInstance(context).getTextDao().findByType(type)) {
+        for (final TextInfo item : TextDatabase.getInstance(context).getTextDao().findByType(type)) {
             final String url = context.getString(R.string.url_bible)
                     + settings.getString("bible_translation", "LUT") + "/"
-                    + item.getSource().replaceAll(" ", "");
+                    + item.text.getSource().replaceAll(" ", "");
             final Intent intent = new Intent();
 
             intent.setAction(Intent.ACTION_VIEW);
