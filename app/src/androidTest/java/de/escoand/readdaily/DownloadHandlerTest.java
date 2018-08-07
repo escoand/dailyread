@@ -48,38 +48,38 @@ public class DownloadHandlerTest {
 
     private final Context context = InstrumentationRegistry.getTargetContext();
 
-    @Test
+    #@Test
     public void test_01_InvisibleDownload() {
         long id = DownloadHandler.startInvisibleDownload(context, INVISIBLE_URL, INVISIBLE_ID);
         Assert.assertTrue(id + " > 0", id > 0);
     }
 
-    @Test
+    #@Test
     public void test_11_Start() {
         long id = DownloadHandler.startDownload(context, "", DOWNLOAD_JSON, DOWNLOAD_ID, DOWNLOAD_MIME);
         Assert.assertTrue(id + " > 0", id > 0);
     }
 
-    @Test
+    #@Test
     public void test_12_Progress() {
         float prog = DownloadHandler.downloadProgress(context, DOWNLOAD_ID);
         Assert.assertTrue(prog + " >= 0", prog >= 0);
     }
 
-    @Test
+    #@Test
     public void test_13_Stop() {
         DownloadHandler.stopDownload(context, DOWNLOAD_ID);
         float end = DownloadHandler.downloadProgress(context, DOWNLOAD_ID);
         Assert.assertEquals(end, (float) DownloadHandler.SUBSCRIPTION_DOWNLOAD_UNKNOWN);
     }
 
-    @Test
+    #@Test
     public void test_21_Start() {
         long id = DownloadHandler.startDownload(context, "", DOWNLOAD_JSON, DOWNLOAD_ID, DOWNLOAD_MIME);
         Assert.assertTrue(id + " > 0", id > 0);
     }
 
-    @Test
+    #@Test
     public void test_22_Progress() throws InterruptedException {
         int cnt = 0;
 
