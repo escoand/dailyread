@@ -30,23 +30,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-public abstract class AbstractContentFragment extends DialogFragment implements Observer, SimpleCursorAdapter.ViewBinder {
+public abstract class AbstractContentFragment extends DialogFragment implements Observer {
     protected int layout = R.layout.item_content;
-    protected String[] from = new String[]{Database.COLUMN_TITLE, Database.COLUMN_TEXT, Database.COLUMN_SOURCE};
-    protected int[] to = new int[]{R.id.daily_title, R.id.daily_text, R.id.daily_source};
     protected String condition = null;
     protected String[] values = null;
     protected Date dateOnCreate = null;
     protected int dateOffset = 0;
 
-    private SimpleCursorAdapter adapter = null;
+    private ListItemBinding binding = null;
 
     public void setDateOnCreate(final Date date) {
         dateOnCreate = date;
@@ -55,20 +52,18 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
     private void initDateOnCreate() {
         if (dateOnCreate != null) {
             DatePersistence.getInstance().deleteObserver(this);
-            if (adapter != null)
-                adapter.changeCursor(Database.getInstance(getContext()).getDay(dateOnCreate, condition, values));
+            if (binding != null)
+                binding.setText(TextDatabase.getInstance(getContext()).getTextDao().findByType(values[0]));
         } else
             DatePersistence.getInstance().addObserver(this);
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        adapter = new SimpleCursorAdapter(getContext(), layout, null, from, to, 0);
-        adapter.setViewBinder(this);
-
         final ListView list = new ListView(getContext());
         list.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        list.setAdapter(adapter);
+
+        final ListItemBinding binding = DataBindingUtil.inflate(inflater, layout, list, false);
 
         return list;
     }
@@ -100,8 +95,8 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
 
     @Override
     public void update(Observable observable, Object o) {
-        if (adapter != null)
-            adapter.changeCursor(DatePersistence.getInstance().getData(getContext(), condition, values, dateOffset));
+        if (binding != null)
+            binding.setText(TextDatabase.getInstance(getContext()).getTextDao().findByDate());
     }
 
     @Override
@@ -135,17 +130,6 @@ public abstract class AbstractContentFragment extends DialogFragment implements 
             case Database.COLUMN_TEXT:
                 if (view instanceof TextView) {
                     ((TextView) view).setText(Html.fromHtml(cursor.getString(columnIndex)));
-                    return true;
-                }
-                break;
-
-            // source
-            case Database.COLUMN_SOURCE:
-                if (cursor.isNull(columnIndex)) {
-                    if (wrapper != null)
-                        wrapper.setVisibility(View.GONE);
-                    else
-                        view.setVisibility(View.GONE);
                     return true;
                 }
                 break;

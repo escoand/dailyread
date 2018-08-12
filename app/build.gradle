@@ -25,6 +25,10 @@ android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
 
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "de.escoand.readdaily"
         minSdkVersion 14
@@ -34,6 +38,7 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             shrinkResources true

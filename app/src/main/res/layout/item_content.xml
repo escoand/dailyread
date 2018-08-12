@@ -17,7 +17,14 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="data"
+            type="de.escoand.readdaily.database.entity.Text" />
+    </data>
+
+<FrameLayout
     style="@style/Card.Wrapper">
 
     <android.support.v7.widget.CardView
@@ -36,22 +43,28 @@
                 android:id="@+id/daily_title"
                 style="@style/Text.Daily.Title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@{data.title}" />
 
             <TextView
                 android:id="@+id/daily_source"
                 style="@style/Text.Daily.Source"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@{data.source}"
+                android:visibility="@{data.source == null ? View.GONE : View.VISIBLE}" />
 
             <TextView
                 android:id="@+id/daily_text"
                 style="@style/Text.Daily"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@{data.text}" />
 
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
 </FrameLayout>
+
+</layout>
