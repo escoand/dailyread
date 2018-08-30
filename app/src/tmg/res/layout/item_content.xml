@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2017 escoand.
+  ~ Copyright (c) 2018 escoand.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,57 +17,159 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Card.Wrapper">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/daily_card"
-        style="@style/Card.Daily"
+    <data>
+
+        <variable
+            name="data"
+            type="de.escoand.readdaily.database.entity.TextInfo" />
+
+        <variable
+            name="types"
+            type="java.util.Map&lt;java.lang.Integer, java.lang.String&gt;" />
+
+        <variable
+            name="image"
+            type="java.lang.Integer" />
+
+        <variable
+            name="handlers"
+            type="de.escoand.readdaily.views.ViewHandlers" />
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
+            android:background="?attr/color_header_background"
+            android:elevation="8dp"
+            android:gravity="center_vertical|center"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:visibility="@{data.text.type == de.escoand.readdaily.enums.TextType.DAY.getPriority() ? android.view.View.VISIBLE : android.view.View.GONE}">
 
-            <TextView
-                android:id="@+id/daily_title"
-                style="@style/Text.Daily.Title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/player_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:transitionName="playerImage"
+                app:imageResource="@{image}" />
 
             <LinearLayout
-                android:id="@+id/wrapper_source"
+                android:id="@+id/header_texts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
 
                 <TextView
-                    android:id="@+id/daily_source"
-                    style="@style/Text.Daily.Source"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    android:id="@+id/button_bible_exegesis"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/header_title"
+                    style="@style/Text.Header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_bible"
-                    android:tint="?attr/color_daily_source" />
+                    android:layout_weight="2"
+                    android:gravity="bottom"
+                    android:text="@{data.text.text}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/header_source"
+                        style="@style/Text.Header.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="@{data.text.source}" />
+
+                    <ImageView
+                        android:id="@+id/button_bible_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0"
+                        android:src="@drawable/icon_bible"
+                        android:tint="?attr/color_header_icon" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/daily_text"
-                style="@style/Text.Daily"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+        <FrameLayout
+            style="@style/Card.Wrapper"
+            android:visibility="@{data.text.type != de.escoand.readdaily.enums.TextType.DAY.getPriority() ? android.view.View.VISIBLE : android.view.View.GONE}">
 
-</FrameLayout>
+            <android.support.v7.widget.CardView
+                android:id="@+id/daily_card"
+                style="@style/Card.Daily"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/daily_title"
+                        style="@style/Text.Daily.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{data.text.title ?? types[data.text.type]}' />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="@{data.text.source != null ? android.view.View.VISIBLE : android.view.View.GONE}">
+
+                        <TextView
+                            android:id="@+id/daily_source"
+                            style="@style/Text.Daily.Source"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{data.text.source}" />
+
+                        <ImageView
+                            android:id="@+id/button_bible_exegesis"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:onClick="@{(view) -> handlers.onBibleClick(view, data)}"
+                            android:src="@drawable/icon_bible"
+                            android:tint="?attr/color_daily_source" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/daily_text"
+                        style="@style/Text.Daily"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{data.text.text}" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</layout>
