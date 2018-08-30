@@ -178,7 +178,7 @@ public class Text {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(),
-                "%s [#%d subscription=%d type=%d date=%d group=%f read=%b title=%.50s text=%.50s]",
-                getClass().getSimpleName(), id, subscription, type, Converters.calendarToInt(date), group, read, title, text);
+                "%s [#%d subscription=%d type=%d date=%d group=%f read=%b title=%.50s text=%.50s source=%.50s]",
+                getClass().getSimpleName(), id, subscription, type, Converters.calendarToInt(date), group, read, title, text, source);
     }
 }

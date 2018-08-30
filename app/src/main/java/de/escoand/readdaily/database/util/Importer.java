@@ -18,15 +18,18 @@
 package de.escoand.readdaily.database.util;
 
 import android.arch.persistence.room.Dao;
+import android.support.annotation.NonNull;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
@@ -43,9 +46,9 @@ import de.escoand.readdaily.database.entity.TextType;
 
 @Dao
 public abstract class Importer {
-    private TextDatabase db;
-    private SubscriptionDao subscriptionDao;
-    private TextDao textDao;
+    final private TextDatabase db;
+    final private SubscriptionDao subscriptionDao;
+    final private TextDao textDao;
 
     Importer(TextDatabase db) {
         this.db = db;
@@ -53,7 +56,64 @@ public abstract class Importer {
         textDao = db.getTextDao();
     }
 
-    public void importXML(String subscription, InputStream stream) throws IOException, XmlPullParserException {
+    public void importCSV(@NonNull final String subscription, @NonNull final InputStream stream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        String line;
+        Text text;
+
+        db.beginTransaction();
+
+        try {
+
+            // subscription
+            long id = subscriptionDao.insert(new Subscription(subscription, 0));
+
+            while ((line = reader.readLine()) != null) {
+                String[] cols = line.split("\t");
+
+                if (cols.length < 6)
+                    continue;
+
+                Calendar calendar = Converters.intToCalendar(Integer.valueOf(cols[1].trim()));
+                float group = Float.valueOf(cols[0].trim());
+
+                // verse of the day
+                text = new Text(id, TextType.TYPE_DAY, calendar, group, null, cols[4].trim(), null);
+                LogHandler.d(text.toString());
+                textDao.insert(text);
+
+                // description of the day
+                text = new Text(id, TextType.TYPE_EXEGESIS, calendar, group, cols[5].trim(), cols[6].trim(), cols[2].trim());
+                LogHandler.d(text.toString());
+                textDao.insert(text);
+
+                // verse of the week
+                if (cols.length >= 9 && !cols[7].isEmpty() && !cols[8].isEmpty()) {
+                    text = new Text(id, TextType.TYPE_WEEK, calendar, group, null, cols[7].trim(), cols[8].trim());
+                    LogHandler.d(text.toString());
+                    textDao.insert(text);
+                }
+
+                // verse of the month
+                if (cols.length >= 11 && !cols[9].isEmpty() && !cols[10].isEmpty()) {
+                    text = new Text(id, TextType.TYPE_MONTH, calendar, group, null, cols[9].trim(), cols[10].trim());
+                    LogHandler.d(text.toString());
+                    textDao.insert(text);
+                }
+            }
+
+            reader.close();
+            db.setTransactionSuccessful();
+        }
+
+        // commit or rollback
+        finally {
+            db.endTransaction();
+        }
+    }
+
+
+    public void importXML(@NonNull String subscription, @NonNull InputStream stream) throws IOException, XmlPullParserException {
         Random rand = new Random();
         XmlPullParser parser = Xml.newPullParser();
         Text text_entry = new Text();

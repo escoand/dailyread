@@ -50,7 +50,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
-public class RoomDatabaseTest {
+public class TextDatabaseTest {
     private TextDatabase db;
     private DownloadDao downloadDao;
     private SubscriptionDao subscriptionDao;
@@ -203,6 +203,32 @@ public class RoomDatabaseTest {
         assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 2)).size());
         assertEquals(0, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 3)).size());
         assertEquals(1, textDao.findByDate(new GregorianCalendar(YEAR, MONTH, 4)).size());
+    }
+
+    // test csv file handling
+    @Test
+    public void testImportCsv() throws IOException {
+        final Context context = InstrumentationRegistry.getContext();
+        int id = context.getResources().getIdentifier("data_csv", "raw", context.getPackageName());
+        final String name = "text_csv";
+
+        textTypeDao.insert(
+                new TextType(TextType.TYPE_DAY, "day"),
+                new TextType(TextType.TYPE_EXEGESIS, "exegesis"),
+                new TextType(TextType.TYPE_INTRO, "intro"),
+                new TextType(TextType.TYPE_WEEK, "week"),
+                new TextType(TextType.TYPE_MONTH, "month"),
+                new TextType(TextType.TYPE_YEAR, "year")
+        );
+
+        importer.importCSV(name, context.getResources().openRawResource(id));
+        assertNotNull(subscriptionDao.findByName(name));
+        assertEquals(4, textDao.findByDate(new GregorianCalendar(2000, 11 - 1, 1)).size());
+        assertEquals(3, textDao.findByDate(new GregorianCalendar(2000, 11 - 1, 2)).size());
+        assertEquals(4 + 3 + 3 + 2, textDao.getAllDays().size());
+        assertEquals(4, textDao.getCalendar().size());
+        assertEquals(2, textDao.findByPattern("%Month%").size());
+        assertEquals(2, textDao.findByPattern("%Week%").size());
     }
 
     // test xml file handling

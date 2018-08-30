@@ -61,7 +61,7 @@ public interface TextDao {
     List<TextInfo> findByType(String type);
 
     @Transaction
-    @Query("SELECT text.* FROM text JOIN texttype ON text.type=texttype.priority WHERE text LIKE :pattern ORDER BY date, texttype.priority DESC")
+    @Query("SELECT text.* FROM text JOIN texttype ON text.type=texttype.priority WHERE title LIKE :pattern OR text LIKE :pattern OR source LIKE :pattern ORDER BY date, texttype.priority DESC")
     List<TextInfo> findByPattern(String pattern);
 
     @Query("SELECT date, MAX(read) read FROM text WHERE date>=20000000 and date<=21000000 GROUP BY date")

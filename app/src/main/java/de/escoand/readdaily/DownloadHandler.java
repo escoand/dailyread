@@ -181,6 +181,12 @@ public class DownloadHandler extends BroadcastReceiver {
                                 LogHandler.w("register feedback: " + new String(buf, 0, len));
                                 break;
 
+                            // csv data
+                            case "text/comma-separated-values":
+                            case "text/csv":
+                                importer.importCSV(download.getSubscription(), stream);
+                                break;
+
                             // xml data
                             case "application/xml":
                             case "text/xml":
