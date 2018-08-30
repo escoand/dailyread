@@ -42,7 +42,6 @@ import de.escoand.readdaily.database.dao.SubscriptionDao;
 import de.escoand.readdaily.database.dao.TextDao;
 import de.escoand.readdaily.database.entity.Subscription;
 import de.escoand.readdaily.database.entity.Text;
-import de.escoand.readdaily.database.entity.TextType;
 
 @Dao
 public abstract class Importer {
@@ -78,25 +77,25 @@ public abstract class Importer {
                 float group = Float.valueOf(cols[0].trim());
 
                 // verse of the day
-                text = new Text(id, TextType.TYPE_DAY, calendar, group, null, cols[4].trim(), null);
+                text = new Text(id, de.escoand.readdaily.enums.TextType.DAY.getPriority(), calendar, group, null, cols[4].trim(), null);
                 LogHandler.d(text.toString());
                 textDao.insert(text);
 
                 // description of the day
-                text = new Text(id, TextType.TYPE_EXEGESIS, calendar, group, cols[5].trim(), cols[6].trim(), cols[2].trim());
+                text = new Text(id, de.escoand.readdaily.enums.TextType.EXEGESIS.getPriority(), calendar, group, cols[5].trim(), cols[6].trim(), cols[2].trim());
                 LogHandler.d(text.toString());
                 textDao.insert(text);
 
                 // verse of the week
                 if (cols.length >= 9 && !cols[7].isEmpty() && !cols[8].isEmpty()) {
-                    text = new Text(id, TextType.TYPE_WEEK, calendar, group, null, cols[7].trim(), cols[8].trim());
+                    text = new Text(id, de.escoand.readdaily.enums.TextType.WEEK.getPriority(), calendar, group, null, cols[7].trim(), cols[8].trim());
                     LogHandler.d(text.toString());
                     textDao.insert(text);
                 }
 
                 // verse of the month
                 if (cols.length >= 11 && !cols[9].isEmpty() && !cols[10].isEmpty()) {
-                    text = new Text(id, TextType.TYPE_MONTH, calendar, group, null, cols[9].trim(), cols[10].trim());
+                    text = new Text(id, de.escoand.readdaily.enums.TextType.MONTH.getPriority(), calendar, group, null, cols[9].trim(), cols[10].trim());
                     LogHandler.d(text.toString());
                     textDao.insert(text);
                 }
@@ -148,7 +147,7 @@ public abstract class Importer {
                                 text_entry.setDate(tmp);
                                 text_item.setDate(tmp);
                             }
-                            text_entry.setType(TextType.TYPE_INTRO);
+                            text_entry.setType(de.escoand.readdaily.enums.TextType.INTRO.getPriority());
                             if (parser.getAttributeValue(null, "sourceId") != null)
                                 text_entry.setGroup(Integer.valueOf(parser.getAttributeValue(null, "sourceId")));
                             text_entry.setTitle(parser.getAttributeValue(null, "title"));
@@ -157,7 +156,7 @@ public abstract class Importer {
                             break;
 
                         case "exegesis":
-                            text_item.setType(TextType.TYPE_EXEGESIS);
+                            text_item.setType(de.escoand.readdaily.enums.TextType.EXEGESIS.getPriority());
                             text_item.setGroup(
                                     Float.valueOf(parser.getAttributeValue(null, "sourceId")) +
                                             Float.valueOf(parser.getAttributeValue(null, "sourceChapter")) / 1000
@@ -175,7 +174,7 @@ public abstract class Importer {
                             break;
 
                         case "verse_of_the_day":
-                            text_item.setType(TextType.TYPE_DAY);
+                            text_item.setType(de.escoand.readdaily.enums.TextType.DAY.getPriority());
                             text_item.setGroup(0);
                             text_item.setTitle(null);
                             text_item.setText(null);
@@ -183,7 +182,7 @@ public abstract class Importer {
                             break;
 
                         case "verse_of_the_week":
-                            text_item.setType(TextType.TYPE_WEEK);
+                            text_item.setType(de.escoand.readdaily.enums.TextType.WEEK.getPriority());
                             text_item.setGroup(0);
                             text_item.setTitle(null);
                             text_item.setText(null);
@@ -191,7 +190,7 @@ public abstract class Importer {
                             break;
 
                         case "verse_of_the_month":
-                            text_item.setType(TextType.TYPE_MONTH);
+                            text_item.setType(de.escoand.readdaily.enums.TextType.MONTH.getPriority());
                             text_item.setGroup(0);
                             text_item.setTitle(null);
                             text_item.setText(null);
@@ -199,7 +198,7 @@ public abstract class Importer {
                             break;
 
                         case "verse_of_the_year":
-                            text_item.setType(TextType.TYPE_YEAR);
+                            text_item.setType(de.escoand.readdaily.enums.TextType.YEAR.getPriority());
                             text_item.setGroup(0);
                             text_item.setTitle(null);
                             text_item.setText(null);
@@ -207,7 +206,7 @@ public abstract class Importer {
                             break;
 
                         case "thoughts_on_bible_quote_year":
-                            text_item.setType(TextType.TYPE_YEAR);
+                            text_item.setType(de.escoand.readdaily.enums.TextType.YEAR.getPriority());
                             text_item.setGroup(0);
                             text_item.setTitle(parser.getAttributeValue(null, "title"));
                             text_item.setText(null);
@@ -296,7 +295,7 @@ public abstract class Importer {
         // subscription
         long id = subscriptionDao.insert(new Subscription(subscription, 0));
         text.setSubscription(id);
-        text.setType(TextType.TYPE_MEDIA);
+        text.setType(de.escoand.readdaily.enums.TextType.MEDIA.getPriority());
         text.setGroup(0);
         text.setTitle(null);
         text.setText(null);

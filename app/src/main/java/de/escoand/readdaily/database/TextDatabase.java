@@ -23,6 +23,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
+import de.escoand.readdaily.LogHandler;
 import de.escoand.readdaily.database.dao.DownloadDao;
 import de.escoand.readdaily.database.dao.SubscriptionDao;
 import de.escoand.readdaily.database.dao.TextDao;
@@ -50,14 +51,11 @@ public abstract class TextDatabase extends RoomDatabase {
             TextTypeDao textTypeDao = instance.getTextTypeDao();
 
             if (textTypeDao.getAll().isEmpty()) {
-                textTypeDao.insert(
-                        new TextType(TextType.TYPE_DAY, "day"),
-                        new TextType(TextType.TYPE_EXEGESIS, "exegesis"),
-                        new TextType(TextType.TYPE_INTRO, "intro"),
-                        new TextType(TextType.TYPE_WEEK, "week"),
-                        new TextType(TextType.TYPE_MONTH, "month"),
-                        new TextType(TextType.TYPE_YEAR, "year")
-                );
+                for (de.escoand.readdaily.enums.TextType type : de.escoand.readdaily.enums.TextType.values()) {
+                    TextType textType = new TextType(type.getPriority(), type.name());
+                    LogHandler.d(textType.toString());
+                    textTypeDao.insert(textType);
+                }
             }
         }
 

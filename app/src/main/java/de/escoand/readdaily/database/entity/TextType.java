@@ -24,13 +24,6 @@ import java.util.Locale;
 
 @Entity
 public class TextType {
-    public static final int TYPE_YEAR = 50;
-    public static final int TYPE_MONTH = 40;
-    public static final int TYPE_WEEK = 30;
-    public static final int TYPE_DAY = 20;
-    public static final int TYPE_EXEGESIS = 10;
-    public static final int TYPE_INTRO = 25;
-    public static final int TYPE_MEDIA = 70;
 
     @PrimaryKey
     private int priority;

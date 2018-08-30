@@ -212,14 +212,8 @@ public class TextDatabaseTest {
         int id = context.getResources().getIdentifier("data_csv", "raw", context.getPackageName());
         final String name = "text_csv";
 
-        textTypeDao.insert(
-                new TextType(TextType.TYPE_DAY, "day"),
-                new TextType(TextType.TYPE_EXEGESIS, "exegesis"),
-                new TextType(TextType.TYPE_INTRO, "intro"),
-                new TextType(TextType.TYPE_WEEK, "week"),
-                new TextType(TextType.TYPE_MONTH, "month"),
-                new TextType(TextType.TYPE_YEAR, "year")
-        );
+        for (de.escoand.readdaily.enums.TextType type : de.escoand.readdaily.enums.TextType.values())
+            textTypeDao.insert(new TextType(type.getPriority(), type.name()));
 
         importer.importCSV(name, context.getResources().openRawResource(id));
         assertNotNull(subscriptionDao.findByName(name));
@@ -238,14 +232,8 @@ public class TextDatabaseTest {
         int id = context.getResources().getIdentifier("data_xml", "raw", context.getPackageName());
         final String name = "text_xml";
 
-        textTypeDao.insert(
-                new TextType(TextType.TYPE_DAY, "day"),
-                new TextType(TextType.TYPE_EXEGESIS, "exegesis"),
-                new TextType(TextType.TYPE_INTRO, "intro"),
-                new TextType(TextType.TYPE_WEEK, "week"),
-                new TextType(TextType.TYPE_MONTH, "month"),
-                new TextType(TextType.TYPE_YEAR, "year")
-        );
+        for (de.escoand.readdaily.enums.TextType type : de.escoand.readdaily.enums.TextType.values())
+            textTypeDao.insert(new TextType(type.getPriority(), type.name()));
 
         importer.importXML(name, context.getResources().openRawResource(id));
         assertNotNull(subscriptionDao.findByName(name));
