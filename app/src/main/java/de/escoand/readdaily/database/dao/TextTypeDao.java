@@ -34,6 +34,9 @@ public interface TextTypeDao {
     @Insert
     List<Long> insert(TextType... types);
 
+    @Query("SELECT * FROM texttype")
+    List<TextType> getAll();
+
     @Query("SELECT * FROM texttype WHERE priority = :priority")
     TextType findByPriority(long priority);
 

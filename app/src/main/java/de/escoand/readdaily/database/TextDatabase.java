@@ -45,8 +45,22 @@ public abstract class TextDatabase extends RoomDatabase {
     private static TextDatabase instance = null;
 
     public static synchronized TextDatabase getInstance(Context context) {
-        if (instance == null)
+        if (instance == null) {
             instance = Room.databaseBuilder(context, TextDatabase.class, DATABASE_NAME).build();
+            TextTypeDao textTypeDao = instance.getTextTypeDao();
+
+            if (textTypeDao.getAll().isEmpty()) {
+                textTypeDao.insert(
+                        new TextType(TextType.TYPE_DAY, "day"),
+                        new TextType(TextType.TYPE_EXEGESIS, "exegesis"),
+                        new TextType(TextType.TYPE_INTRO, "intro"),
+                        new TextType(TextType.TYPE_WEEK, "week"),
+                        new TextType(TextType.TYPE_MONTH, "month"),
+                        new TextType(TextType.TYPE_YEAR, "year")
+                );
+            }
+        }
+
         return instance;
     }
 
