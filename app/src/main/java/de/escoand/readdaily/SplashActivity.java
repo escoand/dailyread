@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 escoand.
+ * Copyright (c) 2018 escoand.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,47 +20,73 @@ package de.escoand.readdaily;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 
+import java.util.concurrent.CountDownLatch;
+
+import de.escoand.readdaily.database.TextDatabase;
+
 public class SplashActivity extends Activity {
+    final long SPLASH_MIN_TIMEOUT = 3000;
+    final CountDownLatch latch = new CountDownLatch(2);
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // show splash at least x seconds
+        if (BuildConfig.DEBUG)
+            latch.countDown();
+        else
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(SPLASH_MIN_TIMEOUT);
+                    } catch (InterruptedException e) {
+                        // ignore
+                    }
+                    latch.countDown();
+                }
+            }).run();
 
-        // skip splash at debug
-        if (BuildConfig.DEBUG) {
-            startActivity(new Intent(getApplication(), MainActivity.class));
-            finish();
-            return;
-        }
-
-        // remove test data
-        else {
-            LogHandler.i("start clean");
-
-            // android
-            Database.getInstance(this).removeData("android.test.canceled");
-            Database.getInstance(this).removeData("android.test.item_unavailable");
-            Database.getInstance(this).removeData("android.test.purchased");
-            Database.getInstance(this).removeData("android.test.refunded");
-
-            // app
-            Database.getInstance(this).removeData("android.test.json");
-            Database.getInstance(this).removeData("android.test.xml");
-            Database.getInstance(this).removeData("android.test.zip");
-
-            LogHandler.i("end clean");
-        }
-
-        setContentView(R.layout.activity_splash);
-        new Handler().postDelayed(new Runnable() {
+        // load initial data
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplication(), MainActivity.class));
-                finish();
+                final TextDatabase database = TextDatabase.getInstance(getApplicationContext());
+                final int dataId = getResources().getIdentifier("data_initial", "raw", getPackageName());
+
+                // load if database is empty
+                if (database.getDownloadDao().getAll().isEmpty() && dataId != 0) {
+                    try {
+                        LogHandler.i("try to load initial data as xml");
+                        database.getImporter().importXML("default", getResources().openRawResource(dataId));
+                    } catch (Exception e) {
+                        LogHandler.w("failed to load initial data as xml");
+
+                        //try {
+                        //    LogHandler.i("try to load initial data as csv");
+                        //    database.getImporter().importCSV("default", context.getResources().openRawResource(dataId));
+                        //} catch (Exception e) {
+                        //    LogHandler.w("failed to load initial data as csv");
+                        //}
+                    }
+                }
+
+                latch.countDown();
             }
-        }, 3000);
+        }).run();
+
+        // wait for the workers
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            // ignore
+        }
+
+        // start main activity
+        startActivity(new Intent(getApplication(), MainActivity.class));
+        finish();
     }
 }
